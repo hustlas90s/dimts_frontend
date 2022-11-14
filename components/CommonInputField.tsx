@@ -1,6 +1,6 @@
 import { Controller } from "react-hook-form";
 
-interface MyInputFieldProps {
+interface CommonInputFieldProps {
 	control: any;
 	fieldLabel: string;
 	fieldType: string;
@@ -10,7 +10,7 @@ interface MyInputFieldProps {
 	placeHolder?: string;
 }
 
-const MyInputField = ({
+const CommonInputField = ({
 	control,
 	fieldLabel,
 	fieldType,
@@ -18,7 +18,7 @@ const MyInputField = ({
 	fieldRules,
 	defaultValue,
 	placeHolder,
-}: MyInputFieldProps) => {
+}: CommonInputFieldProps) => {
 	return (
 		<Controller
 			control={control}
@@ -33,7 +33,7 @@ const MyInputField = ({
 					<input
 						type={fieldType}
 						id={fieldName}
-						className="bg-gray-100 px-3 py-1 w-72 focus:outline-none border border-gray-200 focus:border-purple-400 rounded-lg"
+						className="w-full bg-gray-100 px-3 py-1 focus:outline-none border border-gray-200 focus:border-purple-400 rounded-lg"
 						placeholder={placeHolder}
 						onChange={onChange}
 						defaultValue={defaultValue ?? ""}
@@ -51,4 +51,4 @@ const MyInputField = ({
 	);
 };
 
-export default MyInputField;
+export default CommonInputField;
