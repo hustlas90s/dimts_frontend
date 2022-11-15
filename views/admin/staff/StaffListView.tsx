@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useCallback } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { getStaffList, deleteAccount } from "../../../redux/dataSlice";
 import AddNewButton from "../../../components/AddNewButton";
@@ -8,16 +8,23 @@ import AdminBreadCrumbs from "../../../components/admin/AdminBreadCrumbs";
 import RegisterStaff from "../../../components/admin/RegisterStaff";
 import SuccessModal from "../../../components/SuccessModal";
 import WarningModal from "../../../components/WarningModal";
+import useCrudModals from "../../../hooks/useCrudModals";
+import useModalIDs from "../../../hooks/useModalIDs";
 
 const StaffListView = () => {
 	const dispatch = useAppDispatch();
 	const { dataLoading, staffList } = useAppSelector(
 		(state: any) => state.dataState
 	);
-	const [showAddModal, setShowAddModal] = useState(false);
-	const [showSuccessModal, setShowSuccessModal] = useState(false);
-	const [showDeleteModal, setShowDeleteModal] = useState(false);
-	const [deleteID, setDeleteID] = useState(0);
+	const {
+		showAddModal,
+		setShowAddModal,
+		showSuccessModal,
+		setShowSuccessModal,
+		showDeleteModal,
+		setShowDeleteModal,
+	} = useCrudModals();
+	const { deleteID, setDeleteID } = useModalIDs();
 
 	useEffect(() => {
 		dispatch(getStaffList());
