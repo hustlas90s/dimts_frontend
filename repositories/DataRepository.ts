@@ -7,7 +7,7 @@ export default class DataRepository {
         const { data } = await backendConn.get('staff_accounts/', {
             headers : {
                 Authorization : `Bearer ${ jwt_token }`,
-                'Content-Type' : 'aaplication/json'
+                'Content-Type' : 'aplication/json'
             }
         })
         return data.results
@@ -17,7 +17,7 @@ export default class DataRepository {
         const { data } = await backendConn.get('citizen_accounts/', {
             headers : {
                 Authorization : `Bearer ${ jwt_token }`,
-                'Content-Type' : 'aaplication/json'
+                'Content-Type' : 'aplication/json'
             }
         })
         return data.results
@@ -27,7 +27,7 @@ export default class DataRepository {
         const { data } = await backendConn.get('docket_cases/', {
             headers : {
                 Authorization : `Bearer ${ jwt_token }`,
-                'Content-Type' : 'aaplication/json'
+                'Content-Type' : 'aplication/json'
             }
         })
         return data.results
@@ -37,7 +37,7 @@ export default class DataRepository {
         const { data } = await backendConn.get('criminal_cases/', {
             headers : {
                 Authorization : `Bearer ${ jwt_token }`,
-                'Content-Type' : 'aaplication/json'
+                'Content-Type' : 'aplication/json'
             }
         })
         return data.results
@@ -47,7 +47,7 @@ export default class DataRepository {
         const { data } = await backendConn.get('civil_cases/', {
             headers : {
                 Authorization : `Bearer ${ jwt_token }`,
-                'Content-Type' : 'aaplication/json'
+                'Content-Type' : 'aplication/json'
             }
         })
         return data.results
@@ -57,10 +57,31 @@ export default class DataRepository {
         const { data } = await backendConn.get('court_hearings/', {
             headers : {
                 Authorization : `Bearer ${ jwt_token }`,
-                'Content-Type' : 'aaplication/json'
+                'Content-Type' : 'aplication/json'
             }
         })
         return JSON.parse(data)
+    }
+    // POST REQUESTS
+    // Create new court hearing
+    async NewCourtHearing(jwt_token: string, formData: any) {
+        const { data } = await backendConn.post('new_hearing/', formData, {
+            headers : {
+                Authorization : `Bearer ${ jwt_token }`,
+                'Content-Type' : 'aplication/json'
+            }
+        })
+        return data
+    }
+    // Create new docket
+    async NewDocket(jwt_token: string, formData: any) {
+        const { data } = await backendConn.post('new_docket/', formData, {
+            headers : {
+                Authorization : `Bearer ${ jwt_token }`,
+                'Content-Type' : 'aplication/json'
+            }
+        })
+        return data
     }
     // PUT REQUESTS
     // Update account
@@ -72,9 +93,42 @@ export default class DataRepository {
         })
         return data.results
     }
+    // Update court hearing
+    async UpdateCourtHearing(jwt_token: string, formData: any, hearing_id: number) {
+        const { data } = await backendConn.put(`hearing/update/${ hearing_id }`, formData, {
+            headers : {
+                Authorization : `Bearer ${ jwt_token }`
+            }
+        })
+    }
+    // Update docket
+    async UpdateDocket(jwt_token: string, formData: any, docket_id: number) {
+        const { data } = await backendConn.put(`docket/update/${ docket_id }`, formData, {
+            headers : {
+                Authorization : `Bearer ${ jwt_token }`
+            }
+        })
+    }
     // DELETE REQUESTS
+    // Delete an account
     async DeleteAccount(jwt_token: string, account_id: number) {
         const { data } = await backendConn.delete(`account/delete/${ account_id }`, {
+            headers : {
+                Authorization : `Bearer ${ jwt_token }`
+            }
+        })
+        return data.results
+    }
+    async DeleteCourtHearing(jwt_token: string, hearing_id: number) {
+        const { data } = await backendConn.delete(`hearing/delete/${ hearing_id }`, {
+            headers : {
+                Authorization : `Bearer ${ jwt_token }`
+            }
+        })
+        return data.results
+    }
+    async DeleteDocket(jwt_token: string, docket_id: number) {
+        const { data } = await backendConn.delete(`docket/delete/${ docket_id }`, {
             headers : {
                 Authorization : `Bearer ${ jwt_token }`
             }
