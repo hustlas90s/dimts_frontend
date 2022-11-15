@@ -69,6 +69,14 @@ export const getCourtHearings = createAsyncThunk(
     }
 )
 
+export const deleteAccount = createAsyncThunk(
+    'data/deleteAccount', 
+    async (account_id: number) => {
+        const dataRepo = new DataRepository()
+        return await dataRepo.DeleteAccount(localStorage.jwt_token, account_id)
+    } 
+)
+
 const dataSlice = createSlice({
     name : 'data',
     initialState,
@@ -132,6 +140,16 @@ const dataSlice = createSlice({
             return { ...state, dataLoading : false, courtHearingList : action.payload }
         })
         builder.addCase(getCourtHearings.rejected, (state) => {
+            return { ...state, dataLoading : false }
+        })
+        // Delete Account
+        builder.addCase(deleteAccount.pending, (state) => {
+            return { ...state, dataLoading : true }
+        })
+        builder.addCase(deleteAccount.fulfilled, (state) => {
+            return { ...state, dataLoading : false }
+        })
+        builder.addCase(deleteAccount.rejected, (state) => {
             return { ...state, dataLoading : false }
         })
     }

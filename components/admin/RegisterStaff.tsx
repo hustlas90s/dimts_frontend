@@ -2,6 +2,8 @@ import SubmitModal from "../SubmitModal";
 import MyInputField from "../MyInputField";
 import { useForm } from "react-hook-form";
 import { fieldRules } from "../authHelper";
+import { useAppDispatch } from "../../redux/hooks";
+import { registerFromAdmin } from "../../redux/authSlice";
 
 interface RegisterStaffParams {
 	isShow: boolean;
@@ -15,10 +17,19 @@ const RegisterStaff = ({
 	onCancel,
 }: RegisterStaffParams) => {
 	const { control, handleSubmit } = useForm();
+	const dispatch = useAppDispatch();
 
 	const onSubmit = (formData: any) => {
-		onConfirm();
-		console.log("Staff account data: ", formData);
+		const data = {
+			first_name: formData.staffFirstName,
+			last_name: formData.staffLastName,
+			contact_number: formData.staffMobile,
+			email: formData.staffEmail,
+			username: formData.staffUsername,
+			password: formData.staffPassword,
+			role: "staff",
+		};
+		dispatch(registerFromAdmin(data)).then(() => onConfirm());
 	};
 
 	return (
@@ -50,21 +61,21 @@ const RegisterStaff = ({
 				/>
 				<MyInputField
 					control={control}
-					fieldLabel="Email"
-					fieldType="text"
-					fieldName="staffEmail"
-					fieldRules={fieldRules.requiredUniqueEmailRule}
-					defaultValue=""
-					placeHolder="dummy@gmail.com"
-				/>
-				<MyInputField
-					control={control}
 					fieldLabel="Mobile Number"
 					fieldType="text"
 					fieldName="staffMobile"
 					fieldRules={fieldRules.requiredMobileNumberRule}
 					defaultValue=""
 					placeHolder="09123123123"
+				/>
+				<MyInputField
+					control={control}
+					fieldLabel="Email"
+					fieldType="text"
+					fieldName="staffEmail"
+					fieldRules={fieldRules.requiredUniqueEmailRule}
+					defaultValue=""
+					placeHolder="dummy@gmail.com"
 				/>
 				<MyInputField
 					control={control}

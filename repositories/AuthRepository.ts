@@ -32,39 +32,12 @@ export default class AuthRepository {
     }
     // GET REQUESTS
     // Get Account Details
-    async GetAccountDetails (decoded_token: string, user_id: number) {
+    async GetAccountDetails (jwt_token: string, user_id: number) {
         const res = await backendConn.get(`account/${ user_id }`, {
-            headers : {
-                Authorization : `Bearer ${ decoded_token }`
-            }
-        })
-        return res.data
-    }
-    // Get Staff Accounts
-    async GetStaffAccounts (decoded_token: string) {
-        const res = await backendConn.get('citizen_accounts/', {
-            headers : {
-                Authorization : `Bearer ${ decoded_token }`
-            }
-        })
-        return res.data.results
-    }
-    // Get Citizen Accounts
-    async GetCitizenAccounts(decoded_token: string) {
-        const res = await backendConn.get('citizen_accounts/', {
-            headers : {
-                Authorization : `Bearer ${ decoded_token }`
-            }
-        })
-        return res.data.results
-    }
-    // PUT REQUESTS
-    // Update account
-    async UpdateAccount(jwt_token: string, formData: any, account_id: number) {
-        const res = await backendConn.put(`account/update/${ account_id }`, formData, {
             headers : {
                 Authorization : `Bearer ${ jwt_token }`
             }
         })
+        return res.data
     }
 }

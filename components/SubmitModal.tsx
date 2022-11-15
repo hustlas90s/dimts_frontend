@@ -1,5 +1,7 @@
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
+import { useAppSelector } from "../redux/hooks";
+import { BeatLoader } from "react-spinners";
 
 interface AddModalParams {
 	isShow: boolean;
@@ -18,6 +20,13 @@ const AddModal = ({
 	onCancel,
 	children,
 }: AddModalParams) => {
+	const { authLoading } = useAppSelector((state: any) => state.authState);
+	const [submitLoading, setSubmitLoading] = useState(false);
+
+	useEffect(() => {
+		setSubmitLoading(authLoading);
+	}, [authLoading]);
+
 	return (
 		<Transition
 			appear
@@ -74,13 +83,29 @@ const AddModal = ({
 								</div>
 								{children}
 								<div className="self-end flex gap-x-5 mt-5">
-									<button
-										type="button"
-										className="bg-purple-600 hover:bg-purple-500 focus:outline-none px-5 py-2 text-white font-medium tracking-wider rounded-lg text-sm"
-										onClick={onConfirm}
-									>
-										Submit
-									</button>
+									{!authLoading && (
+										<button
+											type="button"
+											className="bg-purple-600 hover:bg-purple-500 focus:outline-none px-5 py-2 text-white font-medium tracking-wider rounded-lg text-sm"
+											onClick={onConfirm}
+										>
+											Submit
+										</button>
+									)}
+									{authLoading && (
+										<button
+											type="button"
+											className="bg-purple-600 focus:outline-none px-5 py-2 text-white font-medium tracking-wider rounded-lg text-sm cursor-not-allowed flex justify-center items-center"
+											disabled
+										>
+											<BeatLoader
+												loading={authLoading}
+												color="#ffffff"
+												speedMultiplier={1}
+												size={10}
+											/>
+										</button>
+									)}
 									<button
 										type="button"
 										className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-2 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2"

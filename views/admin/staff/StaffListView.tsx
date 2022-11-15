@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { getStaffList } from "../../../redux/dataSlice";
+import { getStaffList, deleteAccount } from "../../../redux/dataSlice";
 import AddNewButton from "../../../components/AddNewButton";
 import MoonLoader from "react-spinners/MoonLoader";
 import StaffListTable from "./StaffListTable";
@@ -17,26 +17,31 @@ const StaffListView = () => {
 	const [showAddModal, setShowAddModal] = useState(false);
 	const [showSuccessModal, setShowSuccessModal] = useState(false);
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
+	const [deleteID, setDeleteID] = useState(0);
 
 	useEffect(() => {
 		dispatch(getStaffList());
 	}, []);
 
-	const onSubmitNewAccount = () => {
+	const onSubmitNewAccount = useCallback(() => {
+		dispatch(getStaffList());
 		setShowAddModal(false);
 		setShowSuccessModal(true);
 		setTimeout(() => {
 			setShowSuccessModal(false);
 		}, 3000);
-	};
+	}, []);
 
 	const onShowDeleteModal = (account_id: number) => {
+		setDeleteID(account_id);
 		setShowDeleteModal(true);
 	};
 
 	const onDeleteAccount = () => {
-		setShowDeleteModal(false);
-		console.log("Nag delete ko!");
+		dispatch(deleteAccount(deleteID)).then(() => {
+			dispatch(getStaffList());
+			setShowDeleteModal(false);
+		});
 	};
 
 	return (

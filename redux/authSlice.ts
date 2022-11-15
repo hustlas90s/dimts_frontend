@@ -3,8 +3,8 @@ import AuthRepository from '../repositories/AuthRepository'
 import jwt_decode from 'jwt-decode'
 
 interface AuthShape {
-    currentStep: number;
     authLoading: boolean;
+    currentStep: number;
     loginUsername: string;
     loginPassword: string;
     registerFirstName: string;
@@ -21,8 +21,8 @@ interface AuthShape {
 }
 
 const initialState: AuthShape = {
-    currentStep : 0,
     authLoading : false,
+    currentStep : 0,
     loginUsername : '',
     loginPassword : '',
     registerFirstName : '',
@@ -70,6 +70,14 @@ export const registerAccount = createAsyncThunk(
             password : state.authState.registerPassword,
             role : account_role
         }
+        return await authRepo.RegisterAccount(formData)
+    }
+)
+
+export const registerFromAdmin = createAsyncThunk(
+    'auth/registerStaffAccount',
+    async (formData: any) => {
+        const authRepo = new AuthRepository()
         return await authRepo.RegisterAccount(formData)
     }
 )
