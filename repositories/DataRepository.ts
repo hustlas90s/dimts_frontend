@@ -67,8 +67,7 @@ export default class DataRepository {
     async NewCourtHearing(jwt_token: string, formData: any) {
         const { data } = await backendConn.post('new_hearing/', formData, {
             headers : {
-                Authorization : `Bearer ${ jwt_token }`,
-                'Content-Type' : 'aplication/json'
+                Authorization : `Bearer ${ jwt_token }`
             }
         })
         return data
@@ -77,8 +76,7 @@ export default class DataRepository {
     async NewDocket(jwt_token: string, formData: any) {
         const { data } = await backendConn.post('new_docket/', formData, {
             headers : {
-                Authorization : `Bearer ${ jwt_token }`,
-                'Content-Type' : 'aplication/json'
+                Authorization : `Bearer ${ jwt_token }`
             }
         })
         return data

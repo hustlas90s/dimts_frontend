@@ -1,47 +1,115 @@
-import { useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../../../redux/hooks'
-import { getCourtHearings } from '../../../redux/dataSlice'
-import AddNewButton from '../../../components/AddNewButton';
+import { useEffect, useCallback } from "react";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import {
+	deleteHearing,
+	getCourtHearings,
+	getDocketList,
+} from "../../../redux/dataSlice";
+import AddNewButton from "../../../components/AddNewButton";
 import MoonLoader from "react-spinners/MoonLoader";
-import CourtHearingsTable from './CourtHearingsTable';
-import AdminBreadCrumbs from '../../../components/admin/AdminBreadCrumbs';
+import CourtHearingsTable from "./CourtHearingsTable";
+import AdminBreadCrumbs from "../../../components/admin/AdminBreadCrumbs";
+import AddHearing from "../../../components/admin/AddHearing";
+import SuccessModal from "../../../components/SuccessModal";
+import WarningModal from "../../../components/WarningModal";
+import useCrudModals from "../../../hooks/useCrudModals";
+import useModalIDs from "../../../hooks/useModalIDs";
 
 const CourtHearingsView = () => {
+	const dispatch = useAppDispatch();
+	const { dataLoading, courtHearingList, docketList } = useAppSelector(
+		(state: any) => state.dataState
+	);
+	const {
+		showAddModal,
+		setShowAddModal,
+		showSuccessModal,
+		setShowSuccessModal,
+		showDeleteModal,
+		setShowDeleteModal,
+	} = useCrudModals();
+	const { deleteID, setDeleteID } = useModalIDs();
 
-    const dispatch = useAppDispatch()
-    const { dataLoading, courtHearingList } = useAppSelector((state: any) => state.dataState)
+	useEffect(() => {
+		dispatch(getDocketList());
+		dispatch(getCourtHearings());
+	}, []);
 
-    useEffect(() => {
-        dispatch(getCourtHearings())
-    }, [])
+	const onSubmitNewHearing = useCallback(() => {
+		dispatch(getCourtHearings());
+		setShowAddModal(false);
+		setShowSuccessModal(true);
+		setTimeout(() => {
+			setShowSuccessModal(false);
+		}, 3000);
+	}, []);
 
-    return (
-        <div className="flex flex-col gap-y-5 font-mont text-gray-700">
-            <AdminBreadCrumbs activeText="Court Hearings" />
-            <div className="w-full bg-white font-mont flex flex-col gap-y-5 text-gray-700 p-5 shadow border-b border-gray-200 rounded-lg">
-                {/*  */}
-                <div className="w-full flex justify-between">
-                    <h4 className="text-xl font-black tracking-wider">Court Hearings</h4>
-                    <AddNewButton btnText="New Hearing" />
-                </div>
-                {/*  */}
-                <div className="w-full border-b border-gray-200 -mt-3"></div>
-                {/*  */}
-                {
-                    dataLoading && 
-                    <div className="w-full flex justify-center items-center">
-                        <MoonLoader 
-                            loading={ dataLoading }
-                            color="#9333ea"
-                            speedMultiplier={1}
-                            size={70}
-                        />
-                    </div>
-                }
-                { !dataLoading && <CourtHearingsTable courtHearings={ courtHearingList } /> }
-            </div>
-        </div>
-    )
-}
+	const onShowDeleteModal = (hearing_id: number) => {
+		setDeleteID(hearing_id);
+		setShowDeleteModal(true);
+	};
 
-export default CourtHearingsView
+	const onDeleteHearing = () => {
+		dispatch(deleteHearing(deleteID)).then(() => {
+			dispatch(getCourtHearings());
+			setShowDeleteModal(false);
+		});
+	};
+
+	return (
+		<div className="flex flex-col gap-y-5 font-mont text-gray-700">
+			<AddHearing
+				isShow={showAddModal}
+				onConfirm={() => onSubmitNewHearing()}
+				onCancel={() => setShowAddModal(false)}
+				selectOptions={docketList}
+			/>
+			<SuccessModal
+				isShow={showSuccessModal}
+				successTitle="Court Hearing"
+				successText="New court hearing added successfully"
+				onConfirm={() => setShowSuccessModal(false)}
+			/>
+			<WarningModal
+				isShow={showDeleteModal}
+				warningText="hearing"
+				onConfirm={() => onDeleteHearing()}
+				onCancel={() => setShowDeleteModal(false)}
+			/>
+			<AdminBreadCrumbs activeText="Court Hearings" />
+			<div className="w-full bg-white font-mont flex flex-col gap-y-5 text-gray-700 p-5 shadow border-b border-gray-200 rounded-lg">
+				{/*  */}
+				<div className="w-full flex justify-between">
+					<h4 className="text-xl font-black tracking-wider">Court Hearings</h4>
+					<AddNewButton
+						btnText="New Hearing"
+						onClickAdd={() => setShowAddModal(true)}
+					/>
+				</div>
+				{/*  */}
+				<div className="w-full border-b border-gray-200 -mt-3"></div>
+				{/*  */}
+				{dataLoading && (
+					<div className="w-full flex justify-center items-center">
+						<MoonLoader
+							loading={dataLoading}
+							color="#9333ea"
+							speedMultiplier={1}
+							size={70}
+						/>
+					</div>
+				)}
+				{!dataLoading && (
+					<CourtHearingsTable
+						courtHearings={courtHearingList}
+						onShowWarning={(hearing_id: number) =>
+							onShowDeleteModal(hearing_id)
+						}
+					/>
+				)}
+			</div>
+		</div>
+	);
+};
+
+export default CourtHearingsView;

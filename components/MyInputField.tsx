@@ -33,7 +33,7 @@ const MyInputField = ({
 					<input
 						type={fieldType}
 						id={fieldName}
-						className="bg-gray-100 px-3 py-1 w-72 focus:outline-none border border-gray-200 focus:border-purple-400 rounded-lg"
+						className="bg-gray-100 px-3 py-1 w-72 focus:outline-none border border-gray-200 focus:border-purple-400 rounded-lg appearance-none"
 						placeholder={placeHolder}
 						onChange={onChange}
 						defaultValue={defaultValue ?? ""}

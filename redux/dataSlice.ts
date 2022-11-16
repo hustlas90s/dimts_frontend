@@ -21,6 +21,15 @@ const initialState: DataShape = {
     courtHearingList : []
 }
 
+// ACCOUNT THUNKS
+export const deleteAccount = createAsyncThunk(
+    'data/deleteAccount', 
+    async (account_id: number) => {
+        const dataRepo = new DataRepository()
+        return await dataRepo.DeleteAccount(localStorage.jwt_token, account_id)
+    } 
+)
+
 export const getStaffList = createAsyncThunk(
     'data/getStaffList',
     async () => {
@@ -37,6 +46,39 @@ export const getCitizenList = createAsyncThunk(
     }
 )
 
+// HEARING THUNKS 
+export const getCourtHearings = createAsyncThunk(
+    'data/getCourtHearings',
+    async () => {
+        const dataRepo = new DataRepository()
+        return await dataRepo.GetCourtHearings(localStorage.jwt_token)
+    }
+)
+
+export const createNewHearing = createAsyncThunk(
+    'data/createNewHearing',
+    async (formData: any) => {
+        const dataRepo = new DataRepository()
+        await dataRepo.NewCourtHearing(localStorage.jwt_token, formData)
+    }
+)
+
+export const updateHearing = createAsyncThunk(
+    'data/updateHearing',
+    async (args) => {
+        const dataRepo = new DataRepository()
+    }
+)
+
+export const deleteHearing = createAsyncThunk(
+    'data/deleteHearing',
+    async (hearing_id: number) => {
+        const dataRepo = new DataRepository()
+        await dataRepo.DeleteCourtHearing(localStorage.jwt_token, hearing_id)
+    }
+)
+
+// DOCKET THUNKS
 export const getDocketList = createAsyncThunk(
     'data/getDocketList',
     async () => {
@@ -61,20 +103,26 @@ export const getCivilCases = createAsyncThunk(
     }
 )
 
-export const getCourtHearings = createAsyncThunk(
-    'data/getCourtHearings',
-    async () => {
+export const createNewDocket = createAsyncThunk(
+    'data/createNewDocket',
+    async (args) => {
         const dataRepo = new DataRepository()
-        return await dataRepo.GetCourtHearings(localStorage.jwt_token)
     }
 )
 
-export const deleteAccount = createAsyncThunk(
-    'data/deleteAccount', 
-    async (account_id: number) => {
+export const updateDocket = createAsyncThunk(
+    'data/updateDocket',
+    async (args) => {
         const dataRepo = new DataRepository()
-        return await dataRepo.DeleteAccount(localStorage.jwt_token, account_id)
-    } 
+    }
+)
+
+export const deleteDocket = createAsyncThunk(
+    'data/deleteDocket',
+    async (docket_id: number) => {
+        const dataRepo = new DataRepository()
+        await dataRepo.DeleteDocket(localStorage.jwt_token, docket_id)
+    }
 )
 
 const dataSlice = createSlice({
