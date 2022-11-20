@@ -98,6 +98,7 @@ export default class DataRepository {
                 Authorization : `Bearer ${ jwt_token }`
             }
         })
+        return data.results
     }
     // Update docket
     async UpdateDocket(jwt_token: string, formData: any, docket_id: number) {
@@ -106,6 +107,7 @@ export default class DataRepository {
                 Authorization : `Bearer ${ jwt_token }`
             }
         })
+        return data.results
     }
     // DELETE REQUESTS
     // Delete an account

@@ -65,8 +65,9 @@ export const createNewHearing = createAsyncThunk(
 
 export const updateHearing = createAsyncThunk(
     'data/updateHearing',
-    async (args) => {
+    async (args: { formData: any, hearing_id: number }) => {
         const dataRepo = new DataRepository()
+        await dataRepo.UpdateCourtHearing(localStorage.jwt_token, args.formData, args.hearing_id)
     }
 )
 
@@ -130,6 +131,7 @@ const dataSlice = createSlice({
     initialState,
     reducers : {},
     extraReducers : builder => {
+        // ACCOUNTS
         // Get Staff Accounts
         builder.addCase(getStaffList.pending, (state) => {
             return { ...state, dataLoading : true }
@@ -150,6 +152,17 @@ const dataSlice = createSlice({
         builder.addCase(getCitizenList.rejected, (state) => {
             return { ...state, dataLoading : false }
         })
+        // Delete Account
+        builder.addCase(deleteAccount.pending, (state) => {
+            return { ...state, dataLoading : true }
+        })
+        builder.addCase(deleteAccount.fulfilled, (state) => {
+            return { ...state, dataLoading : false }
+        })
+        builder.addCase(deleteAccount.rejected, (state) => {
+            return { ...state, dataLoading : false }
+        })
+        // DOCKET
         // Get Docket List
         builder.addCase(getDocketList.pending, (state) => {
             return { ...state, dataLoading : true }
@@ -180,6 +193,7 @@ const dataSlice = createSlice({
         builder.addCase(getCivilCases.rejected, (state) => {
             return { ...state, dataLoading : false }
         })
+        // COURT HEARINGS
         // Get Court Hearings
         builder.addCase(getCourtHearings.pending, (state) => {
             return { ...state, dataLoading : true }
@@ -190,14 +204,14 @@ const dataSlice = createSlice({
         builder.addCase(getCourtHearings.rejected, (state) => {
             return { ...state, dataLoading : false }
         })
-        // Delete Account
-        builder.addCase(deleteAccount.pending, (state) => {
+        // Delete Hearing
+        builder.addCase(deleteHearing.pending, (state) => {
             return { ...state, dataLoading : true }
         })
-        builder.addCase(deleteAccount.fulfilled, (state) => {
+        builder.addCase(deleteHearing.fulfilled, (state) => {
             return { ...state, dataLoading : false }
         })
-        builder.addCase(deleteAccount.rejected, (state) => {
+        builder.addCase(deleteHearing.rejected, (state) => {
             return { ...state, dataLoading : false }
         })
     }

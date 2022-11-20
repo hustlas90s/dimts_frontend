@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Controller } from "react-hook-form";
 
 interface MyInputFieldProps {
@@ -8,6 +9,8 @@ interface MyInputFieldProps {
 	fieldRules: any;
 	defaultValue?: string;
 	placeHolder?: string;
+	readOnly?: boolean;
+	setFieldValue?: any;
 }
 
 const MyInputField = ({
@@ -18,7 +21,13 @@ const MyInputField = ({
 	fieldRules,
 	defaultValue,
 	placeHolder,
+	readOnly,
+	setFieldValue,
 }: MyInputFieldProps) => {
+	useEffect(() => {
+		setFieldValue ? setFieldValue(fieldName, defaultValue) : null;
+	}, []);
+
 	return (
 		<Controller
 			control={control}
@@ -37,6 +46,7 @@ const MyInputField = ({
 						placeholder={placeHolder}
 						onChange={onChange}
 						defaultValue={defaultValue ?? ""}
+						readOnly={readOnly}
 					/>
 					{error && (
 						<p className="text-xs text-rose-500">

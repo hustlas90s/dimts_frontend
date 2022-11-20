@@ -12,6 +12,7 @@ import AdminBreadCrumbs from "../../../components/admin/AdminBreadCrumbs";
 import AddHearing from "../../../components/admin/AddHearing";
 import SuccessModal from "../../../components/SuccessModal";
 import WarningModal from "../../../components/WarningModal";
+import UpdateHearing from "../../../components/admin/UpdateHearing";
 import useCrudModals from "../../../hooks/useCrudModals";
 import useModalIDs from "../../../hooks/useModalIDs";
 
@@ -20,15 +21,25 @@ const CourtHearingsView = () => {
 	const { dataLoading, courtHearingList, docketList } = useAppSelector(
 		(state: any) => state.dataState
 	);
+
 	const {
 		showAddModal,
 		setShowAddModal,
+		showEditModal,
+		setShowEditModal,
 		showSuccessModal,
 		setShowSuccessModal,
 		showDeleteModal,
 		setShowDeleteModal,
 	} = useCrudModals();
-	const { deleteID, setDeleteID } = useModalIDs();
+	const {
+		selectedID,
+		setSelectedID,
+		selectedObject,
+		setSelectedObject,
+		successText,
+		setSuccessText,
+	} = useModalIDs();
 
 	useEffect(() => {
 		dispatch(getDocketList());
@@ -38,19 +49,46 @@ const CourtHearingsView = () => {
 	const onSubmitNewHearing = useCallback(() => {
 		dispatch(getCourtHearings());
 		setShowAddModal(false);
+		setSuccessText("Addition of new court hearing is successful");
 		setShowSuccessModal(true);
 		setTimeout(() => {
 			setShowSuccessModal(false);
 		}, 3000);
 	}, []);
 
+	const onShowUpdateModal = (hearing_id: number) => {
+		setSelectedID(hearing_id);
+		const hearing = courtHearingList.find(
+			(hearing: any) => hearing.id === hearing_id
+		);
+		setSelectedObject({
+			hearingID: hearing.id,
+			hearingSchedule: hearing.hearing_schedule,
+			hearingStartTime: hearing.start_time,
+			hearingEndTime: hearing.end_time,
+			hearingCaseNo: hearing.case__case_no,
+		});
+		setShowEditModal(true);
+	};
+
+	const onUpdateHearing = () => {
+		dispatch(getCourtHearings());
+		setSuccessText("Updating of court hearing schedule is successful");
+		setShowSuccessModal(true);
+		setShowEditModal(false);
+		setTimeout(() => {
+			setShowSuccessModal(false);
+		}, 3000);
+	};
+
 	const onShowDeleteModal = (hearing_id: number) => {
-		setDeleteID(hearing_id);
+		setSelectedID(hearing_id);
 		setShowDeleteModal(true);
 	};
 
 	const onDeleteHearing = () => {
-		dispatch(deleteHearing(deleteID)).then(() => {
+		setSuccessText("Deletion of court hearing is successful");
+		dispatch(deleteHearing(selectedID)).then(() => {
 			dispatch(getCourtHearings());
 			setShowDeleteModal(false);
 		});
@@ -64,10 +102,16 @@ const CourtHearingsView = () => {
 				onCancel={() => setShowAddModal(false)}
 				selectOptions={docketList}
 			/>
+			<UpdateHearing
+				isShow={showEditModal}
+				onConfirm={() => onUpdateHearing()}
+				onCancel={() => setShowEditModal(false)}
+				selectedHearing={selectedObject}
+			/>
 			<SuccessModal
 				isShow={showSuccessModal}
 				successTitle="Court Hearing"
-				successText="New court hearing added successfully"
+				successText={successText}
 				onConfirm={() => setShowSuccessModal(false)}
 			/>
 			<WarningModal
@@ -105,6 +149,7 @@ const CourtHearingsView = () => {
 						onShowWarning={(hearing_id: number) =>
 							onShowDeleteModal(hearing_id)
 						}
+						onShowEdit={(hearing_id: number) => onShowUpdateModal(hearing_id)}
 					/>
 				)}
 			</div>

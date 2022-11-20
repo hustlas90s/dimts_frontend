@@ -24,7 +24,7 @@ const CitizenListView = () => {
 		showDeleteModal,
 		setShowDeleteModal,
 	} = useCrudModals();
-	const { deleteID, setDeleteID } = useModalIDs();
+	const { selectedID, setSelectedID } = useModalIDs();
 
 	useEffect(() => {
 		dispatch(getCitizenList());
@@ -40,12 +40,12 @@ const CitizenListView = () => {
 	}, []);
 
 	const onShowDeleteModal = (account_id: number) => {
-		setDeleteID(account_id);
+		setSelectedID(account_id);
 		setShowDeleteModal(true);
 	};
 
 	const onDeleteAccount = () => {
-		dispatch(deleteAccount(deleteID)).then(() => {
+		dispatch(deleteAccount(selectedID)).then(() => {
 			dispatch(getCitizenList());
 			setShowDeleteModal(false);
 		});
