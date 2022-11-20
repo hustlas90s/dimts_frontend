@@ -1,7 +1,5 @@
-import React from 'react'
+import BuCorView from "../../views/admin/custodies/BuCorView";
 
 export default function bucor_custody() {
-    return (
-        <div>bucor_custody</div>
-    )
+	return <BuCorView />;
 }

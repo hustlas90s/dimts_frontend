@@ -9,6 +9,9 @@ interface DataShape {
     criminalCaseList: any;
     civilCaseList: any;
     courtHearingList: any;
+    pnpRecords: any;
+    bjmpRecords: any;
+    bucorRecords: any;
 }
 
 const initialState: DataShape = {
@@ -18,7 +21,10 @@ const initialState: DataShape = {
     docketList : [],
     criminalCaseList : [],
     civilCaseList : [],
-    courtHearingList : []
+    courtHearingList : [],
+    pnpRecords : [],
+    bjmpRecords : [],
+    bucorRecords : [],
 }
 
 // ACCOUNT THUNKS

@@ -353,11 +353,11 @@ const AdminSideNav = () => {
 			</div>
 			<div
 				className={`w-full flex items-center gap-x-5 px-5 py-3 ${
-					router.pathname === "/admin/mailed_documents"
+					router.pathname === "/admin/emailed_documents"
 						? "bg-purple-50"
 						: "bg-transparent"
 				} rounded-lg hover:cursor-pointer`}
-				onClick={() => isItemClicked("/admin/mailed_documents")}
+				onClick={() => isItemClicked("/admin/emailed_documents")}
 			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
@@ -366,7 +366,7 @@ const AdminSideNav = () => {
 					strokeWidth={1.5}
 					stroke="currentColor"
 					className={`w-5 h-5 ${
-						router.pathname === "/admin/mailed_documents"
+						router.pathname === "/admin/emailed_documents"
 							? "text-purple-600"
 							: "text-gray-700"
 					}`}
@@ -379,12 +379,12 @@ const AdminSideNav = () => {
 				</svg>
 				<p
 					className={`font-medium ${
-						router.pathname === "/admin/mailed_documents"
+						router.pathname === "/admin/emailed_documents"
 							? "text-purple-600"
 							: "text-gray-700"
 					} text-sm`}
 				>
-					Mails
+					Emails
 				</p>
 			</div>
 			{/* CUSTODIES */}
