@@ -70,11 +70,11 @@ const StaffListView = () => {
 				onConfirm={() => onDeleteAccount()}
 				onCancel={() => setShowDeleteModal(false)}
 			/>
-			<AdminBreadCrumbs activeText="Staff List" />
+			<AdminBreadCrumbs activeText="Staff Accounts" />
 			<div className="w-full bg-white font-mont flex flex-col gap-y-5 p-5 shadow border-b border-gray-200 rounded-lg">
 				{/*  */}
 				<div className="w-full flex justify-between">
-					<h4 className="text-xl font-black tracking-wider">Staff List</h4>
+					<h4 className="text-xl font-black tracking-wider">Staff Accounts</h4>
 					<AddNewButton
 						btnText="New Staff"
 						onClickAdd={() => setShowAddModal(true)}

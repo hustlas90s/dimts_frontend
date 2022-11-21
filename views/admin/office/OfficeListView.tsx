@@ -1,19 +1,19 @@
-import { useEffect, useCallback } from "react";
+import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { deleteAccount, getCitizenList } from "../../../redux/dataSlice";
+import { getDocketList, getProvinces } from "../../../redux/dataSlice";
 import AddNewButton from "../../../components/AddNewButton";
 import MoonLoader from "react-spinners/MoonLoader";
-import CitizenListTable from "./CitizenListTable";
+import OfficeListTable from "./OfficeListTable";
 import AdminBreadCrumbs from "../../../components/admin/AdminBreadCrumbs";
-import RegisterCitizen from "../../../components/admin/RegisterCitizen";
+import RegisterOffice from "../../../components/admin/RegisterOffice";
 import SuccessModal from "../../../components/SuccessModal";
 import WarningModal from "../../../components/WarningModal";
 import useCrudModals from "../../../hooks/useCrudModals";
 import useModalIDs from "../../../hooks/useModalIDs";
 
-const CitizenListView = () => {
+const OfficeListView = () => {
 	const dispatch = useAppDispatch();
-	const { dataLoading, citizenList } = useAppSelector(
+	const { dataLoading, provinceList } = useAppSelector(
 		(state: any) => state.dataState
 	);
 	const {
@@ -27,58 +27,26 @@ const CitizenListView = () => {
 	const { selectedID, setSelectedID } = useModalIDs();
 
 	useEffect(() => {
-		dispatch(getCitizenList());
+		dispatch(getProvinces());
 	}, []);
-
-	const onSubmitNewAccount = useCallback(() => {
-		dispatch(getCitizenList());
-		setShowAddModal(false);
-		setShowSuccessModal(true);
-		setTimeout(() => {
-			setShowSuccessModal(false);
-		}, 3000);
-	}, []);
-
-	const onShowDeleteModal = (account_id: number) => {
-		setSelectedID(account_id);
-		setShowDeleteModal(true);
-	};
-
-	const onDeleteAccount = () => {
-		dispatch(deleteAccount(selectedID)).then(() => {
-			dispatch(getCitizenList());
-			setShowDeleteModal(false);
-		});
-	};
 
 	return (
-		<div className="relative flex flex-col gap-y-5 font-mont text-gray-700">
-			<RegisterCitizen
+		<div className="flex flex-col gap-y-5 font-mont text-gray-700">
+			<RegisterOffice
 				isShow={showAddModal}
-				onConfirm={() => onSubmitNewAccount()}
+				onConfirm={() => setShowAddModal(false)}
 				onCancel={() => setShowAddModal(false)}
+				selectOptions={provinceList}
 			/>
-			<SuccessModal
-				isShow={showSuccessModal}
-				successTitle="Citizen Account"
-				successText="New citizen account registered successfully"
-				onConfirm={() => setShowSuccessModal(false)}
-			/>
-			<WarningModal
-				isShow={showDeleteModal}
-				warningText="citizen account"
-				onConfirm={() => onDeleteAccount()}
-				onCancel={() => setShowDeleteModal(false)}
-			/>
-			<AdminBreadCrumbs activeText="Citizen Accounts" />
+			<AdminBreadCrumbs activeText="Offices Accounts" />
 			<div className="w-full bg-white font-mont flex flex-col gap-y-5 text-gray-700 p-5 shadow border-b border-gray-200 rounded-lg">
 				{/*  */}
 				<div className="w-full flex justify-between">
 					<h4 className="text-xl font-black tracking-wider">
-						Citizen Accounts
+						Offices Accounts
 					</h4>
 					<AddNewButton
-						btnText="New Citizen"
+						btnText="New Account"
 						onClickAdd={() => setShowAddModal(true)}
 					/>
 				</div>
@@ -96,14 +64,11 @@ const CitizenListView = () => {
 					</div>
 				)}
 				{!dataLoading && (
-					<CitizenListTable
-						citizenList={citizenList}
-						onShowWarning={(e: number) => onShowDeleteModal(e)}
-					/>
+					<OfficeListTable officeList={[{ first_name: "Tagum City" }]} />
 				)}
 			</div>
 		</div>
 	);
 };
 
-export default CitizenListView;
+export default OfficeListView;

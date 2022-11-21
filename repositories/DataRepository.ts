@@ -1,4 +1,4 @@
-import { backendConn } from "./connection";
+import { backendConn, placesConn } from "./connection";
 
 export default class DataRepository {
     // GET REQUESTS
@@ -61,6 +61,14 @@ export default class DataRepository {
             }
         })
         return JSON.parse(data)
+    }
+    async GetProvinces() {
+        const { data } = await placesConn.get('provinces/112300000/cities-municipalities/', {
+            headers : { 
+                'Content-Type' : 'aplication/json'
+            }
+        })
+        return data
     }
     // POST REQUESTS
     // Create new court hearing

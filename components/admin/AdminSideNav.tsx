@@ -183,7 +183,7 @@ const AdminSideNav = () => {
 										: "text-gray-700"
 								} text-xs`}
 							>
-								Staff List
+								Staff Accounts
 							</p>
 						</div>
 						{/*  */}
@@ -198,7 +198,22 @@ const AdminSideNav = () => {
 										: "text-gray-700"
 								} text-xs`}
 							>
-								Citizen List
+								Citizen Accounts
+							</p>
+						</div>
+						{/*  */}
+						<div
+							className={`w-full pl-16 py-3 bg-transparent rounded-lg hover:cursor-pointer`}
+							onClick={() => isItemClicked("/admin/office_accounts")}
+						>
+							<p
+								className={`font-medium ${
+									router.pathname === "/admin/office_accounts"
+										? "text-purple-600"
+										: "text-gray-700"
+								} text-xs`}
+							>
+								Office Accounts
 							</p>
 						</div>
 					</div>

@@ -37,7 +37,9 @@ const MySelectField = ({
 						<option
 							disabled
 							value=""
-						></option>
+						>
+							Select Option
+						</option>
 						{myOptions.map((option: any) => {
 							return <option value={option.value}>{option.label}</option>;
 						})}

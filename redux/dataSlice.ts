@@ -5,6 +5,7 @@ interface DataShape {
     dataLoading: boolean;
     staffList: any;
     citizenList: any;
+    provinceList: any;
     docketList: any;
     criminalCaseList: any;
     civilCaseList: any;
@@ -18,6 +19,7 @@ const initialState: DataShape = {
     dataLoading : false,
     staffList : [],
     citizenList : [],
+    provinceList : [],
     docketList : [],
     criminalCaseList : [],
     civilCaseList : [],
@@ -49,6 +51,19 @@ export const getCitizenList = createAsyncThunk(
     async () => {
         const dataRepo = new DataRepository()
         return await dataRepo.GetCitizenList(localStorage.jwt_token)
+    }
+)
+
+// PLACES THUNKS
+export const getProvinces = createAsyncThunk(
+    'data/getProvinces',
+    async () => {
+        const dataRepo = new DataRepository()
+        const provinces = await dataRepo.GetProvinces()
+        const formattedProvinces = provinces.map((province: any) => {
+            return { label : province.name, value : province.name }
+        })
+        return formattedProvinces
     }
 )
 
@@ -156,6 +171,17 @@ const dataSlice = createSlice({
             return { ...state, dataLoading : false, citizenList : action.payload }
         })
         builder.addCase(getCitizenList.rejected, (state) => {
+            return { ...state, dataLoading : false }
+        })
+        // PLACES
+        // Get Provinces
+        builder.addCase(getProvinces.pending, (state) => {
+            return { ...state, dataLoading : true }
+        })
+        builder.addCase(getProvinces.fulfilled, (state, action) => {
+            return { ...state, dataLoading : false, provinceList : action.payload }
+        })
+        builder.addCase(getProvinces.rejected, (state) => {
             return { ...state, dataLoading : false }
         })
         // Delete Account
