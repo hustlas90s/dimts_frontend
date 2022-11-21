@@ -1,4 +1,4 @@
-import React from "react";
+import moment from "moment";
 
 const PNPTable = ({ pnpRecords }: any) => {
 	return (
@@ -24,7 +24,7 @@ const PNPTable = ({ pnpRecords }: any) => {
 									{record.crime}
 								</td>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
-									{record.date_arrived}
+									{moment(record.date_arrived).format("LL")}
 								</td>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
 									{record.assigned_personnel}

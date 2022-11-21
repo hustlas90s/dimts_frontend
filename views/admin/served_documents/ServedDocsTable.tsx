@@ -1,37 +1,37 @@
-import moment from "moment";
+import React from "react";
 
-const BJMPTable = ({ bjmpRecords }: any) => {
+const ServedDocsTable = ({ servedDocs }: any) => {
 	return (
 		<div className="overflow-x-auto">
 			<table className="min-w-max w-full table-auto">
 				<thead>
 					<tr className="bg-gray-100 text-gray-600 text-sm leading-normal">
-						<th className="py-3 px-6 text-left">Name</th>
-						<th className="py-3 px-6 text-left">Crime/Offense</th>
-						<th className="py-3 px-6 text-left">Date Arrived</th>
-						<th className="py-3 px-6 text-left">Assigned Personnel</th>
+						<th className="py-3 px-6 text-left">Office</th>
+						<th className="py-3 px-6 text-left">Barcode No.</th>
+						<th className="py-3 px-6 text-left">Case No.</th>
+						<th className="py-3 px-6 text-left">Date Submitted</th>
 						<th className="py-3 px-6 text-center">Actions</th>
 					</tr>
 				</thead>
 				<tbody className="text-gray-600 text-sm">
-					{bjmpRecords.map((record: any) => {
+					{servedDocs.map((doc: any) => {
 						return (
 							<tr className="border-b border-gray-200 hover:bg-gray-50">
 								<td className="py-3 px-6 text-left whitespace-nowrap">
-									{record.name}
+									{doc.office}
 								</td>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
-									{record.crime}
+									{doc.barcode_no}
 								</td>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
-									{moment(record.date_arrived).format("LL")}
+									{doc.case_no}
 								</td>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
-									{record.assigned_personnel}
+									{doc.date_submitted}
 								</td>
 								<td className="py-3 px-6 text-center">
 									<div className="flex items-center justify-center gap-x-5">
-										<div className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110 cursor-pointer">
+										<div className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110">
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
 												fill="none"
@@ -53,7 +53,7 @@ const BJMPTable = ({ bjmpRecords }: any) => {
 												/>
 											</svg>
 										</div>
-										<div className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110 cursor-pointer">
+										<div className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110">
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
 												fill="none"
@@ -69,7 +69,7 @@ const BJMPTable = ({ bjmpRecords }: any) => {
 												/>
 											</svg>
 										</div>
-										<div className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110 cursor-pointer">
+										<div className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110">
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
 												fill="none"
@@ -96,4 +96,4 @@ const BJMPTable = ({ bjmpRecords }: any) => {
 	);
 };
 
-export default BJMPTable;
+export default ServedDocsTable;
