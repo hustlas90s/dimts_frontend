@@ -5,6 +5,7 @@ interface DataShape {
     dataLoading: boolean;
     staffList: any;
     citizenList: any;
+    officesList: any;
     provinceList: any;
     docketList: any;
     criminalCaseList: any;
@@ -19,6 +20,7 @@ const initialState: DataShape = {
     dataLoading : false,
     staffList : [],
     citizenList : [],
+    officesList : [],
     provinceList : [],
     docketList : [],
     criminalCaseList : [],
@@ -51,6 +53,14 @@ export const getCitizenList = createAsyncThunk(
     async () => {
         const dataRepo = new DataRepository()
         return await dataRepo.GetCitizenList(localStorage.jwt_token)
+    }
+)
+
+export const getOfficesList = createAsyncThunk(
+    'data/getOfficesList',
+    async () => {
+        const dataRepo = new DataRepository()
+        return await dataRepo.GetOfficesList(localStorage.jwt_token)
     }
 )
 
@@ -171,6 +181,16 @@ const dataSlice = createSlice({
             return { ...state, dataLoading : false, citizenList : action.payload }
         })
         builder.addCase(getCitizenList.rejected, (state) => {
+            return { ...state, dataLoading : false }
+        })
+        // Get Offices Accounts
+        builder.addCase(getOfficesList.pending, (state) => {
+            return { ...state, dataLoading : true }
+        })
+        builder.addCase(getOfficesList.fulfilled, (state, action) => {
+            return { ...state, dataLoading : false, officesList : action.payload }
+        })
+        builder.addCase(getOfficesList.rejected, (state) => {
             return { ...state, dataLoading : false }
         })
         // PLACES

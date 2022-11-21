@@ -16,7 +16,10 @@ const OfficeListTable = ({ officeList }: any) => {
 				<tbody className="text-gray-600 text-sm">
 					{officeList.map((office: any) => {
 						return (
-							<tr className="border-b border-gray-200 hover:bg-gray-50">
+							<tr
+								key={office.email}
+								className="border-b border-gray-200 hover:bg-gray-50"
+							>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
 									Davao del Norte
 								</td>

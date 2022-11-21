@@ -16,7 +16,10 @@ const CitizenListTable = ({ citizenList, onShowWarning }: any) => {
 				<tbody className="text-gray-600 text-sm">
 					{citizenList.map((citizen: any) => {
 						return (
-							<tr className="border-b border-gray-200 hover:bg-gray-50">
+							<tr
+								key={citizen.id}
+								className="border-b border-gray-200 hover:bg-gray-50"
+							>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
 									{citizen.first_name}
 								</td>

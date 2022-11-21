@@ -1,6 +1,10 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { getDocketList, getProvinces } from "../../../redux/dataSlice";
+import {
+	deleteAccount,
+	getOfficesList,
+	getProvinces,
+} from "../../../redux/dataSlice";
 import AddNewButton from "../../../components/AddNewButton";
 import MoonLoader from "react-spinners/MoonLoader";
 import OfficeListTable from "./OfficeListTable";
@@ -13,7 +17,7 @@ import useModalIDs from "../../../hooks/useModalIDs";
 
 const OfficeListView = () => {
 	const dispatch = useAppDispatch();
-	const { dataLoading, provinceList } = useAppSelector(
+	const { dataLoading, provinceList, officesList } = useAppSelector(
 		(state: any) => state.dataState
 	);
 	const {
@@ -27,16 +31,50 @@ const OfficeListView = () => {
 	const { selectedID, setSelectedID } = useModalIDs();
 
 	useEffect(() => {
+		dispatch(getOfficesList());
 		dispatch(getProvinces());
 	}, []);
+
+	const onSubmitNewAccount = useCallback(() => {
+		dispatch(getOfficesList());
+		setShowAddModal(false);
+		setShowSuccessModal(true);
+		setTimeout(() => {
+			setShowSuccessModal(false);
+		}, 3000);
+	}, []);
+
+	const onShowDeleteModal = (account_id: number) => {
+		setSelectedID(account_id);
+		setShowDeleteModal(true);
+	};
+
+	const onDeleteAccount = () => {
+		dispatch(deleteAccount(selectedID)).then(() => {
+			dispatch(getOfficesList());
+			setShowDeleteModal(false);
+		});
+	};
 
 	return (
 		<div className="flex flex-col gap-y-5 font-mont text-gray-700">
 			<RegisterOffice
 				isShow={showAddModal}
-				onConfirm={() => setShowAddModal(false)}
+				onConfirm={() => onSubmitNewAccount()}
 				onCancel={() => setShowAddModal(false)}
 				selectOptions={provinceList}
+			/>
+			<SuccessModal
+				isShow={showSuccessModal}
+				successTitle="Offices Account"
+				successText="New offices account registered successfully"
+				onConfirm={() => setShowSuccessModal(false)}
+			/>
+			<WarningModal
+				isShow={showDeleteModal}
+				warningText="citizen account"
+				onConfirm={() => onDeleteAccount()}
+				onCancel={() => setShowDeleteModal(false)}
 			/>
 			<AdminBreadCrumbs activeText="Offices Accounts" />
 			<div className="w-full bg-white font-mont flex flex-col gap-y-5 text-gray-700 p-5 shadow border-b border-gray-200 rounded-lg">
@@ -63,9 +101,7 @@ const OfficeListView = () => {
 						/>
 					</div>
 				)}
-				{!dataLoading && (
-					<OfficeListTable officeList={[{ first_name: "Tagum City" }]} />
-				)}
+				{!dataLoading && <OfficeListTable officeList={officesList} />}
 			</div>
 		</div>
 	);

@@ -24,22 +24,22 @@ const RegisterOffice = ({
 
 	const onSubmit = (formData: any) => {
 		const data = {
-			first_name: formData.officeFirstName,
+			first_name: formData.officeName,
+			last_name: formData.officeName,
 			contact_number: formData.officeMobile,
 			email: formData.officeEmail,
 			username: formData.officeUsername,
 			password: formData.officePassword,
 			role: "office",
 		};
-		console.log("Office Account data:", data);
-		onConfirm();
+		dispatch(registerFromAdmin(data)).then(() => onConfirm());
 	};
 
 	return (
 		<SubmitModal
 			isShow={isShow}
-			addTitle="Office Account"
-			addText="Create new office account"
+			addTitle="Offices Account"
+			addText="Create new offices account"
 			onConfirm={handleSubmit(onSubmit)}
 			onCancel={onCancel}
 		>
@@ -57,7 +57,7 @@ const RegisterOffice = ({
 				<MySelectField
 					myControl={control}
 					myOptions={selectOptions}
-					fieldName="officeFirstName"
+					fieldName="officeName"
 					fieldLabel="City/Municipality"
 					fieldRules={fieldRules.requiredRule}
 					defaultValue=""
