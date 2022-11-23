@@ -1,6 +1,10 @@
 import React from "react";
 
-const CitizenListTable = ({ citizenList, onShowWarning }: any) => {
+const CitizenListTable = ({
+	citizenList,
+	onViewCitizen,
+	onShowWarning,
+}: any) => {
 	return (
 		<div className="overflow-x-auto">
 			<table className="min-w-max w-full table-auto">
@@ -34,7 +38,10 @@ const CitizenListTable = ({ citizenList, onShowWarning }: any) => {
 								</td>
 								<td className="py-3 px-6 text-center">
 									<div className="flex items-center justify-center gap-x-5">
-										<div className="w-4 mr-2 transform hover:text-purple-600 hover:scale- cursor-pointer">
+										<div
+											className="w-4 mr-2 transform hover:text-purple-600 hover:scale- cursor-pointer"
+											onClick={() => onViewCitizen(citizen)}
+										>
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
 												fill="none"

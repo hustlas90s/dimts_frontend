@@ -1,4 +1,4 @@
-import React from "react";
+import moment from "moment";
 
 const CriminalCaseTable = ({ criminalCases }: any) => {
 	return (
@@ -28,7 +28,7 @@ const CriminalCaseTable = ({ criminalCases }: any) => {
 									{crime.crime_type}
 								</td>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
-									{crime.hearing_date}
+									{moment(crime.hearing_date).format("ll")}
 								</td>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
 									{crime.judge_assigned}

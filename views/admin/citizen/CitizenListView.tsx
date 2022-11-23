@@ -5,6 +5,7 @@ import AddNewButton from "../../../components/AddNewButton";
 import MoonLoader from "react-spinners/MoonLoader";
 import CitizenListTable from "./CitizenListTable";
 import AdminBreadCrumbs from "../../../components/admin/AdminBreadCrumbs";
+import ViewCitizen from "../../../components/admin/ViewCitizen";
 import RegisterCitizen from "../../../components/admin/RegisterCitizen";
 import SuccessModal from "../../../components/SuccessModal";
 import WarningModal from "../../../components/WarningModal";
@@ -17,6 +18,8 @@ const CitizenListView = () => {
 		(state: any) => state.dataState
 	);
 	const {
+		viewModal,
+		setViewModal,
 		showAddModal,
 		setShowAddModal,
 		showSuccessModal,
@@ -24,11 +27,20 @@ const CitizenListView = () => {
 		showDeleteModal,
 		setShowDeleteModal,
 	} = useCrudModals();
-	const { selectedID, setSelectedID } = useModalIDs();
+	const { selectedID, setSelectedID, selectedObject, setSelectedObject } =
+		useModalIDs();
 
 	useEffect(() => {
 		dispatch(getCitizenList());
 	}, []);
+
+	const onViewCitizen = useCallback(
+		(selectedCitizen: any) => {
+			setSelectedObject(selectedCitizen);
+			setViewModal(true);
+		},
+		[selectedObject, viewModal]
+	);
 
 	const onSubmitNewAccount = useCallback(() => {
 		dispatch(getCitizenList());
@@ -37,7 +49,7 @@ const CitizenListView = () => {
 		setTimeout(() => {
 			setShowSuccessModal(false);
 		}, 3000);
-	}, []);
+	}, [showAddModal]);
 
 	const onShowDeleteModal = (account_id: number) => {
 		setSelectedID(account_id);
@@ -53,6 +65,11 @@ const CitizenListView = () => {
 
 	return (
 		<div className="relative flex flex-col gap-y-5 font-mont text-gray-700">
+			<ViewCitizen
+				isShow={viewModal}
+				onClose={() => setViewModal(false)}
+				selectedCitizen={selectedObject}
+			/>
 			<RegisterCitizen
 				isShow={showAddModal}
 				onConfirm={() => onSubmitNewAccount()}
@@ -98,6 +115,9 @@ const CitizenListView = () => {
 				{!dataLoading && (
 					<CitizenListTable
 						citizenList={citizenList}
+						onViewCitizen={(selectedCitizen: any) =>
+							onViewCitizen(selectedCitizen)
+						}
 						onShowWarning={(e: number) => onShowDeleteModal(e)}
 					/>
 				)}
