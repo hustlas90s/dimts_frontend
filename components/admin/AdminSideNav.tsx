@@ -319,7 +319,7 @@ const AdminSideNav = () => {
 				{/* CASE LIST DROPDOWN ITEMS */}
 				{casesDropDown ? (
 					<div className="flex flex-col gap-y-1">
-						<div
+						{/* <div
 							className={`w-full pl-16 py-3 bg-transparent rounded-lg hover:cursor-pointer`}
 							onClick={() => isItemClicked("/admin/docket_cases")}
 						>
@@ -332,7 +332,7 @@ const AdminSideNav = () => {
 							>
 								Docket Cases
 							</p>
-						</div>
+						</div> */}
 						{/*  */}
 						<div
 							className={`w-full pl-16 py-3 bg-transparent rounded-lg hover:cursor-pointer`}
