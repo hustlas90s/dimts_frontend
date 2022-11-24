@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Controller } from "react-hook-form";
 
 interface MySelectFieldProps {
@@ -7,6 +8,7 @@ interface MySelectFieldProps {
 	fieldLabel: string;
 	fieldRules: any;
 	defaultValue?: string;
+	setFieldValue?: any;
 }
 
 const MySelectField = ({
@@ -16,7 +18,12 @@ const MySelectField = ({
 	fieldLabel,
 	fieldRules,
 	defaultValue,
+	setFieldValue,
 }: MySelectFieldProps) => {
+	useEffect(() => {
+		setFieldValue ? setFieldValue(fieldName, defaultValue) : null;
+	}, []);
+
 	return (
 		<Controller
 			control={myControl}
@@ -32,7 +39,7 @@ const MySelectField = ({
 						id={fieldName}
 						className="w-full bg-gray-100 px-3 py-1 focus:outline-none border border-gray-200 focus:border-purple-400 rounded-lg appearance-none"
 						onChange={onChange}
-						defaultValue=""
+						defaultValue={defaultValue ?? ""}
 					>
 						<option
 							disabled
@@ -41,7 +48,14 @@ const MySelectField = ({
 							Select Option
 						</option>
 						{myOptions.map((option: any) => {
-							return <option value={option.value}>{option.label}</option>;
+							return (
+								<option
+									key={option.value}
+									value={option.value}
+								>
+									{option.label}
+								</option>
+							);
 						})}
 					</select>
 					{error && (

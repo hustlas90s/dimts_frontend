@@ -49,7 +49,7 @@ const CourtHearingsView = () => {
 	const onSubmitNewHearing = useCallback(() => {
 		dispatch(getCourtHearings());
 		setShowAddModal(false);
-		setSuccessText("Addition of new court hearing is successful");
+		setSuccessText("Creation of new court hearing is successful");
 		setShowSuccessModal(true);
 		setTimeout(() => {
 			setShowSuccessModal(false);

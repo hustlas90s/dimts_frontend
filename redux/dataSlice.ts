@@ -137,15 +137,17 @@ export const getCivilCases = createAsyncThunk(
 
 export const createNewDocket = createAsyncThunk(
     'data/createNewDocket',
-    async (args) => {
+    async (formData: any) => {
         const dataRepo = new DataRepository()
+        await dataRepo.NewDocket(localStorage.jwt_token, formData)
     }
 )
 
 export const updateDocket = createAsyncThunk(
     'data/updateDocket',
-    async (args) => {
+    async (args: {formData: any, docket_id: number}) => {
         const dataRepo = new DataRepository()
+        await dataRepo.UpdateDocket(localStorage.jwt_token, args.formData, args.docket_id)
     }
 )
 

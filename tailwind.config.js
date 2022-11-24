@@ -17,7 +17,8 @@ module.exports = {
         'register' : "url('/images/register_img.jpg')",
       },
       gridTemplateColumns : {
-        'layout' : '250px 1fr'
+        'layout' : '250px 1fr',
+        'calendar' : '1fr 350px'
       },
       gridTemplateRows : {
         'layout' : '88px 1fr'
