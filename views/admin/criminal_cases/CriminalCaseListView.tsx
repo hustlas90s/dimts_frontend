@@ -10,9 +10,9 @@ import AddCase from "../../../components/admin/AddCase";
 import UpdateCase from "../../../components/admin/UpdateCase";
 import SuccessModal from "../../../components/SuccessModal";
 import WarningModal from "../../../components/WarningModal";
+import DeletedModal from "../../../components/DeletedModal";
 import useCrudModals from "../../../hooks/useCrudModals";
 import useModalIDs from "../../../hooks/useModalIDs";
-import DeletedModal from "../../../components/DeletedModal";
 
 const CriminalCaseListView = () => {
 	const dispatch = useAppDispatch();
@@ -53,7 +53,7 @@ const CriminalCaseListView = () => {
 
 	const onSubmitNewCase = useCallback(() => {
 		dispatch(getCriminalCases());
-		setSuccessText("Creation of new court hearing is successful");
+		setSuccessText("Creation of new criminal record is successful");
 		setShowAddModal(false);
 		setShowSuccessModal(true);
 		setTimeout(() => {
@@ -120,6 +120,8 @@ const CriminalCaseListView = () => {
 			/>
 			<AddCase
 				isShow={showAddModal}
+				addTitle="Criminal Case"
+				addText="Create new criminal record"
 				onConfirm={() => onSubmitNewCase()}
 				onCancel={() => setShowAddModal(false)}
 				caseType="Criminal"
@@ -134,7 +136,7 @@ const CriminalCaseListView = () => {
 			/>
 			<SuccessModal
 				isShow={showSuccessModal}
-				successTitle="Criminal Cases"
+				successTitle="Criminal Case"
 				successText={successText}
 				onConfirm={() => setShowSuccessModal(false)}
 			/>
@@ -146,7 +148,7 @@ const CriminalCaseListView = () => {
 			/>
 			<DeletedModal
 				isShow={showDeleteModal}
-				deletedTitle="Criminal Cases"
+				deletedTitle="Criminal Case"
 				deletedText={successText}
 				onConfirm={() => setShowDeleteModal(false)}
 			/>

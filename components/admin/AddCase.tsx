@@ -9,12 +9,21 @@ import MyTextAreaField from "../MyTextArea";
 
 interface AddCaseParams {
 	isShow: boolean;
+	addTitle: string;
+	addText: string;
 	onConfirm(): void;
 	onCancel(): void;
 	caseType: string;
 }
 
-const AddCase = ({ isShow, onConfirm, onCancel, caseType }: AddCaseParams) => {
+const AddCase = ({
+	isShow,
+	addTitle,
+	addText,
+	onConfirm,
+	onCancel,
+	caseType,
+}: AddCaseParams) => {
 	const { control, handleSubmit, setValue } = useForm();
 	const dispatch = useAppDispatch();
 
@@ -40,8 +49,8 @@ const AddCase = ({ isShow, onConfirm, onCancel, caseType }: AddCaseParams) => {
 	return (
 		<SubmitModal
 			isShow={isShow}
-			addTitle="Criminal Cases"
-			addText="Create new criminal record"
+			addTitle={addTitle}
+			addText={addText}
 			onConfirm={handleSubmit(onSubmit)}
 			onCancel={onCancel}
 		>

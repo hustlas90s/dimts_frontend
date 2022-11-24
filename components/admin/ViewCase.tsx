@@ -1,4 +1,5 @@
 import ViewModal from "../ViewModal";
+import moment from "moment";
 
 interface ViewCaseParams {
 	isShow: boolean;
@@ -51,25 +52,29 @@ const ViewCase = ({
 				{/*  */}
 				<div className="flex flex-col gap-y-1">
 					<h4 className="font-bold">Received Date</h4>
-					<p className="text-sm text-gray-500">{selectedCase.received_date}</p>
+					<p className="text-sm text-gray-500">
+						{moment(selectedCase.received_date).format("LL")}
+					</p>
 				</div>
 				{/*  */}
 				<div className="flex flex-col gap-y-1">
 					<h4 className="font-bold">Hearing Date</h4>
-					<p className="text-sm text-gray-500">{selectedCase.hearing_date}</p>
+					<p className="text-sm text-gray-500">
+						{moment(selectedCase.hearing_date).format("LL")}
+					</p>
 				</div>
 				{/*  */}
 				<div className="flex flex-col gap-y-1">
 					<h4 className="font-bold">Arraignment Date</h4>
 					<p className="text-sm text-gray-500">
-						{selectedCase.arraignment_date}
+						{moment(selectedCase.arraignment_date).format("LL")}
 					</p>
 				</div>
 				{/*  */}
 				<div className="flex flex-col gap-y-1">
 					<h4 className="font-bold">Initial Trial Date</h4>
 					<p className="text-sm text-gray-500">
-						{selectedCase.initial_trial_date}
+						{moment(selectedCase.initial_trial_date).format("LL")}
 					</p>
 				</div>
 				{/*  */}

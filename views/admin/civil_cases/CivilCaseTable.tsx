@@ -1,6 +1,11 @@
 import moment from "moment";
 
-const CivilCaseTable = ({ civilCases }: any) => {
+const CivilCaseTable = ({
+	civilCases,
+	onViewCase,
+	onShowWarning,
+	onShowEdit,
+}: any) => {
 	return (
 		<div className="overflow-x-auto">
 			<table className="min-w-max w-full table-auto">
@@ -38,7 +43,10 @@ const CivilCaseTable = ({ civilCases }: any) => {
 								</td>
 								<td className="py-3 px-6 text-center">
 									<div className="flex items-center justify-center gap-x-5">
-										<div className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110">
+										<div
+											className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110 cursor-pointer"
+											onClick={() => onViewCase(crime)}
+										>
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
 												fill="none"
@@ -60,7 +68,10 @@ const CivilCaseTable = ({ civilCases }: any) => {
 												/>
 											</svg>
 										</div>
-										<div className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110">
+										<div
+											className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110 cursor-pointer"
+											onClick={() => onShowEdit(crime.id)}
+										>
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
 												fill="none"
@@ -76,7 +87,10 @@ const CivilCaseTable = ({ civilCases }: any) => {
 												/>
 											</svg>
 										</div>
-										<div className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110">
+										<div
+											className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110 cursor-pointer"
+											onClick={() => onShowWarning(crime.id)}
+										>
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
 												fill="none"
