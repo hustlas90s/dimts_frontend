@@ -101,7 +101,12 @@ const OfficeListView = () => {
 						/>
 					</div>
 				)}
-				{!dataLoading && <OfficeListTable officeList={officesList} />}
+				{!dataLoading && (
+					<OfficeListTable
+						officeList={officesList}
+						onShowWarning={(e: number) => onShowDeleteModal(e)}
+					/>
+				)}
 			</div>
 		</div>
 	);

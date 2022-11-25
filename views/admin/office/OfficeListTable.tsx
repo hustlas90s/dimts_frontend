@@ -1,6 +1,6 @@
 import React from "react";
 
-const OfficeListTable = ({ officeList }: any) => {
+const OfficeListTable = ({ officeList, onShowWarning }: any) => {
 	return (
 		<div className="overflow-x-auto">
 			<table className="min-w-max w-full table-auto">
@@ -34,7 +34,10 @@ const OfficeListTable = ({ officeList }: any) => {
 								</td>
 								<td className="py-3 px-6 text-center">
 									<div className="flex items-center justify-center gap-x-5">
-										<div className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110 cursor-pointer">
+										<div
+											className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110 cursor-pointer"
+											onClick={() => onShowWarning(office.id)}
+										>
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
 												fill="none"
