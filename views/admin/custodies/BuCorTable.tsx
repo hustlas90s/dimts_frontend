@@ -21,7 +21,7 @@ const BuCorTable = ({ bucorRecords }: any) => {
 									{record.name}
 								</td>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
-									{record.crime}
+									{record.case__crime_type}
 								</td>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
 									{moment(record.date_arrived).format("LL")}

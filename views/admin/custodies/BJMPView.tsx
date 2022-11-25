@@ -1,12 +1,20 @@
+import { useEffect } from "react";
 import { MoonLoader } from "react-spinners";
 import AddNewButton from "../../../components/AddNewButton";
 import AdminBreadCrumbs from "../../../components/admin/AdminBreadCrumbs";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import BJMPTable from "./BJMPTable";
+import { getBJMPDetainees } from "../../../redux/dataSlice";
 
 const BJMPView = () => {
 	const dispatch = useAppDispatch();
-	const { dataLoading } = useAppSelector((state) => state.dataState);
+	const { dataLoading, bjmpRecords } = useAppSelector(
+		(state) => state.dataState
+	);
+
+	useEffect(() => {
+		dispatch(getBJMPDetainees());
+	}, []);
 
 	return (
 		<div className="flex flex-col gap-y-5 font-mont text-gray-700">
@@ -33,18 +41,7 @@ const BJMPView = () => {
 						/>
 					</div>
 				)}
-				{!dataLoading && (
-					<BJMPTable
-						bjmpRecords={[
-							{
-								name: "John Doe",
-								crime: "Theft",
-								date_arrived: "11/20/2022",
-								assigned_personnel: "Yeah Yow",
-							},
-						]}
-					/>
-				)}
+				{!dataLoading && <BJMPTable bjmpRecords={bjmpRecords} />}
 			</div>
 		</div>
 	);

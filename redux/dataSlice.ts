@@ -159,6 +159,55 @@ export const deleteDocket = createAsyncThunk(
     }
 )
 
+// DETAINEE THUNKS
+export const getPNPDetainees = createAsyncThunk(
+    'data/getPNPDetainees',
+    async () => {
+        const dataRepo = new DataRepository()
+        return await dataRepo.GetPNPDetainees(localStorage.jwt_token)
+    }
+)
+
+export const getBJMPDetainees = createAsyncThunk(
+    'data/getBJMPDetainees',
+    async () => {
+        const dataRepo = new DataRepository()
+        return await dataRepo.GetBJMPDetainees(localStorage.jwt_token)
+    }
+)
+
+export const getBuCorDetainees = createAsyncThunk(
+    'data/getBuCorDetainees',
+    async () => {
+        const dataRepo = new DataRepository()
+        return await dataRepo.GetBuCorDetainees(localStorage.jwt_token)
+    }
+)
+
+export const createNewDetainee = createAsyncThunk(
+    'data/createNewDetainee',
+    async (formData: any) => {
+        const dataRepo = new DataRepository()
+        await dataRepo.NewDetainee(localStorage.jwt_token, formData)
+    }
+)
+
+export const updateDetainee = createAsyncThunk(
+    'data/updateDetainee', 
+    async (args: {formData: any, detainee_id: number}) => {
+        const dataRepo = new DataRepository()
+        await dataRepo.UpdateDetainee(localStorage.jwt_token, args.formData, args.detainee_id)
+    }
+)
+
+export const deleteDetainee = createAsyncThunk(
+    'data/deleteDetainee',
+    async (detainee_id: number) => {
+        const dataRepo = new DataRepository()
+        await dataRepo.DeleteDetainee(localStorage.jwt_token, detainee_id)
+    }
+)
+
 const dataSlice = createSlice({
     name : 'data',
     initialState,
@@ -266,6 +315,47 @@ const dataSlice = createSlice({
             return { ...state, dataLoading : false }
         })
         builder.addCase(deleteHearing.rejected, (state) => {
+            return { ...state, dataLoading : false }
+        })
+        // DETAINEES
+        // Get PNP Detainees
+        builder.addCase(getPNPDetainees.pending, (state) => {
+            return { ...state, dataLoading : true }
+        })
+        builder.addCase(getPNPDetainees.fulfilled, (state, action) => {
+            return { ...state, dataLoading : false, pnpRecords : action.payload }
+        })
+        builder.addCase(getPNPDetainees.rejected, (state) => {
+            return { ...state, dataLoading : false }
+        })
+        // Get BJMP Detainees
+        builder.addCase(getBJMPDetainees.pending, (state) => {
+            return { ...state, dataLoading : true }
+        })
+        builder.addCase(getBJMPDetainees.fulfilled, (state, action) => {
+            return { ...state, dataLoading : false, bjmpRecords : action.payload }
+        })
+        builder.addCase(getBJMPDetainees.rejected, (state) => {
+            return { ...state, dataLoading : false }
+        })
+        // Get BuCor Detainees
+        builder.addCase(getBuCorDetainees.pending, (state) => {
+            return { ...state, dataLoading : true }
+        })
+        builder.addCase(getBuCorDetainees.fulfilled, (state, action) => {
+            return { ...state, dataLoading : false, bucorRecords : action.payload }
+        })
+        builder.addCase(getBuCorDetainees.rejected, (state) => {
+            return { ...state, dataLoading : false }
+        })
+        // New Detainee
+        builder.addCase(createNewDetainee.pending, (state) => {
+            return { ...state, dataLoading : true }
+        })
+        builder.addCase(createNewDetainee.fulfilled, (state) => {
+            return { ...state, dataLoading : false }
+        })
+        builder.addCase(createNewDetainee.rejected, (state) => {
             return { ...state, dataLoading : false }
         })
     }

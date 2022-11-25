@@ -1,6 +1,11 @@
 import moment from "moment";
 
-const PNPTable = ({ pnpRecords }: any) => {
+const PNPTable = ({
+	pnpRecords,
+	onViewRecord,
+	onShowWarning,
+	onShowEdit,
+}: any) => {
 	return (
 		<div className="overflow-x-auto">
 			<table className="min-w-max w-full table-auto">
@@ -21,7 +26,7 @@ const PNPTable = ({ pnpRecords }: any) => {
 									{record.name}
 								</td>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
-									{record.crime}
+									{record.case__crime_type}
 								</td>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
 									{moment(record.date_arrived).format("LL")}
@@ -31,7 +36,10 @@ const PNPTable = ({ pnpRecords }: any) => {
 								</td>
 								<td className="py-3 px-6 text-center">
 									<div className="flex items-center justify-center gap-x-5">
-										<div className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110 cursor-pointer">
+										<div
+											className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110 cursor-pointer"
+											onClick={() => onViewRecord(record)}
+										>
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
 												fill="none"
@@ -53,7 +61,10 @@ const PNPTable = ({ pnpRecords }: any) => {
 												/>
 											</svg>
 										</div>
-										<div className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110 cursor-pointer">
+										<div
+											className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110 cursor-pointer"
+											onClick={() => onShowEdit(record.id)}
+										>
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
 												fill="none"
@@ -69,7 +80,10 @@ const PNPTable = ({ pnpRecords }: any) => {
 												/>
 											</svg>
 										</div>
-										<div className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110 cursor-pointer">
+										<div
+											className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110 cursor-pointer"
+											onClick={() => onShowWarning(record.id)}
+										>
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
 												fill="none"

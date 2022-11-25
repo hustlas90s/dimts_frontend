@@ -80,6 +80,36 @@ export default class DataRepository {
         })
         return data
     }
+    // Get PNP Detainees
+    async GetPNPDetainees(jwt_token: string) {
+        const { data } = await backendConn.get('pnp_detainees/', {
+            headers : {
+                Authorization : `Bearer ${ jwt_token }`,
+                'Content-Type' : 'aplication/json'
+            }
+        })
+        return JSON.parse(data)
+    }
+    // Get BJMP Detainees
+    async GetBJMPDetainees(jwt_token: string) {
+        const {data} = await backendConn.get('bjmp_detainees/', {
+            headers : {
+                Authorization : `Bearer ${ jwt_token }`,
+                'Content-Type' : 'aplication/json'
+            }
+        })
+        return JSON.parse(data)
+    }
+    // Get BuCor Detainees
+    async GetBuCorDetainees(jwt_token: string) {
+        const {data} = await backendConn.get('bucor_detainees/', {
+            headers : {
+                Authorization : `Bearer ${ jwt_token }`,
+                'Content-Type' : 'aplication/json'
+            }
+        })
+        return JSON.parse(data)
+    }
     // POST REQUESTS
     // Create new court hearing
     async NewCourtHearing(jwt_token: string, formData: any) {
@@ -93,6 +123,15 @@ export default class DataRepository {
     // Create new docket
     async NewDocket(jwt_token: string, formData: any) {
         const { data } = await backendConn.post('new_docket/', formData, {
+            headers : {
+                Authorization : `Bearer ${ jwt_token }`
+            }
+        })
+        return data
+    }
+    // Create new detainee
+    async NewDetainee(jwt_token: string, formData: any) {
+        const { data } = await backendConn.post('new_detainee/', formData, {
             headers : {
                 Authorization : `Bearer ${ jwt_token }`
             }
@@ -127,6 +166,15 @@ export default class DataRepository {
         })
         return data.results
     }
+    // Update detainee
+    async UpdateDetainee(jwt_token: string, formData: any, detainee_id: number) {
+        const { data } = await backendConn.put(`detainee/update/${ detainee_id }`, formData, {
+            headers : {
+                Authorization : `Bearer ${ jwt_token }`
+            }
+        })
+        return data.results
+    }
     // DELETE REQUESTS
     // Delete an account
     async DeleteAccount(jwt_token: string, account_id: number) {
@@ -137,6 +185,7 @@ export default class DataRepository {
         })
         return data.results
     }
+    // Delete court hearing
     async DeleteCourtHearing(jwt_token: string, hearing_id: number) {
         const { data } = await backendConn.delete(`hearing/delete/${ hearing_id }`, {
             headers : {
@@ -145,8 +194,18 @@ export default class DataRepository {
         })
         return data.results
     }
+    // Delete docket
     async DeleteDocket(jwt_token: string, docket_id: number) {
         const { data } = await backendConn.delete(`docket/delete/${ docket_id }`, {
+            headers : {
+                Authorization : `Bearer ${ jwt_token }`
+            }
+        })
+        return data.results
+    }
+    // Deelete detainee
+    async DeleteDetainee(jwt_token: string, detainee_id: number) {
+        const { data } = await backendConn.delete(`detainee/delete/${ detainee_id }`, {
             headers : {
                 Authorization : `Bearer ${ jwt_token }`
             }
