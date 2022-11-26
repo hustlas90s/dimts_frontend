@@ -75,6 +75,14 @@ export const getOfficesList = createAsyncThunk(
     }
 )
 
+export const updateAccount = createAsyncThunk(
+    'data/updateAccount',
+    async (args: { formData: any, account_id: number }) => {
+        const dataRepo = new DataRepository()
+        await dataRepo.UpdateAccount(localStorage.jwt_token, args.formData, args.account_id)
+    }
+)
+
 // PLACES THUNKS
 export const getProvinces = createAsyncThunk(
     'data/getProvinces',

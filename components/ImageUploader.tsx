@@ -73,7 +73,7 @@ const ImageUploader = ({
 				</div>
 			</div>
 			{errorState ? (
-				<p className="text-red-500 text-xs pl-3">This field is required</p>
+				<p className="text-red-500 text-xs mt-1">This field is required</p>
 			) : null}
 		</div>
 	) : (
@@ -97,7 +97,7 @@ const ImageUploader = ({
 				</p>
 			</div>
 			{errorState ? (
-				<p className="text-red-500 text-xs pl-3 mt-1">This field is required</p>
+				<p className="text-red-500 text-xs mt-1">This field is required</p>
 			) : null}
 		</div>
 	);
