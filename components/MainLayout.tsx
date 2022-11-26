@@ -2,6 +2,8 @@ import React from "react";
 import { useRouter } from "next/router";
 import AdminSideNav from "./admin/AdminSideNav";
 import AdminTopNav from "./admin/AdminTopNav";
+import CitizenSideNav from "./citzen/CitizenSideNav";
+import CitizenTopNav from "./citzen/CitizenTopNav";
 
 const MainLayout = ({ children }: any) => {
 	const { pathname } = useRouter();
@@ -33,11 +35,11 @@ const MainLayout = ({ children }: any) => {
 			return (
 				<div className="grid grid-cols-layout">
 					{/* SIDENAV */}
-					<AdminSideNav />
+					<CitizenSideNav />
 					{/*  */}
 					<div className="w-full h-screen grid grid-rows-layout">
 						{/* TOPNAV */}
-						<AdminTopNav />
+						<CitizenTopNav />
 						{/*  */}
 						<div className="w-full bg-gray-100 overflow-y-auto overflow-x-hidden p-8">
 							{children}

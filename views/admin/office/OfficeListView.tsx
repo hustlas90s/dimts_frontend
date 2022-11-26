@@ -72,7 +72,7 @@ const OfficeListView = () => {
 			/>
 			<WarningModal
 				isShow={showDeleteModal}
-				warningText="citizen account"
+				warningText="office account"
 				onConfirm={() => onDeleteAccount()}
 				onCancel={() => setShowDeleteModal(false)}
 			/>

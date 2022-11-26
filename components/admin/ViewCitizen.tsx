@@ -19,7 +19,7 @@ const ViewCitizen = ({
 			onClose={onClose}
 		>
 			<div className="flex flex-col gap-y-8 font-mont text-gray-700">
-				<div className="w-full h-96 bg-gray-100 rounded-lg"></div>
+				<div className="w-full h-72 bg-gray-100 rounded-lg"></div>
 				{/* CITIZEN NAME */}
 				<div className="grid grid-cols-2 gap-x-5">
 					<div className="flex flex-col gap-y-1">

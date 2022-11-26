@@ -2,7 +2,7 @@ import { Fragment } from "react";
 import { Popover, Transition } from "@headlessui/react";
 import { useRouter } from "next/router";
 
-const AdminTopNav = () => {
+const CitizenTopNav = () => {
 	const router = useRouter();
 	const onLogout = () => {
 		localStorage.clear();
@@ -90,4 +90,4 @@ const AdminTopNav = () => {
 	);
 };
 
-export default AdminTopNav;
+export default CitizenTopNav;

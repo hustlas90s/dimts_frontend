@@ -1,8 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import DataRepository from '../repositories/DataRepository'
+import AuthRepository from '../repositories/AuthRepository'
 
 interface DataShape {
     dataLoading: boolean;
+    userInfo: any;
     staffList: any;
     citizenList: any;
     officesList: any;
@@ -18,6 +20,7 @@ interface DataShape {
 
 const initialState: DataShape = {
     dataLoading : false,
+    userInfo : {},
     staffList : [],
     citizenList : [],
     officesList : [],
@@ -32,6 +35,14 @@ const initialState: DataShape = {
 }
 
 // ACCOUNT THUNKS
+export const getUserInfo = createAsyncThunk(
+    'data/getUserInfo',
+    async (user_id: number) => {
+        const authRepo = new AuthRepository()
+        return await authRepo.GetAccountDetails(localStorage.jwt_token, user_id)
+    }
+)
+
 export const deleteAccount = createAsyncThunk(
     'data/deleteAccount', 
     async (account_id: number) => {
@@ -214,6 +225,16 @@ const dataSlice = createSlice({
     reducers : {},
     extraReducers : builder => {
         // ACCOUNTS
+        // Get User Info
+        builder.addCase(getUserInfo.pending, (state) => {
+            return { ...state, dataLoading : true }
+        })
+        builder.addCase(getUserInfo.fulfilled, (state, action) => {
+            return { ...state, dataLoading : false, userInfo : action.payload }
+        })
+        builder.addCase(getUserInfo.rejected, (state) => {
+            return { ...state, dataLoading : false }
+        })
         // Get Staff Accounts
         builder.addCase(getStaffList.pending, (state) => {
             return { ...state, dataLoading : true }
