@@ -1,6 +1,6 @@
 import React from "react";
 
-const ServedDocsTable = ({ servedDocs }: any) => {
+const ServedDocsTable = ({ transaferedDocuments }: any) => {
 	return (
 		<div className="overflow-x-auto">
 			<table className="min-w-max w-full table-auto">
@@ -14,7 +14,7 @@ const ServedDocsTable = ({ servedDocs }: any) => {
 					</tr>
 				</thead>
 				<tbody className="text-gray-600 text-sm">
-					{servedDocs.map((doc: any) => {
+					{transaferedDocuments.map((doc: any) => {
 						return (
 							<tr className="border-b border-gray-200 hover:bg-gray-50">
 								<td className="py-3 px-6 text-left whitespace-nowrap">

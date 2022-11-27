@@ -1,3 +1,5 @@
+import { useState, useEffect } from "react";
+import { nanoid } from "@reduxjs/toolkit";
 import SubmitModal from "../SubmitModal";
 import MyInputField from "../MyInputField";
 import MySelectField from "../MySelectField";
@@ -6,6 +8,7 @@ import { fieldRules } from "../authHelper";
 import { useAppDispatch } from "../../redux/hooks";
 import { createNewDocket } from "../../redux/dataSlice";
 import MyTextAreaField from "../MyTextArea";
+import { QRCodeCanvas } from "qrcode.react";
 
 interface AddCaseParams {
 	isShow: boolean;
@@ -27,7 +30,14 @@ const AddCase = ({
 	const { control, handleSubmit, setValue } = useForm();
 	const dispatch = useAppDispatch();
 
+	const [qrValue, setQrValue] = useState<any>();
+	const [showLoading, setShowLoading] = useState(false);
+
 	const onSubmit = (formData: any) => {
+		let qrImage: any = document.getElementById("qr-gen");
+		let qrBase64 = qrImage.toDataURL("image/jpeg");
+		console.log(qrBase64);
+		setShowLoading(true);
 		const data = {
 			type_of_case: formData.caseType,
 			case_no: formData.caseNo,
@@ -42,9 +52,20 @@ const AddCase = ({
 			raffled_court: formData.caseRaffled,
 			judge_assigned: formData.caseJudge,
 			case_status: formData.caseStatus,
+			qr_code: qrBase64,
+			qr_code_tracker: qrValue,
 		};
-		dispatch(createNewDocket(data)).then(() => onConfirm());
+		setTimeout(() => {
+			dispatch(createNewDocket(data)).then(() => {
+				setShowLoading(false);
+				onConfirm();
+			});
+		}, 1000);
 	};
+
+	useEffect(() => {
+		setQrValue(nanoid());
+	}, [onConfirm, onCancel]);
 
 	return (
 		<SubmitModal
@@ -53,6 +74,7 @@ const AddCase = ({
 			addText={addText}
 			onConfirm={handleSubmit(onSubmit)}
 			onCancel={onCancel}
+			loadingState={showLoading}
 		>
 			<div className="grid grid-cols-2 gap-y-8 gap-x-5">
 				<MyInputField
@@ -190,6 +212,22 @@ const AddCase = ({
 						defaultValue=""
 						placeHolder=""
 					/>
+				</div>
+				<div className="col-span-2">
+					<div className="flex flex-col gap-y-1">
+						<p className="font-semibold text-sm text-gray-700">
+							QRCode Preview
+						</p>
+						<div className="w-full h-auto bg-gray-100 border-2 border-dashed border-gray-400 rounded-lg flex justify-center items-center">
+							<QRCodeCanvas
+								id="qr-gen"
+								value={qrValue}
+								size={300}
+								level={"H"}
+								className="self-center py-5"
+							/>
+						</div>
+					</div>
 				</div>
 			</div>
 		</SubmitModal>
