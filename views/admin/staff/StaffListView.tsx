@@ -36,7 +36,7 @@ const StaffListView = () => {
 		setShowSuccessModal(true);
 		setTimeout(() => {
 			setShowSuccessModal(false);
-		}, 3000);
+		}, 2000);
 	}, []);
 
 	const onShowDeleteModal = (account_id: number) => {

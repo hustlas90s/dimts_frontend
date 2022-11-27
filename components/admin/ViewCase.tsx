@@ -99,6 +99,15 @@ const ViewCase = ({
 						{selectedCase.last_court_action}
 					</p>
 				</div>
+				<div className="w-full col-span-2 flex flex-col gap-y-1">
+					<h4 className="font-bold">QRCode</h4>
+					<p className="text-xs">{selectedCase.qr_code_tracker}</p>
+					<img
+						src={selectedCase.qr_code}
+						className="w-full h-auto"
+						alt="QRcode"
+					/>
+				</div>
 			</div>
 		</ViewModal>
 	);

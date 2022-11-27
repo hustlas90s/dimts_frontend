@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { useAppSelector } from "../redux/hooks";
-import { BeatLoader } from "react-spinners";
+import { BeatLoader, MoonLoader, PulseLoader } from "react-spinners";
 
 interface AddModalParams {
 	isShow: boolean;
@@ -9,6 +9,7 @@ interface AddModalParams {
 	addText: string;
 	onConfirm(): void;
 	onCancel(): void;
+	loadingState?: boolean;
 	children: any;
 }
 
@@ -18,15 +19,9 @@ const AddModal = ({
 	addText,
 	onConfirm,
 	onCancel,
+	loadingState,
 	children,
 }: AddModalParams) => {
-	const { authLoading } = useAppSelector((state: any) => state.authState);
-	const [submitLoading, setSubmitLoading] = useState(false);
-
-	useEffect(() => {
-		setSubmitLoading(authLoading);
-	}, [authLoading]);
-
 	return (
 		<Transition
 			appear
@@ -83,27 +78,33 @@ const AddModal = ({
 								</div>
 								{children}
 								<div className="self-end flex gap-x-5 mt-5">
-									{!authLoading && (
+									{typeof loadingState !== undefined && (
 										<button
 											type="button"
-											className="bg-purple-600 hover:bg-purple-500 focus:outline-none px-5 py-2 text-white font-medium tracking-wider rounded-lg text-sm"
+											className="bg-purple-600 hover:bg-purple-500 focus:outline-none px-5 py-2 rounded-lg flex justify-center items-center"
+											onClick={onConfirm}
+										>
+											{loadingState ? (
+												<PulseLoader
+													loading={loadingState}
+													color="#ffffff"
+													speedMultiplier={1}
+													size={10}
+												/>
+											) : (
+												<p className="text-white font-medium tracking-wider text-sm">
+													Submit
+												</p>
+											)}
+										</button>
+									)}
+									{typeof loadingState === undefined && (
+										<button
+											type="button"
+											className="bg-purple-600 hover:bg-purple-500 focus:outline-none px-5 py-2 rounded-lg text-white font-medium tracking-wider text-sm"
 											onClick={onConfirm}
 										>
 											Submit
-										</button>
-									)}
-									{authLoading && (
-										<button
-											type="button"
-											className="bg-purple-600 focus:outline-none px-5 py-2 text-white font-medium tracking-wider rounded-lg text-sm cursor-not-allowed flex justify-center items-center"
-											disabled
-										>
-											<BeatLoader
-												loading={authLoading}
-												color="#ffffff"
-												speedMultiplier={1}
-												size={10}
-											/>
 										</button>
 									)}
 									<button

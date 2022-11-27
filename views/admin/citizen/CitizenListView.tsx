@@ -48,7 +48,7 @@ const CitizenListView = () => {
 		setShowSuccessModal(true);
 		setTimeout(() => {
 			setShowSuccessModal(false);
-		}, 3000);
+		}, 2000);
 	}, [showAddModal]);
 
 	const onShowDeleteModal = (account_id: number) => {
