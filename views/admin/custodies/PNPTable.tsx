@@ -21,12 +21,17 @@ const PNPTable = ({
 				<tbody className="text-gray-600 text-sm">
 					{pnpRecords.map((record: any) => {
 						return (
-							<tr className="border-b border-gray-200 hover:bg-gray-50">
+							<tr
+								key={record.id}
+								className="border-b border-gray-200 hover:bg-gray-50"
+							>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
 									{record.name}
 								</td>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
-									{record.case__crime_type}
+									{record.case__crime_type.includes("[")
+										? record.case__crime_type.slice(1, -1).replace(/['"]+/g, "")
+										: record.case__crime_type}
 								</td>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
 									{moment(record.date_arrived).format("LL")}

@@ -58,13 +58,7 @@ const MySelectField = ({
 							);
 						})}
 					</select>
-					{error && (
-						<p className="text-xs text-rose-500">
-							{error.type !== "validate"
-								? error.message
-								: "Email already used in another account"}
-						</p>
-					)}
+					{error && <p className="text-xs text-rose-500">{error.message}</p>}
 				</div>
 			)}
 		/>

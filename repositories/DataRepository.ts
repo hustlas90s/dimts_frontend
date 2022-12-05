@@ -72,6 +72,17 @@ export default class DataRepository {
         })
         return JSON.parse(data)
     }
+    // Get Upcoming Hearings
+    async GetUpcomingHearings(jwt_token: string) {
+        const { data } = await backendConn.get('upcoming_hearings/', {
+            headers : {
+                Authorization : `Bearer ${ jwt_token }`,
+                'Content-Type' : 'aplication/json'
+            }
+        })
+        return JSON.parse(data)
+    }
+    // Get Provinces
     async GetProvinces() {
         const { data } = await placesConn.get('provinces/112300000/cities-municipalities/', {
             headers : { 
@@ -93,6 +104,36 @@ export default class DataRepository {
     // Get BJMP Detainees
     async GetBJMPDetainees(jwt_token: string) {
         const {data} = await backendConn.get('bjmp_detainees/', {
+            headers : {
+                Authorization : `Bearer ${ jwt_token }`,
+                'Content-Type' : 'aplication/json'
+            }
+        })
+        return JSON.parse(data)
+    }
+    // Get Transfered Documents
+    async GetTransferedDocuments(jwt_token: string) {
+        const {data} = await backendConn.get('transfered_documents/', {
+            headers : {
+                Authorization : `Bearer ${ jwt_token }`,
+                'Content-Type' : 'aplication/json'
+            }
+        })
+        return JSON.parse(data)
+    }
+    // Get Recent Documents
+    async GetRecentDocuments(jwt_token: string) {
+        const {data} = await backendConn.get('recent_documents/', {
+            headers : {
+                Authorization : `Bearer ${ jwt_token }`,
+                'Content-Type' : 'aplication/json'
+            }
+        })
+        return JSON.parse(data)
+    }
+    // Get Office Documents
+    async GetOfficeDocuments(jwt_token: string) {
+        const {data} = await backendConn.get('office_documents/', {
             headers : {
                 Authorization : `Bearer ${ jwt_token }`,
                 'Content-Type' : 'aplication/json'
@@ -138,6 +179,15 @@ export default class DataRepository {
         })
         return data
     }
+    // Send Document
+    async SendDocumentEmail (jwt_token: string, formData: any) {
+        const { data } = await backendConn.post('send_document_email/', formData, {
+            headers : {
+                Authorization : `Bearer ${ jwt_token }`
+            }
+        })
+        return data
+    }
     // PUT REQUESTS
     // Update account
     async UpdateAccount(jwt_token: string, formData: any, account_id: number) {
@@ -175,6 +225,15 @@ export default class DataRepository {
         })
         return data.results
     }
+    // Update document
+    async UpdateDocument(jwt_token: string, formData: any, document_id: number) {
+        const { data } = await backendConn.put(`document/update/${ document_id }`, formData, {
+            headers : {
+                Authorization : `Bearer ${ jwt_token }`
+            }
+        })
+        return data.results
+    }
     // DELETE REQUESTS
     // Delete an account
     async DeleteAccount(jwt_token: string, account_id: number) {
@@ -206,6 +265,15 @@ export default class DataRepository {
     // Deelete detainee
     async DeleteDetainee(jwt_token: string, detainee_id: number) {
         const { data } = await backendConn.delete(`detainee/delete/${ detainee_id }`, {
+            headers : {
+                Authorization : `Bearer ${ jwt_token }`
+            }
+        })
+        return data.results
+    }
+    // Deelete document
+    async DeleteDocument(jwt_token: string, document_id: number) {
+        const { data } = await backendConn.delete(`document/delete/${ document_id }`, {
             headers : {
                 Authorization : `Bearer ${ jwt_token }`
             }

@@ -35,7 +35,12 @@ const ViewRecord = ({
 				<div className="flex flex-col gap-y-1">
 					<h4 className="font-bold">Crime/Offense</h4>
 					<p className="text-sm text-gray-500">
-						{selectedRecord.case__crime_type}
+						{selectedRecord?.case__crime_type !== undefined &&
+						selectedRecord?.case__crime_type.includes("[")
+							? selectedRecord.case__crime_type
+									.slice(1, -1)
+									.replace(/['"]+/g, "")
+							: selectedRecord.case__crime_type}
 					</p>
 				</div>
 				{/*  */}

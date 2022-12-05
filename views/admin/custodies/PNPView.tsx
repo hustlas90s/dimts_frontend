@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import PNPTable from "./PNPTable";
 import {
 	deleteDetainee,
-	getDocketList,
+	getCriminalCases,
 	getPNPDetainees,
 } from "../../../redux/dataSlice";
 import ViewRecord from "../../../components/admin/ViewRecord";
@@ -20,7 +20,7 @@ import useModalIDs from "../../../hooks/useModalIDs";
 
 const PNPView = () => {
 	const dispatch = useAppDispatch();
-	const { dataLoading, pnpRecords, docketList } = useAppSelector(
+	const { dataLoading, pnpRecords, criminalCaseList } = useAppSelector(
 		(state) => state.dataState
 	);
 
@@ -49,7 +49,7 @@ const PNPView = () => {
 
 	useEffect(() => {
 		dispatch(getPNPDetainees());
-		dispatch(getDocketList());
+		dispatch(getCriminalCases());
 	}, []);
 
 	const onViewRecord = (criminal_record: any) => {
@@ -128,7 +128,7 @@ const PNPView = () => {
 				detainedIn="pnp"
 				onConfirm={() => onSubmitNewRecord()}
 				onCancel={() => setShowAddModal(false)}
-				selectOptions={docketList}
+				selectOptions={criminalCaseList}
 			/>
 			<UpdateRecord
 				isShow={showEditModal}

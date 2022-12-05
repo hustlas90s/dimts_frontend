@@ -1,6 +1,11 @@
 import moment from "moment";
 
-const BuCorTable = ({ bucorRecords }: any) => {
+const BuCorTable = ({
+	bucorRecords,
+	onViewRecord,
+	onShowWarning,
+	onShowEdit,
+}: any) => {
 	return (
 		<div className="overflow-x-auto">
 			<table className="min-w-max w-full table-auto">
@@ -16,12 +21,17 @@ const BuCorTable = ({ bucorRecords }: any) => {
 				<tbody className="text-gray-600 text-sm">
 					{bucorRecords.map((record: any) => {
 						return (
-							<tr className="border-b border-gray-200 hover:bg-gray-50">
+							<tr
+								key={record.id}
+								className="border-b border-gray-200 hover:bg-gray-50"
+							>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
 									{record.name}
 								</td>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
-									{record.case__crime_type}
+									{record.case__crime_type.includes("[")
+										? record.case__crime_type.slice(1, -1).replace(/['"]+/g, "")
+										: record.case__crime_type}
 								</td>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
 									{moment(record.date_arrived).format("LL")}
@@ -31,7 +41,10 @@ const BuCorTable = ({ bucorRecords }: any) => {
 								</td>
 								<td className="py-3 px-6 text-center">
 									<div className="flex items-center justify-center gap-x-5">
-										<div className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110 cursor-pointer">
+										<div
+											className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110 cursor-pointer"
+											onClick={() => onViewRecord(record)}
+										>
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
 												fill="none"
@@ -53,7 +66,10 @@ const BuCorTable = ({ bucorRecords }: any) => {
 												/>
 											</svg>
 										</div>
-										<div className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110 cursor-pointer">
+										<div
+											className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110 cursor-pointer"
+											onClick={() => onShowEdit(record.id)}
+										>
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
 												fill="none"
@@ -69,7 +85,10 @@ const BuCorTable = ({ bucorRecords }: any) => {
 												/>
 											</svg>
 										</div>
-										<div className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110 cursor-pointer">
+										<div
+											className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110 cursor-pointer"
+											onClick={() => onShowWarning(record.id)}
+										>
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
 												fill="none"

@@ -30,7 +30,9 @@ const CriminalCaseTable = ({
 									{crime.case_no}
 								</td>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
-									{crime.crime_type}
+									{crime.crime_type.includes("[")
+										? crime.crime_type.slice(1, -1).replace(/['"]+/g, "")
+										: crime.crime_type}
 								</td>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
 									{moment(crime.hearing_date).format("ll")}

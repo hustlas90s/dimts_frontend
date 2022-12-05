@@ -1,18 +1,110 @@
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { getDocketList } from "../../../redux/dataSlice";
-import AddNewButton from "../../../components/AddNewButton";
+import {
+	sendDocumentEmail,
+	getTransferedDocuments,
+	getOfficesList,
+	getDocketList,
+	deleteDocument,
+} from "../../../redux/dataSlice";
 import MoonLoader from "react-spinners/MoonLoader";
 import TransferedDocumentsTable from "./TransferedDocumentsTable";
 import AdminBreadCrumbs from "../../../components/admin/AdminBreadCrumbs";
+import SendDocument from "../../../components/admin/SendDocument";
+import SuccessModal from "../../../components/SuccessModal";
+import WarningModal from "../../../components/WarningModal";
+import DeletedModal from "../../../components/DeletedModal";
+import useCrudModals from "../../../hooks/useCrudModals";
+import useModalIDs from "../../../hooks/useModalIDs";
 
 const ServedDocsView = () => {
 	const dispatch = useAppDispatch();
-	const { dataLoading } = useAppSelector((state: any) => state.dataState);
+	const { dataLoading, transferedDocuments, officesList, docketList } =
+		useAppSelector((state) => state.dataState);
+	const {
+		viewModal,
+		setViewModal,
+		showAddModal,
+		setShowAddModal,
+		showSuccessModal,
+		showEditModal,
+		setShowEditModal,
+		setShowSuccessModal,
+		showWarningModal,
+		setShowWarningModal,
+		showDeleteModal,
+		setShowDeleteModal,
+	} = useCrudModals();
+	const {
+		selectedID,
+		setSelectedID,
+		selectedObject,
+		setSelectedObject,
+		successText,
+		setSuccessText,
+	} = useModalIDs();
+
+	useEffect(() => {
+		dispatch(getTransferedDocuments());
+		dispatch(getOfficesList());
+		dispatch(getDocketList());
+	}, []);
+
+	const onSubmitNewDocument = useCallback(() => {
+		dispatch(getTransferedDocuments());
+		setSuccessText("Sending of document is successful");
+		setShowAddModal(false);
+		setShowSuccessModal(true);
+		setTimeout(() => {
+			setShowSuccessModal(false);
+		}, 3000);
+	}, [showAddModal]);
+
+	const onShowWarningModal = (account_id: number) => {
+		setSelectedID(account_id);
+		setShowWarningModal(true);
+	};
+
+	const onDeleteDocument = useCallback(() => {
+		setSuccessText("Deletion of transfered document is successful");
+		dispatch(deleteDocument(selectedID)).then(() => {
+			dispatch(getTransferedDocuments());
+			setShowWarningModal(false);
+			setShowDeleteModal(true);
+			setTimeout(() => {
+				setShowDeleteModal(false);
+			}, 3000);
+		});
+	}, [showDeleteModal, showWarningModal]);
 
 	return (
 		<div className="flex flex-col gap-y-5 font-mont text-gray-700">
-			<AdminBreadCrumbs activeText="Served Documents" />
+			<SendDocument
+				isShow={showAddModal}
+				onConfirm={() => onSubmitNewDocument()}
+				onCancel={() => setShowAddModal(false)}
+				officeOptions={officesList}
+				caseOptions={docketList}
+			/>
+			<SuccessModal
+				isShow={showSuccessModal}
+				successTitle="Transfered Documents"
+				successText={successText}
+				onConfirm={() => setShowSuccessModal(false)}
+			/>
+			<WarningModal
+				isShow={showWarningModal}
+				warningText="document"
+				onConfirm={() => onDeleteDocument()}
+				onCancel={() => setShowWarningModal(false)}
+			/>
+			<DeletedModal
+				isShow={showDeleteModal}
+				deletedTitle="Transfered Document"
+				deletedText={successText}
+				onConfirm={() => setShowDeleteModal(false)}
+			/>
+			<AdminBreadCrumbs activeText="Transfered Documents" />
 			<div className="w-full bg-white font-mont flex flex-col gap-y-5 text-gray-700 p-5 shadow border-b border-gray-200 rounded-lg">
 				{/*  */}
 				<div className="w-full flex justify-between">
@@ -23,7 +115,7 @@ const ServedDocsView = () => {
 					<button
 						type="button"
 						className={`bg-purple-600 hover:bg-purple-500 px-3 py-2 text-white font-semibold rounded-lg transition-colors ease-out duration-200 flex items-center gap-x-2`}
-						onClick={() => console.log("Justine Gwapo")}
+						onClick={() => setShowAddModal(true)}
 					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
@@ -56,7 +148,12 @@ const ServedDocsView = () => {
 						/>
 					</div>
 				)}
-				{!dataLoading && <TransferedDocumentsTable transaferedDocuments={[]} />}
+				{!dataLoading && (
+					<TransferedDocumentsTable
+						transaferedDocuments={transferedDocuments}
+						onShowWarning={(e: number) => onShowWarningModal(e)}
+					/>
+				)}
 			</div>
 		</div>
 	);

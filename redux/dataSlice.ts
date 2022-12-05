@@ -13,9 +13,13 @@ interface DataShape {
     criminalCaseList: any;
     civilCaseList: any;
     courtHearingList: any;
+    upcomingHearingList: any;
     pnpRecords: any;
     bjmpRecords: any;
     bucorRecords: any;
+    transferedDocuments: any;
+    officeDocuments: any;
+    recentDocuments: any;
 }
 
 const initialState: DataShape = {
@@ -29,9 +33,13 @@ const initialState: DataShape = {
     criminalCaseList : [],
     civilCaseList : [],
     courtHearingList : [],
+    upcomingHearingList : [],
     pnpRecords : [],
     bjmpRecords : [],
     bucorRecords : [],
+    transferedDocuments : [],
+    officeDocuments: [],
+    recentDocuments : [],
 }
 
 // ACCOUNT THUNKS
@@ -102,6 +110,14 @@ export const getCourtHearings = createAsyncThunk(
     async () => {
         const dataRepo = new DataRepository()
         return await dataRepo.GetCourtHearings(localStorage.jwt_token)
+    }
+)
+
+export const getUpcomingHearings = createAsyncThunk(
+    'data/getUpcomingHearings',
+    async () => {
+        const dataRepo = new DataRepository()
+        return await dataRepo.GetUpcomingHearings(localStorage.jwt_token)
     }
 )
 
@@ -227,6 +243,47 @@ export const deleteDetainee = createAsyncThunk(
     }
 )
 
+// TRANSFERED DOCUMENT THUNKS
+export const sendDocumentEmail = createAsyncThunk(
+    'data/sendDocumentEmail',
+    async (formData: any) => {
+        const dataRepo = new DataRepository()
+        await dataRepo.SendDocumentEmail(localStorage.jwt_token, formData)
+    }
+)
+
+export const getTransferedDocuments = createAsyncThunk(
+    'data/getTransferedDocuments',
+    async () => {
+        const dataRepo = new DataRepository()
+        return await dataRepo.GetTransferedDocuments(localStorage.jwt_token)
+    }
+)
+
+export const getOfficeDocuments = createAsyncThunk(
+    'data/getOfficeDocuments',
+    async () => {
+        const dataRepo = new DataRepository()
+        return await dataRepo.GetOfficeDocuments(localStorage.jwt_token)
+    }
+)
+
+export const getRecentDocuments = createAsyncThunk(
+    'data/getRecentDocuments',
+    async () => {
+        const dataRepo = new DataRepository()
+        return await dataRepo.GetRecentDocuments(localStorage.jwt_token)
+    }
+)
+
+export const deleteDocument = createAsyncThunk(
+    'data/deleteDocument',
+    async (document_id: number) => {
+        const dataRepo = new DataRepository()
+        return await dataRepo.DeleteDocument(localStorage.jwt_token, document_id)
+    }
+) 
+
 const dataSlice = createSlice({
     name : 'data',
     initialState,
@@ -336,6 +393,16 @@ const dataSlice = createSlice({
         builder.addCase(getCourtHearings.rejected, (state) => {
             return { ...state, dataLoading : false }
         })
+        // Get Upcoming Hearings
+        builder.addCase(getUpcomingHearings.pending, (state) => {
+            return { ...state, dataLoading : true }
+        })
+        builder.addCase(getUpcomingHearings.fulfilled, (state, action) => {
+            return { ...state, dataLoading : false, upcomingHearingList : action.payload }
+        })
+        builder.addCase(getUpcomingHearings.rejected, (state) => {
+            return { ...state, dataLoading : false }
+        })
         // Delete Hearing
         builder.addCase(deleteHearing.pending, (state) => {
             return { ...state, dataLoading : true }
@@ -385,6 +452,37 @@ const dataSlice = createSlice({
             return { ...state, dataLoading : false }
         })
         builder.addCase(createNewDetainee.rejected, (state) => {
+            return { ...state, dataLoading : false }
+        })
+        // TRANSFERED DOCUMENTS
+        // Get Transfered Documents
+        builder.addCase(getTransferedDocuments.pending, (state) => {
+            return { ...state, dataLoading : true }
+        })
+        builder.addCase(getTransferedDocuments.fulfilled, (state, action) => {
+            return { ...state, dataLoading : false, transferedDocuments : action.payload }
+        })
+        builder.addCase(getTransferedDocuments.rejected, (state) => {
+            return { ...state, dataLoading : false }
+        })
+        // Get Office Documents
+        builder.addCase(getOfficeDocuments.pending, (state) => {
+            return { ...state, dataLoading : true }
+        })
+        builder.addCase(getOfficeDocuments.fulfilled, (state, action) => {
+            return { ...state, dataLoading : false, officeDocuments : action.payload }
+        })
+        builder.addCase(getOfficeDocuments.rejected, (state) => {
+            return { ...state, dataLoading : false }
+        })
+        // Get Recent Documents
+        builder.addCase(getRecentDocuments.pending, (state) => {
+            return { ...state, dataLoading : true }
+        })
+        builder.addCase(getRecentDocuments.fulfilled, (state, action) => {
+            return { ...state, dataLoading : false, recentDocuments : action.payload }
+        })
+        builder.addCase(getRecentDocuments.rejected, (state) => {
             return { ...state, dataLoading : false }
         })
     }

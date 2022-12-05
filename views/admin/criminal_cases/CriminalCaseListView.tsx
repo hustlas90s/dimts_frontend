@@ -2,17 +2,20 @@ import { useCallback, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { getCriminalCases, deleteDocket } from "../../../redux/dataSlice";
 import AddNewButton from "../../../components/AddNewButton";
+import PrintButton from "../../../components/PrintButton";
 import MoonLoader from "react-spinners/MoonLoader";
 import CriminalCaseTable from "./CriminalCaseTable";
 import AdminBreadCrumbs from "../../../components/admin/AdminBreadCrumbs";
 import ViewCase from "../../../components/admin/ViewCase";
-import AddCase from "../../../components/admin/AddCase";
+import AddCriminalCase from "../../../components/admin/AddCriminalCases";
 import UpdateCase from "../../../components/admin/UpdateCase";
 import SuccessModal from "../../../components/SuccessModal";
 import WarningModal from "../../../components/WarningModal";
 import DeletedModal from "../../../components/DeletedModal";
 import useCrudModals from "../../../hooks/useCrudModals";
 import useModalIDs from "../../../hooks/useModalIDs";
+import { ExportToCsv } from "export-to-csv";
+import moment from "moment";
 
 const CriminalCaseListView = () => {
 	const dispatch = useAppDispatch();
@@ -109,6 +112,30 @@ const CriminalCaseListView = () => {
 		});
 	}, [showDeleteModal, showWarningModal]);
 
+	const onExportCases = () => {
+		const csvCases = criminalCaseList.map((crime: any) => {
+			return {
+				case_no: crime.case_no,
+				document_title: crime.document_title,
+				case_title: crime.case_title,
+				crime_type: crime.crime_type,
+				received_date: moment(crime.received_date).format("ll"),
+				hearing_date: moment(crime.hearing_date).format("ll"),
+				arraignment_date: moment(crime.arraignment_date).format("ll"),
+				initial_trial_date: moment(crime.initial_trial_date).format("ll"),
+				last_court_action: crime.last_court_action,
+				raffled_court: crime.raffled_court,
+				judge_assigned: crime.judge_assigned,
+				case_status: crime.case_status,
+			};
+		});
+		const csvExporter = new ExportToCsv({
+			useKeysAsHeaders: true,
+			filename: "Criminal Cases",
+		});
+		csvExporter.generateCsv(csvCases);
+	};
+
 	return (
 		<div className="flex flex-col gap-y-5 font-mont text-gray-700">
 			<ViewCase
@@ -118,13 +145,12 @@ const CriminalCaseListView = () => {
 				onClose={() => setViewModal(false)}
 				selectedCase={selectedObject}
 			/>
-			<AddCase
+			<AddCriminalCase
 				isShow={showAddModal}
 				addTitle="Criminal Case"
 				addText="Create new criminal record"
 				onConfirm={() => onSubmitNewCase()}
 				onCancel={() => setShowAddModal(false)}
-				caseType="Criminal"
 			/>
 			<UpdateCase
 				isShow={showEditModal}
@@ -157,10 +183,13 @@ const CriminalCaseListView = () => {
 				{/*  */}
 				<div className="w-full flex justify-between">
 					<h4 className="text-xl font-black tracking-wider">Criminal Cases</h4>
-					<AddNewButton
-						btnText="New Case"
-						onClickAdd={() => setShowAddModal(true)}
-					/>
+					<div className="flex gap-x-5 items-center">
+						<PrintButton onClickPrint={() => onExportCases()} />
+						<AddNewButton
+							btnText="New Case"
+							onClickAdd={() => setShowAddModal(true)}
+						/>
+					</div>
 				</div>
 				{/*  */}
 				<div className="w-full border-b border-gray-200 -mt-3"></div>

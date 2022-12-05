@@ -2,6 +2,7 @@ import { useCallback, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { deleteDocket, getCivilCases } from "../../../redux/dataSlice";
 import AddNewButton from "../../../components/AddNewButton";
+import PrintButton from "../../../components/PrintButton";
 import MoonLoader from "react-spinners/MoonLoader";
 import CivilCaseTable from "./CivilCaseTable";
 import AdminBreadCrumbs from "../../../components/admin/AdminBreadCrumbs";
@@ -13,6 +14,9 @@ import WarningModal from "../../../components/WarningModal";
 import DeletedModal from "../../../components/DeletedModal";
 import useCrudModals from "../../../hooks/useCrudModals";
 import useModalIDs from "../../../hooks/useModalIDs";
+import moment from "moment";
+import { ExportToCsv } from "export-to-csv";
+import AddCivilCase from "../../../components/admin/AddCivilCases";
 
 const CivilCaseListView = () => {
 	const dispatch = useAppDispatch();
@@ -112,6 +116,30 @@ const CivilCaseListView = () => {
 		dispatch(getCivilCases());
 	}, []);
 
+	const onExportCases = () => {
+		const csvCases = civilCaseList.map((crime: any) => {
+			return {
+				case_no: crime.case_no,
+				document_title: crime.document_title,
+				case_title: crime.case_title,
+				crime_type: crime.crime_type,
+				received_date: moment(crime.received_date).format("ll"),
+				hearing_date: moment(crime.hearing_date).format("ll"),
+				arraignment_date: moment(crime.arraignment_date).format("ll"),
+				initial_trial_date: moment(crime.initial_trial_date).format("ll"),
+				last_court_action: crime.last_court_action,
+				raffled_court: crime.raffled_court,
+				judge_assigned: crime.judge_assigned,
+				case_status: crime.case_status,
+			};
+		});
+		const csvExporter = new ExportToCsv({
+			useKeysAsHeaders: true,
+			filename: "Civil Cases",
+		});
+		csvExporter.generateCsv(csvCases);
+	};
+
 	return (
 		<div className="flex flex-col gap-y-5 font-mont text-gray-700">
 			<ViewCase
@@ -121,13 +149,12 @@ const CivilCaseListView = () => {
 				onClose={() => setViewModal(false)}
 				selectedCase={selectedObject}
 			/>
-			<AddCase
+			<AddCivilCase
 				isShow={showAddModal}
 				addTitle="Civil Case"
 				addText="Create new civil record"
 				onConfirm={() => onSubmitNewCase()}
 				onCancel={() => setShowAddModal(false)}
-				caseType="Civil"
 			/>
 			<UpdateCase
 				isShow={showEditModal}
@@ -160,10 +187,13 @@ const CivilCaseListView = () => {
 				{/*  */}
 				<div className="w-full flex justify-between">
 					<h4 className="text-xl font-black tracking-wider">Civil Cases</h4>
-					<AddNewButton
-						btnText="New Case"
-						onClickAdd={() => setShowAddModal(true)}
-					/>
+					<div className="flex gap-x-5 items-center">
+						<PrintButton onClickPrint={() => onExportCases()} />
+						<AddNewButton
+							btnText="New Case"
+							onClickAdd={() => setShowAddModal(true)}
+						/>
+					</div>
 				</div>
 				{/*  */}
 				<div className="w-full border-b border-gray-200 -mt-3"></div>

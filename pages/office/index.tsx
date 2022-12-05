@@ -1,5 +1,5 @@
-import OfficeUploadView from "../../views/admin/office/OfficeView";
+import OfficeUploadView from "../../views/office/OfficeView";
 
 export default function office() {
-  return <OfficeUploadView />;
+	return <OfficeUploadView />;
 }

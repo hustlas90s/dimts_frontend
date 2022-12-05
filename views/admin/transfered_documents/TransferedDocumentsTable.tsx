@@ -1,37 +1,44 @@
-import React from "react";
+import moment from "moment";
 
-const ServedDocsTable = ({ transaferedDocuments }: any) => {
+const ServedDocsTable = ({ transaferedDocuments, onShowWarning }: any) => {
 	return (
 		<div className="overflow-x-auto">
 			<table className="min-w-max w-full table-auto">
 				<thead>
 					<tr className="bg-gray-100 text-gray-600 text-sm leading-normal">
 						<th className="py-3 px-6 text-left">Office</th>
-						<th className="py-3 px-6 text-left">Barcode No.</th>
+						<th className="py-3 px-6 text-left">QRCode Tracker</th>
 						<th className="py-3 px-6 text-left">Case No.</th>
 						<th className="py-3 px-6 text-left">Date Submitted</th>
+						<th className="py-3 px-6 text-left">Status</th>
 						<th className="py-3 px-6 text-center">Actions</th>
 					</tr>
 				</thead>
 				<tbody className="text-gray-600 text-sm">
 					{transaferedDocuments.map((doc: any) => {
 						return (
-							<tr className="border-b border-gray-200 hover:bg-gray-50">
+							<tr
+								key={doc.id}
+								className="border-b border-gray-200 hover:bg-gray-50"
+							>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
-									{doc.office}
+									{doc.office__first_name}
 								</td>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
-									{doc.barcode_no}
+									{doc.case__qr_code_tracker}
 								</td>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
-									{doc.case_no}
+									{doc.case__case_no}
 								</td>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
-									{doc.date_submitted}
+									{moment(doc.date_received).format("ll")}
+								</td>
+								<td className="py-3 px-6 text-left whitespace-nowrap">
+									{doc.status}
 								</td>
 								<td className="py-3 px-6 text-center">
 									<div className="flex items-center justify-center gap-x-5">
-										<div className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110">
+										<div className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110 hover:cursor-pointer">
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
 												fill="none"
@@ -53,23 +60,10 @@ const ServedDocsTable = ({ transaferedDocuments }: any) => {
 												/>
 											</svg>
 										</div>
-										<div className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110">
-											<svg
-												xmlns="http://www.w3.org/2000/svg"
-												fill="none"
-												viewBox="0 0 24 24"
-												stroke="currentColor"
-												className="w-5 h-5"
-											>
-												<path
-													strokeLinecap="round"
-													strokeLinejoin="round"
-													strokeWidth="2"
-													d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-												/>
-											</svg>
-										</div>
-										<div className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110">
+										<div
+											className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110 hover:cursor-pointer"
+											onClick={() => onShowWarning(doc.id)}
+										>
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
 												fill="none"

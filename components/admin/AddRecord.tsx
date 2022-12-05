@@ -26,7 +26,7 @@ const AddRecord = ({
 	onCancel,
 	selectOptions,
 }: AddRecordParams) => {
-	const { control, handleSubmit, setValue } = useForm();
+	const { control, handleSubmit } = useForm();
 	const dispatch = useAppDispatch();
 
 	const onSubmit = (formData: any) => {

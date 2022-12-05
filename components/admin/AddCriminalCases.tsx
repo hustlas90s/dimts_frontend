@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { nanoid } from "@reduxjs/toolkit";
 import SubmitModal from "../SubmitModal";
 import MyInputField from "../MyInputField";
-import MySelectField from "../MySelectField";
+import MyMultiSelectField from "../MyMultiSelectField";
 import { useForm } from "react-hook-form";
 import { fieldRules } from "../authHelper";
 import { useAppDispatch } from "../../redux/hooks";
@@ -10,23 +10,21 @@ import { createNewDocket } from "../../redux/dataSlice";
 import MyTextAreaField from "../MyTextArea";
 import { QRCodeCanvas } from "qrcode.react";
 
-interface AddCaseParams {
+interface AddCriminalCaseParams {
 	isShow: boolean;
 	addTitle: string;
 	addText: string;
 	onConfirm(): void;
 	onCancel(): void;
-	caseType: string;
 }
 
-const AddCase = ({
+const AddCriminalCase = ({
 	isShow,
 	addTitle,
 	addText,
 	onConfirm,
 	onCancel,
-	caseType,
-}: AddCaseParams) => {
+}: AddCriminalCaseParams) => {
 	const { control, handleSubmit, setValue } = useForm();
 	const dispatch = useAppDispatch();
 
@@ -38,12 +36,15 @@ const AddCase = ({
 		let qrBase64 = qrImage.toDataURL("image/jpeg");
 		console.log(qrBase64);
 		setShowLoading(true);
+		const crimes = formData.caseCrimeType.map((crime: any) => {
+			return crime.value;
+		});
 		const data = {
 			type_of_case: formData.caseType,
 			case_no: formData.caseNo,
 			document_title: formData.caseDocTitle,
 			case_title: formData.caseTitle,
-			crime_type: formData.caseCrimeType,
+			crime_type: JSON.stringify(crimes),
 			received_date: formData.caseReceived,
 			hearing_date: formData.caseHearing,
 			arraignment_date: formData.caseArraignment,
@@ -56,6 +57,7 @@ const AddCase = ({
 			qr_code_tracker: qrValue,
 		};
 		setTimeout(() => {
+			console.log(data);
 			dispatch(createNewDocket(data)).then(() => {
 				setShowLoading(false);
 				onConfirm();
@@ -83,7 +85,7 @@ const AddCase = ({
 					fieldType="text"
 					fieldName="caseType"
 					fieldRules={fieldRules.requiredRule}
-					defaultValue={caseType}
+					defaultValue="Criminal"
 					readOnly={true}
 					setFieldValue={setValue}
 				/>
@@ -114,7 +116,7 @@ const AddCase = ({
 					defaultValue=""
 					placeHolder=""
 				/>
-				<MySelectField
+				<MyMultiSelectField
 					myControl={control}
 					myOptions={[
 						{ label: "Antisocial Behaviour", value: "Antisocial Behaviour" },
@@ -234,4 +236,4 @@ const AddCase = ({
 	);
 };
 
-export default AddCase;
+export default AddCriminalCase;

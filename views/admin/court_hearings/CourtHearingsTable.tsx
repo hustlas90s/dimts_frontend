@@ -45,7 +45,11 @@ const CourtHearingsTable = ({
 									{hearing.case__case_no}
 								</td>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
-									{hearing.case__crime_type}
+									{hearing.case__crime_type.includes("[")
+										? hearing.case__crime_type
+												.slice(1, -1)
+												.replace(/['"]+/g, "")
+										: hearing.case__crime_type}
 								</td>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
 									{moment(hearing.hearing_schedule).format("LL")}
