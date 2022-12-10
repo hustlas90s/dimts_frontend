@@ -20,6 +20,11 @@ interface DataShape {
     transferedDocuments: any;
     officeDocuments: any;
     recentDocuments: any;
+    cluster1: any;
+    cluster2: any;
+    cluster3: any;
+    cluster4: any;
+    cluster5: any;
 }
 
 const initialState: DataShape = {
@@ -40,6 +45,11 @@ const initialState: DataShape = {
     transferedDocuments : [],
     officeDocuments: [],
     recentDocuments : [],
+    cluster1 : [],
+    cluster2 : [],
+    cluster3 : [],
+    cluster4 : [],
+    cluster5 : [],
 }
 
 // ACCOUNT THUNKS
@@ -284,6 +294,15 @@ export const deleteDocument = createAsyncThunk(
     }
 ) 
 
+// CLUSTERING
+export const getKmeansClustering = createAsyncThunk(
+    'data/getKmeansClustering',
+    async () => {
+        const dataRepo = new DataRepository()
+        return await dataRepo.GetKmeansClustering(localStorage.jwt_token)
+    }
+)
+
 const dataSlice = createSlice({
     name : 'data',
     initialState,
@@ -483,6 +502,35 @@ const dataSlice = createSlice({
             return { ...state, dataLoading : false, recentDocuments : action.payload }
         })
         builder.addCase(getRecentDocuments.rejected, (state) => {
+            return { ...state, dataLoading : false }
+        })
+        // Get Kmeans Clustering
+        builder.addCase(getKmeansClustering.pending, (state) => {
+            return { ...state, dataLoading : true }
+        })
+        builder.addCase(getKmeansClustering.fulfilled, (state, action) => {
+            const clusterDates = [5, 8, 7.5, 7.1, 7.2, 6, 6.5, 8.2, 8.3, 5.4, 5, 6.1, 8.1]
+            return { 
+                ...state, 
+                dataLoading : false, 
+                cluster1 : action.payload.cluster1.map((cluster: any, key: any) => {
+                    return  { x : cluster, y : clusterDates.reverse()[key] }
+                }),
+                cluster2 : action.payload.cluster2.map((cluster: any, key: any) => {
+                    return  { x : cluster, y : clusterDates[key] }
+                }),
+                cluster3 : action.payload.cluster3.map((cluster: any, key: any) => {
+                    return  { x : cluster, y : clusterDates.reverse()[key] }
+                }),
+                cluster4 : action.payload.cluster4.map((cluster: any, key: any) => {
+                    return  { x : cluster, y : clusterDates[key] }
+                }),
+                cluster5 : action.payload.cluster5.map((cluster: any, key: any) => {
+                    return  { x : cluster, y : clusterDates.reverse()[key] }
+                })
+            }
+        })
+        builder.addCase(getKmeansClustering.rejected, (state) => {
             return { ...state, dataLoading : false }
         })
     }

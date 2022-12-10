@@ -151,6 +151,16 @@ export default class DataRepository {
         })
         return JSON.parse(data)
     }
+    // Get Kmeans Clustering
+    async GetKmeansClustering(jwt_token: string) {
+        const {data} = await backendConn.get('clustering/', {
+            headers : {
+                Authorization : `Bearer ${ jwt_token }`,
+                'Content-Type' : 'aplication/json'
+            }
+        })
+        return JSON.parse(data)
+    }
     // POST REQUESTS
     // Create new court hearing
     async NewCourtHearing(jwt_token: string, formData: any) {
