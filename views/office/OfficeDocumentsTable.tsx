@@ -1,4 +1,7 @@
 import moment from "moment";
+import ViewRecord from "../../components/admin/ViewRecord";
+import useCrudModals from "../../hooks/useCrudModals";
+import useModalIDs from "../../hooks/useModalIDs";
 
 const OfficeDocumentsTable = ({ officeDocuments }: any) => {
 	return (
