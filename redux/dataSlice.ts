@@ -286,6 +286,14 @@ export const getRecentDocuments = createAsyncThunk(
     }
 )
 
+export const updateDocument = createAsyncThunk(
+    'data/updateDocument',
+    async (args: { formData: any, document_id: number }) => {
+        const dataRepo = new DataRepository()
+        return await dataRepo.UpdateDocument(localStorage.jwt_token, args.formData, args.document_id)
+    }
+)
+
 export const deleteDocument = createAsyncThunk(
     'data/deleteDocument',
     async (document_id: number) => {

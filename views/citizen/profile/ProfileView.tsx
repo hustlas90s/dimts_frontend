@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import AdminBreadCrumbs from "../../../components/admin/AdminBreadCrumbs";
+import CitizenBreadCrumbs from "../../../components/citzen/CitizenBreadCrumbs";
 import jwtDecode from "jwt-decode";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { getUserInfo } from "../../../redux/dataSlice";
@@ -33,13 +33,14 @@ const ProfileView = () => {
 				successText="Updating of citizen account is successful"
 				onConfirm={() => setShowSuccessModal(false)}
 			/>
-			<AdminBreadCrumbs activeText="Identification" />
+			<CitizenBreadCrumbs activeText="Identification" />
 			{/*  */}
 			<div className="w-full bg-white font-mont flex flex-col gap-y-5 text-gray-700 px-5 pt-5 pb-16 shadow border-b border-gray-200 rounded-lg">
 				<div className="w-full flex flex-col justify-between items-center gap-y-5">
 					<h4 className="self-start text-xl font-black tracking-wider mb-5">
 						Identification
 					</h4>
+					<div className="w-full border-b border-gray-200 -mt-3"></div>
 					<ProfileFormView
 						userInfo={userInfo}
 						onSubmitForm={onSubmitForm}

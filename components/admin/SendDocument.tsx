@@ -60,7 +60,7 @@ const SendDocument = ({
 						return { label: option.case_no, value: option.id };
 					})}
 					fieldName="documentCase"
-					fieldLabel="Office"
+					fieldLabel="Case"
 					fieldRules={fieldRules.requiredRule}
 					defaultValue=""
 				/>

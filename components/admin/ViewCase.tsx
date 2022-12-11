@@ -47,7 +47,12 @@ const ViewCase = ({
 				{/*  */}
 				<div className="flex flex-col gap-y-1">
 					<h4 className="font-bold">Crime Type</h4>
-					<p className="text-sm text-gray-500">{selectedCase.crime_type}</p>
+					<p className="text-sm text-gray-500">
+						{selectedCase.crime_type !== undefined &&
+						selectedCase?.crime_type.includes("[")
+							? selectedCase.crime_type.slice(1, -1).replace(/['"]+/g, "")
+							: selectedCase.crime_type}
+					</p>
 				</div>
 				{/*  */}
 				<div className="flex flex-col gap-y-1">
