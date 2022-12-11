@@ -7,9 +7,9 @@ const OfficeDocumentsTable = ({ officeDocuments }: any) => {
 				<thead>
 					<tr className="bg-gray-100 text-gray-600 text-sm leading-normal">
 						<th className="py-3 px-6 text-left">Case No.</th>
+						<th className="py-3 px-6 text-left">Crime Type</th>
 						<th className="py-3 px-6 text-left">Date Submitted</th>
 						<th className="py-3 px-6 text-left">Status</th>
-						<th className="py-3 px-6 text-center">Actions</th>
 					</tr>
 				</thead>
 				<tbody className="text-gray-600 text-sm">
@@ -23,12 +23,17 @@ const OfficeDocumentsTable = ({ officeDocuments }: any) => {
 									{doc.case__case_no}
 								</td>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
+									{doc.case__crime_type.includes("[")
+										? doc.case__crime_type.slice(1, -1).replace(/['"]+/g, "")
+										: doc.case__crime_type}
+								</td>
+								<td className="py-3 px-6 text-left whitespace-nowrap">
 									{moment(doc.date_received).format("LL")}
 								</td>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
 									{doc.status}
 								</td>
-								<td className="py-3 px-6 text-center">
+								{/* <td className="py-3 px-6 text-center">
 									<div className="flex items-center justify-center gap-x-5">
 										<div className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110 cursor-pointer">
 											<svg
@@ -47,7 +52,7 @@ const OfficeDocumentsTable = ({ officeDocuments }: any) => {
 											</svg>
 										</div>
 									</div>
-								</td>
+								</td> */}
 							</tr>
 						);
 					})}

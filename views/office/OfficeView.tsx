@@ -2,11 +2,13 @@ import { useCallback, useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import ImageUploader from "../../components/ImageUploader";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { getOfficeDocuments } from "../../redux/dataSlice";
+import { getOfficeDocuments, updateDocument } from "../../redux/dataSlice";
 import { fieldRules } from "../../components/authHelper";
 import InputWithSubmit from "../../components/InputWithSubmit";
 import MoonLoader from "react-spinners/MoonLoader";
 import OfficeDocumentsTable from "./OfficeDocumentsTable";
+import SuccessModal from "../../components/SuccessModal";
+import useCrudModals from "../../hooks/useCrudModals";
 
 const OfficeView = () => {
 	const dispatch = useAppDispatch();
@@ -14,6 +16,9 @@ const OfficeView = () => {
 		(state) => state.dataState
 	);
 	const { userProfile } = useAppSelector((state) => state.authState);
+	const { showSuccessModal, setShowSuccessModal } = useCrudModals();
+
+	const [trackerError, setTrackerError] = useState(false);
 
 	const { handleSubmit, control } = useForm();
 
@@ -21,12 +26,39 @@ const OfficeView = () => {
 		dispatch(getOfficeDocuments());
 	}, []);
 
+	const afterSubmission = useCallback(() => {
+		dispatch(getOfficeDocuments());
+		setShowSuccessModal(true);
+		setTimeout(() => {
+			setShowSuccessModal(false);
+		}, 3000);
+	}, [showSuccessModal]);
+
 	const onSubmitQrTracker = (formData: any) => {
-		console.log(formData);
+		const selectedDocument = officeDocuments.find(
+			(doc: any) => doc.case__qr_code_tracker === formData.officeQrTracker
+		);
+		if (!selectedDocument) {
+			setTrackerError(true);
+			return;
+		}
+		setTrackerError(false);
+		const data = {
+			status: "Acknowledged",
+		};
+		dispatch(
+			updateDocument({ formData: data, document_id: selectedDocument.id })
+		).then(() => afterSubmission());
 	};
 
 	return (
-		<div className="min-h-screen flex flex-col items-center gap-y-20 font-mont text-gray-700">
+		<div className="relative min-h-screen flex flex-col items-center gap-y-20 font-mont text-gray-700">
+			<SuccessModal
+				isShow={showSuccessModal}
+				successTitle="Transfered Documents"
+				successText="Document has been acknowledged"
+				onConfirm={() => setShowSuccessModal(false)}
+			/>
 			<div className="w-[80%] bg-white font-mont flex flex-col gap-y-5 text-gray-700 p-5 shadow border-b border-gray-200 rounded-lg mt-10">
 				<h4 className="text-xl font-black tracking-wider">
 					{userProfile.first_name}
@@ -46,6 +78,11 @@ const OfficeView = () => {
 						placeHolder="QR Code Tracker"
 						onClickSubmit={handleSubmit(onSubmitQrTracker)}
 					/>
+					{trackerError && (
+						<p className="w-96 text-xs text-rose-500 -mt-4">
+							Invalid QR Code Tracker
+						</p>
+					)}
 				</div>
 			</div>
 			<div className="w-[80%] bg-white font-mont flex flex-col gap-y-5 text-gray-700 p-5 shadow border-b border-gray-200 rounded-lg">

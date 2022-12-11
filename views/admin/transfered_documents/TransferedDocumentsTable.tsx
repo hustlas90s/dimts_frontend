@@ -1,6 +1,10 @@
 import moment from "moment";
 
-const ServedDocsTable = ({ transaferedDocuments, onShowWarning }: any) => {
+const ServedDocsTable = ({
+	transaferedDocuments,
+	onViewDocument,
+	onShowWarning,
+}: any) => {
 	return (
 		<div className="overflow-x-auto">
 			<table className="min-w-max w-full table-auto">
@@ -38,7 +42,10 @@ const ServedDocsTable = ({ transaferedDocuments, onShowWarning }: any) => {
 								</td>
 								<td className="py-3 px-6 text-center">
 									<div className="flex items-center justify-center gap-x-5">
-										<div className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110 hover:cursor-pointer">
+										<div
+											className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110 hover:cursor-pointer"
+											onClick={() => onViewDocument(doc)}
+										>
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
 												fill="none"

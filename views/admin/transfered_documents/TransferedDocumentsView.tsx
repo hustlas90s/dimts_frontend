@@ -16,6 +16,7 @@ import WarningModal from "../../../components/WarningModal";
 import DeletedModal from "../../../components/DeletedModal";
 import useCrudModals from "../../../hooks/useCrudModals";
 import useModalIDs from "../../../hooks/useModalIDs";
+import ViewDocument from "../../../components/admin/ViewDocument";
 
 const ServedDocsView = () => {
 	const dispatch = useAppDispatch();
@@ -50,6 +51,11 @@ const ServedDocsView = () => {
 		dispatch(getDocketList());
 	}, []);
 
+	const onViewTransferedDoc = (doc: any) => {
+		setSelectedObject(doc);
+		setViewModal(true);
+	};
+
 	const onSubmitNewDocument = useCallback(() => {
 		dispatch(getTransferedDocuments());
 		setSuccessText("Sending of document is successful");
@@ -79,6 +85,11 @@ const ServedDocsView = () => {
 
 	return (
 		<div className="flex flex-col gap-y-5 font-mont text-gray-700">
+			<ViewDocument
+				isShow={viewModal}
+				onClose={() => setViewModal(false)}
+				selectedDocument={selectedObject}
+			/>
 			<SendDocument
 				isShow={showAddModal}
 				onConfirm={() => onSubmitNewDocument()}
@@ -151,6 +162,7 @@ const ServedDocsView = () => {
 				{!dataLoading && (
 					<TransferedDocumentsTable
 						transaferedDocuments={transferedDocuments}
+						onViewDocument={(doc: any) => onViewTransferedDoc(doc)}
 						onShowWarning={(e: number) => onShowWarningModal(e)}
 					/>
 				)}
