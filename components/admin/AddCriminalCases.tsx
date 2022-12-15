@@ -7,7 +7,6 @@ import { useForm } from "react-hook-form";
 import { fieldRules } from "../authHelper";
 import { useAppDispatch } from "../../redux/hooks";
 import { createNewDocket } from "../../redux/dataSlice";
-import MyTextAreaField from "../MyTextArea";
 import { QRCodeCanvas } from "qrcode.react";
 
 interface AddCriminalCaseParams {
@@ -46,10 +45,6 @@ const AddCriminalCase = ({
 			case_title: formData.caseTitle,
 			crime_type: JSON.stringify(crimes),
 			received_date: formData.caseReceived,
-			hearing_date: formData.caseHearing,
-			arraignment_date: formData.caseArraignment,
-			initial_trial_date: formData.caseInital,
-			last_court_action: formData.caseLastAction,
 			raffled_court: formData.caseRaffled,
 			judge_assigned: formData.caseJudge,
 			case_status: formData.caseStatus,
@@ -79,16 +74,18 @@ const AddCriminalCase = ({
 			loadingState={showLoading}
 		>
 			<div className="grid grid-cols-2 gap-y-8 gap-x-5">
-				<MyInputField
-					control={control}
-					fieldLabel="Type of Case"
-					fieldType="text"
-					fieldName="caseType"
-					fieldRules={fieldRules.requiredRule}
-					defaultValue="Criminal"
-					readOnly={true}
-					setFieldValue={setValue}
-				/>
+				<div className="hidden">
+					<MyInputField
+						control={control}
+						fieldLabel="Type of Case"
+						fieldType="text"
+						fieldName="caseType"
+						fieldRules={fieldRules.requiredRule}
+						defaultValue="Criminal"
+						readOnly={true}
+						setFieldValue={setValue}
+					/>
+				</div>
 				<MyInputField
 					control={control}
 					fieldLabel="Case No."
@@ -151,7 +148,7 @@ const AddCriminalCase = ({
 					defaultValue=""
 					placeHolder=""
 				/>
-				<MyInputField
+				{/* <MyInputField
 					control={control}
 					fieldLabel="Hearing Date"
 					fieldType="date"
@@ -177,7 +174,7 @@ const AddCriminalCase = ({
 					fieldRules={fieldRules.requiredRule}
 					defaultValue=""
 					placeHolder=""
-				/>
+				/> */}
 				<MyInputField
 					control={control}
 					fieldLabel="Raffled Court"
@@ -205,16 +202,6 @@ const AddCriminalCase = ({
 					defaultValue=""
 					placeHolder=""
 				/>
-				<div className="col-span-2">
-					<MyTextAreaField
-						control={control}
-						fieldLabel="Last Court Action"
-						fieldName="caseLastAction"
-						fieldRules={fieldRules.requiredRule}
-						defaultValue=""
-						placeHolder=""
-					/>
-				</div>
 				<div className="col-span-2">
 					<div className="flex flex-col gap-y-1">
 						<p className="font-semibold text-sm text-gray-700">

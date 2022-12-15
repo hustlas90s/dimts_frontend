@@ -63,27 +63,6 @@ const ViewCase = ({
 				</div>
 				{/*  */}
 				<div className="flex flex-col gap-y-1">
-					<h4 className="font-bold">Hearing Date</h4>
-					<p className="text-sm text-gray-500">
-						{moment(selectedCase.hearing_date).format("LL")}
-					</p>
-				</div>
-				{/*  */}
-				<div className="flex flex-col gap-y-1">
-					<h4 className="font-bold">Arraignment Date</h4>
-					<p className="text-sm text-gray-500">
-						{moment(selectedCase.arraignment_date).format("LL")}
-					</p>
-				</div>
-				{/*  */}
-				<div className="flex flex-col gap-y-1">
-					<h4 className="font-bold">Initial Trial Date</h4>
-					<p className="text-sm text-gray-500">
-						{moment(selectedCase.initial_trial_date).format("LL")}
-					</p>
-				</div>
-				{/*  */}
-				<div className="flex flex-col gap-y-1">
 					<h4 className="font-bold">Raffled Court</h4>
 					<p className="text-sm text-gray-500">{selectedCase.raffled_court}</p>
 				</div>
@@ -98,12 +77,6 @@ const ViewCase = ({
 					<p className="text-sm text-gray-500">{selectedCase.case_status}</p>
 				</div>
 				{/*  */}
-				<div className="col-span-2 flex flex-col gap-y-1">
-					<h4 className="font-bold">Last Court Action</h4>
-					<p className="text-sm text-gray-500">
-						{selectedCase.last_court_action}
-					</p>
-				</div>
 				<div className="w-full col-span-2 flex flex-col gap-y-1">
 					<h4 className="font-bold">QRCode</h4>
 					<p className="text-xs">{selectedCase.qr_code_tracker}</p>

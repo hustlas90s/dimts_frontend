@@ -7,7 +7,7 @@ import MoonLoader from "react-spinners/MoonLoader";
 import CivilCaseTable from "./CivilCaseTable";
 import AdminBreadCrumbs from "../../../components/admin/AdminBreadCrumbs";
 import ViewCase from "../../../components/admin/ViewCase";
-import AddCase from "../../../components/admin/AddCase";
+import AddCivilCase from "../../../components/admin/AddCivilCases";
 import UpdateCase from "../../../components/admin/UpdateCase";
 import SuccessModal from "../../../components/SuccessModal";
 import WarningModal from "../../../components/WarningModal";
@@ -16,7 +16,6 @@ import useCrudModals from "../../../hooks/useCrudModals";
 import useModalIDs from "../../../hooks/useModalIDs";
 import moment from "moment";
 import { ExportToCsv } from "export-to-csv";
-import AddCivilCase from "../../../components/admin/AddCivilCases";
 
 const CivilCaseListView = () => {
 	const dispatch = useAppDispatch();
@@ -74,13 +73,9 @@ const CivilCaseListView = () => {
 			caseTitle: crime.case_title,
 			caseCrimeType: crime.crime_type,
 			caseReceived: crime.received_date,
-			caseHearing: crime.hearing_date,
-			caseArraignment: crime.arraignment_date,
-			caseInital: crime.initial_trial_date,
 			caseRaffled: crime.raffled_court,
 			caseJudge: crime.judge_assigned,
 			caseStatus: crime.case_status,
-			caseLastAction: crime.last_court_action,
 		});
 		setShowEditModal(true);
 	};
@@ -124,10 +119,6 @@ const CivilCaseListView = () => {
 				case_title: crime.case_title,
 				crime_type: crime.crime_type,
 				received_date: moment(crime.received_date).format("ll"),
-				hearing_date: moment(crime.hearing_date).format("ll"),
-				arraignment_date: moment(crime.arraignment_date).format("ll"),
-				initial_trial_date: moment(crime.initial_trial_date).format("ll"),
-				last_court_action: crime.last_court_action,
 				raffled_court: crime.raffled_court,
 				judge_assigned: crime.judge_assigned,
 				case_status: crime.case_status,

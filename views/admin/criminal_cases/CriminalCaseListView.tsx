@@ -74,13 +74,9 @@ const CriminalCaseListView = () => {
 			caseTitle: crime.case_title,
 			caseCrimeType: crime.crime_type,
 			caseReceived: crime.received_date,
-			caseHearing: crime.hearing_date,
-			caseArraignment: crime.arraignment_date,
-			caseInital: crime.initial_trial_date,
 			caseRaffled: crime.raffled_court,
 			caseJudge: crime.judge_assigned,
 			caseStatus: crime.case_status,
-			caseLastAction: crime.last_court_action,
 		});
 		setShowEditModal(true);
 	};
@@ -120,10 +116,6 @@ const CriminalCaseListView = () => {
 				case_title: crime.case_title,
 				crime_type: crime.crime_type,
 				received_date: moment(crime.received_date).format("ll"),
-				hearing_date: moment(crime.hearing_date).format("ll"),
-				arraignment_date: moment(crime.arraignment_date).format("ll"),
-				initial_trial_date: moment(crime.initial_trial_date).format("ll"),
-				last_court_action: crime.last_court_action,
 				raffled_court: crime.raffled_court,
 				judge_assigned: crime.judge_assigned,
 				case_status: crime.case_status,

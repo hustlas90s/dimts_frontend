@@ -1,5 +1,3 @@
-import moment from "moment";
-
 const CivilCaseTable = ({
 	civilCases,
 	onViewCase,
@@ -13,7 +11,6 @@ const CivilCaseTable = ({
 					<tr className="bg-gray-100 text-gray-600 text-sm leading-normal">
 						<th className="py-3 px-6 text-left">Case No.</th>
 						<th className="py-3 px-6 text-left">Crime Type</th>
-						<th className="py-3 px-6 text-left">Hearing Date</th>
 						<th className="py-3 px-6 text-left">Judge Assigned</th>
 						<th className="py-3 px-6 text-left">Case Status</th>
 						<th className="py-3 px-6 text-center">Actions</th>
@@ -33,9 +30,6 @@ const CivilCaseTable = ({
 									{crime.crime_type.includes("[")
 										? crime.crime_type.slice(1, -1).replace(/['"]+/g, "")
 										: crime.crime_type}
-								</td>
-								<td className="py-3 px-6 text-left whitespace-nowrap">
-									{moment(crime.hearing_date).format("ll")}
 								</td>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
 									{crime.judge_assigned}

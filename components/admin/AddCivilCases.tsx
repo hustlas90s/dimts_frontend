@@ -47,10 +47,6 @@ const AddCivilCase = ({
 			case_title: formData.caseTitle,
 			crime_type: JSON.stringify(crimes),
 			received_date: formData.caseReceived,
-			hearing_date: formData.caseHearing,
-			arraignment_date: formData.caseArraignment,
-			initial_trial_date: formData.caseInital,
-			last_court_action: formData.caseLastAction,
 			raffled_court: formData.caseRaffled,
 			judge_assigned: formData.caseJudge,
 			case_status: formData.caseStatus,
@@ -80,16 +76,18 @@ const AddCivilCase = ({
 			loadingState={showLoading}
 		>
 			<div className="grid grid-cols-2 gap-y-8 gap-x-5">
-				<MyInputField
-					control={control}
-					fieldLabel="Type of Case"
-					fieldType="text"
-					fieldName="caseType"
-					fieldRules={fieldRules.requiredRule}
-					defaultValue="Civil"
-					readOnly={true}
-					setFieldValue={setValue}
-				/>
+				<div className="hidden">
+					<MyInputField
+						control={control}
+						fieldLabel="Type of Case"
+						fieldType="hidden"
+						fieldName="caseType"
+						fieldRules={fieldRules.requiredRule}
+						defaultValue="Civil"
+						readOnly={true}
+						setFieldValue={setValue}
+					/>
+				</div>
 				<MyInputField
 					control={control}
 					fieldLabel="Case No."
@@ -133,7 +131,7 @@ const AddCivilCase = ({
 						},
 					]}
 					fieldName="caseCrimeType"
-					fieldLabel="Crime Type"
+					fieldLabel="Civil Type"
 					fieldRules={fieldRules.requiredRule}
 					defaultValue=""
 				/>
@@ -142,33 +140,6 @@ const AddCivilCase = ({
 					fieldLabel="Received Date"
 					fieldType="date"
 					fieldName="caseReceived"
-					fieldRules={fieldRules.requiredRule}
-					defaultValue=""
-					placeHolder=""
-				/>
-				<MyInputField
-					control={control}
-					fieldLabel="Hearing Date"
-					fieldType="date"
-					fieldName="caseHearing"
-					fieldRules={fieldRules.requiredRule}
-					defaultValue=""
-					placeHolder=""
-				/>
-				<MyInputField
-					control={control}
-					fieldLabel="Arraignment Date"
-					fieldType="date"
-					fieldName="caseArraignment"
-					fieldRules={fieldRules.requiredRule}
-					defaultValue=""
-					placeHolder=""
-				/>
-				<MyInputField
-					control={control}
-					fieldLabel="Initial Trial Date"
-					fieldType="date"
-					fieldName="caseInital"
 					fieldRules={fieldRules.requiredRule}
 					defaultValue=""
 					placeHolder=""
@@ -200,16 +171,6 @@ const AddCivilCase = ({
 					defaultValue=""
 					placeHolder=""
 				/>
-				<div className="col-span-2">
-					<MyTextAreaField
-						control={control}
-						fieldLabel="Last Court Action"
-						fieldName="caseLastAction"
-						fieldRules={fieldRules.requiredRule}
-						defaultValue=""
-						placeHolder=""
-					/>
-				</div>
 				<div className="col-span-2">
 					<div className="flex flex-col gap-y-1">
 						<p className="font-semibold text-sm text-gray-700">

@@ -14,6 +14,7 @@ import SuccessModal from "../../../components/SuccessModal";
 import WarningModal from "../../../components/WarningModal";
 import useCrudModals from "../../../hooks/useCrudModals";
 import useModalIDs from "../../../hooks/useModalIDs";
+import ViewProceeding from "../../../components/admin/ViewProceeding";
 
 const CourtProceedingsView = () => {
 	const dispatch = useAppDispatch();
@@ -21,6 +22,8 @@ const CourtProceedingsView = () => {
 		useAppSelector((state) => state.dataState);
 
 	const {
+		viewModal,
+		setViewModal,
 		showAddModal,
 		setShowAddModal,
 		showSuccessModal,
@@ -28,19 +31,27 @@ const CourtProceedingsView = () => {
 		showDeleteModal,
 		setShowDeleteModal,
 	} = useCrudModals();
-	const {
-		selectedID,
-		setSelectedID,
-		selectedObject,
-		setSelectedObject,
-		successText,
-		setSuccessText,
-	} = useModalIDs();
+	const { selectedID, setSelectedID, selectedObject, setSelectedObject } =
+		useModalIDs();
 
 	useEffect(() => {
 		dispatch(getCurrentDockets());
 		dispatch(getCourtProceedings());
 	}, []);
+
+	const onViewCourtProceeding = (proceeding: any) => {
+		setSelectedObject(proceeding);
+		setViewModal(true);
+	};
+
+	const onSubmitNewProceeding = useCallback(() => {
+		dispatch(getCourtProceedings());
+		setShowAddModal(false);
+		setShowSuccessModal(true);
+		setTimeout(() => {
+			setShowSuccessModal(false);
+		}, 3000);
+	}, [showAddModal]);
 
 	const onShowDeleteModal = (proceeding_id: number) => {
 		setSelectedID(proceeding_id);
@@ -48,7 +59,6 @@ const CourtProceedingsView = () => {
 	};
 
 	const onDeleteHearing = () => {
-		setSuccessText("Deletion of court proceeding is successful");
 		dispatch(deleteCourtProceeding(selectedID)).then(() => {
 			dispatch(getCourtProceedings());
 			setShowDeleteModal(false);
@@ -57,9 +67,14 @@ const CourtProceedingsView = () => {
 
 	return (
 		<div className="flex flex-col gap-y-5 font-mont text-gray-700">
+			<ViewProceeding
+				isShow={viewModal}
+				onClose={() => setViewModal(false)}
+				selectedProceeding={selectedObject}
+			/>
 			<AddProceeding
 				isShow={showAddModal}
-				onConfirm={() => console.log("Justine Gwapo")}
+				onConfirm={() => onSubmitNewProceeding()}
 				onCancel={() => setShowAddModal(false)}
 				selectOptions={currentDocketList}
 			/>
@@ -105,6 +120,9 @@ const CourtProceedingsView = () => {
 				{!dataLoading && (
 					<ProceedingsTable
 						courtProceedings={courtProceedingsList}
+						onViewProceeding={(proceeding: any) =>
+							onViewCourtProceeding(proceeding)
+						}
 						onShowWarning={(proceeding_id: number) =>
 							onShowDeleteModal(proceeding_id)
 						}

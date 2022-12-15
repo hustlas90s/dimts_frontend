@@ -63,16 +63,18 @@ const UpdateCase = ({
 			onCancel={onCancel}
 		>
 			<div className="grid grid-cols-2 gap-y-8 gap-x-5">
-				<MyInputField
-					control={control}
-					fieldLabel="Type of Case"
-					fieldType="text"
-					fieldName="caseType"
-					fieldRules={fieldRules.requiredRule}
-					defaultValue={caseType}
-					readOnly={true}
-					setFieldValue={setValue}
-				/>
+				<div className="hidden">
+					<MyInputField
+						control={control}
+						fieldLabel="Type of Case"
+						fieldType="hidden"
+						fieldName="caseType"
+						fieldRules={fieldRules.requiredRule}
+						defaultValue={caseType}
+						readOnly={true}
+						setFieldValue={setValue}
+					/>
+				</div>
 				<MyInputField
 					control={control}
 					fieldLabel="Case No."
@@ -141,36 +143,6 @@ const UpdateCase = ({
 				/>
 				<MyInputField
 					control={control}
-					fieldLabel="Hearing Date"
-					fieldType="date"
-					fieldName="caseHearing"
-					fieldRules={fieldRules.requiredRule}
-					defaultValue={selectedCase.caseHearing}
-					placeHolder=""
-					setFieldValue={setValue}
-				/>
-				<MyInputField
-					control={control}
-					fieldLabel="Arraignment Date"
-					fieldType="date"
-					fieldName="caseArraignment"
-					fieldRules={fieldRules.requiredRule}
-					defaultValue={selectedCase.caseArraignment}
-					placeHolder=""
-					setFieldValue={setValue}
-				/>
-				<MyInputField
-					control={control}
-					fieldLabel="Initial Trial Date"
-					fieldType="date"
-					fieldName="caseInital"
-					fieldRules={fieldRules.requiredRule}
-					defaultValue={selectedCase.caseInital}
-					placeHolder=""
-					setFieldValue={setValue}
-				/>
-				<MyInputField
-					control={control}
 					fieldLabel="Raffled Court"
 					fieldType="text"
 					fieldName="caseRaffled"
@@ -199,17 +171,6 @@ const UpdateCase = ({
 					placeHolder=""
 					setFieldValue={setValue}
 				/>
-				<div className="col-span-2">
-					<MyTextAreaField
-						control={control}
-						fieldLabel="Last Court Action"
-						fieldName="caseLastAction"
-						fieldRules={fieldRules.requiredRule}
-						defaultValue={selectedCase.caseLastAction}
-						placeHolder=""
-						setFieldValue={setValue}
-					/>
-				</div>
 			</div>
 		</SubmitModal>
 	);

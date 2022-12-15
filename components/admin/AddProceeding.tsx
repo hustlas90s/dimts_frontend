@@ -25,18 +25,13 @@ const AddProceeding = ({
 
 	const onSubmit = (formData: any) => {
 		console.log("Proceeding data: ", formData);
-		// const data = {
-		// 	name: `${formData.recordFirstName} ${formData.recordLastName}`,
-		// 	date_arrived: formData.recordDateArrived,
-		// 	date_released: formData.recordDateReleased
-		// 		? formData.recordDateReleased
-		// 		: "",
-		// 	assigned_personnel: formData.recordPersonnel,
-		// 	remarks: formData.recordRemarks,
-		// 	detained_in: detainedIn,
-		// 	case: formData.recordCase,
-		// };
-		// dispatch(createNewDetainee(data)).then(() => onConfirm());
+		const data = {
+			case: formData.proceedingCase,
+			proceeding_type: formData.proceedingType,
+			proceeding_date: formData.proceedingDate,
+			remarks: formData.proceedingRemarks,
+		};
+		dispatch(newCourtProceeding(data)).then(() => onConfirm());
 	};
 
 	return (
@@ -48,35 +43,40 @@ const AddProceeding = ({
 			onCancel={onCancel}
 		>
 			<div className="grid grid-cols-2 gap-y-8 gap-x-5">
-				<MySelectField
-					myControl={control}
-					myOptions={selectOptions.map((option: any) => {
-						return { label: option.case_no, value: option.id };
-					})}
-					fieldName="proceedingCase"
-					fieldLabel="Case"
-					fieldRules={fieldRules.requiredRule}
-					defaultValue=""
-				/>
-				<MySelectField
-					myControl={control}
-					myOptions={[
-						{ label: "Hearing", value: "Hearing" },
-						{ label: "Arraignment", value: "Arraignment" },
-						{ label: "Initial Trial", value: "Initial Trial" },
-					]}
-					fieldName="proceedingType"
-					fieldLabel="Proceeding Type"
-					fieldRules={fieldRules.requiredRule}
-					defaultValue=""
-				/>
+				<div className="w-72">
+					<MySelectField
+						myControl={control}
+						myOptions={selectOptions.map((option: any) => {
+							return { label: option.case_no, value: option.id };
+						})}
+						fieldName="proceedingCase"
+						fieldLabel="Case"
+						fieldRules={fieldRules.requiredRule}
+						defaultValue=""
+					/>
+				</div>
+				<div className="w-72">
+					<MySelectField
+						myControl={control}
+						myOptions={[
+							{ label: "Hearing", value: "Hearing" },
+							{ label: "Arraignment", value: "Arraignment" },
+							{ label: "Initial Trial", value: "Initial Trial" },
+							{ label: "Last Court Action", value: "Last Court Action" },
+						]}
+						fieldName="proceedingType"
+						fieldLabel="Proceeding Type"
+						fieldRules={fieldRules.requiredRule}
+						defaultValue=""
+					/>
+				</div>
 				<div className="col-span-2">
 					<MyInputFieldFull
 						control={control}
 						fieldLabel="Date"
 						fieldType="date"
 						fieldName="proceedingDate"
-						fieldRules=""
+						fieldRules={fieldRules.requiredRule}
 						defaultValue=""
 					/>
 				</div>
