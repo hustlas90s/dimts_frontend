@@ -32,9 +32,19 @@ export default class DataRepository {
         })
         return data.results
     }
-    // Get Docket List
-    async GetDocketList(jwt_token: string) {
-        const { data } = await backendConn.get('docket_cases/', {
+    // Get Current Dockets
+    async GetCurrentDockets(jwt_token: string) {
+        const { data } = await backendConn.get('current_dockets/', {
+            headers : {
+                Authorization : `Bearer ${ jwt_token }`,
+                'Content-Type' : 'aplication/json'
+            }
+        })
+        return data.results
+    }
+    // Get Past Dockets
+    async GetPastDockets(jwt_token: string) {
+        const { data } = await backendConn.get('past_dockets/', {
             headers : {
                 Authorization : `Bearer ${ jwt_token }`,
                 'Content-Type' : 'aplication/json'
@@ -161,6 +171,16 @@ export default class DataRepository {
         })
         return JSON.parse(data)
     }
+    // Get Court Proceedings
+    async GetCourtProceedings(jwt_token: string) {
+        const { data } = await backendConn.get('court_proceedings/', {
+            headers : {
+                Authorization : `Bearer ${ jwt_token }`,
+                'Content-Type' : 'aplication/json'
+            }
+        })
+        return JSON.parse(data)
+    }
     // POST REQUESTS
     // Create new court hearing
     async NewCourtHearing(jwt_token: string, formData: any) {
@@ -192,6 +212,15 @@ export default class DataRepository {
     // Send Document
     async SendDocumentEmail (jwt_token: string, formData: any) {
         const { data } = await backendConn.post('send_document_email/', formData, {
+            headers : {
+                Authorization : `Bearer ${ jwt_token }`
+            }
+        })
+        return data
+    }
+    // New Proceeding
+    async NewCourtProceeding(jwt_token: string, formData: any) {
+        const { data } = await backendConn.post('new_proceeding/', formData, {
             headers : {
                 Authorization : `Bearer ${ jwt_token }`
             }
@@ -284,6 +313,15 @@ export default class DataRepository {
     // Deelete document
     async DeleteDocument(jwt_token: string, document_id: number) {
         const { data } = await backendConn.delete(`document/delete/${ document_id }`, {
+            headers : {
+                Authorization : `Bearer ${ jwt_token }`
+            }
+        })
+        return data.results
+    }
+    // Delete Court Proceeding
+    async DeleteCourtProceeding(jwt_token: string, proceeding_id: number) {
+        const { data } = await backendConn.delete(`court_proceeding/delete/${ proceeding_id }`, {
             headers : {
                 Authorization : `Bearer ${ jwt_token }`
             }

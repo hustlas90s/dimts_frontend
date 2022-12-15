@@ -1,6 +1,6 @@
 import React from "react";
 
-const StaffListTable = ({ docketList }: any) => {
+const DocketListTable = ({ pastDocketList }: any) => {
 	return (
 		<div className="overflow-x-auto">
 			<table className="min-w-max w-full table-auto">
@@ -14,7 +14,7 @@ const StaffListTable = ({ docketList }: any) => {
 					</tr>
 				</thead>
 				<tbody className="text-gray-600 text-sm">
-					{docketList.map((docket: any) => {
+					{pastDocketList.map((docket: any) => {
 						return (
 							<tr
 								key={docket.id}
@@ -56,7 +56,7 @@ const StaffListTable = ({ docketList }: any) => {
 												/>
 											</svg>
 										</div>
-										<div className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110">
+										{/* <div className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110">
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
 												fill="none"
@@ -71,7 +71,7 @@ const StaffListTable = ({ docketList }: any) => {
 													d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
 												/>
 											</svg>
-										</div>
+										</div> */}
 										<div className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110">
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
@@ -99,4 +99,4 @@ const StaffListTable = ({ docketList }: any) => {
 	);
 };
 
-export default StaffListTable;
+export default DocketListTable;

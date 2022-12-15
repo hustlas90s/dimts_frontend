@@ -16,7 +16,7 @@ import UpdateRecord from "../../../components/admin/UpdateRecord";
 
 const BJMPView = () => {
 	const dispatch = useAppDispatch();
-	const { dataLoading, bjmpRecords, docketList } = useAppSelector(
+	const { dataLoading, bjmpRecords } = useAppSelector(
 		(state) => state.dataState
 	);
 

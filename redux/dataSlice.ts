@@ -9,7 +9,8 @@ interface DataShape {
     citizenList: any;
     officesList: any;
     provinceList: any;
-    docketList: any;
+    currentDocketList: any;
+    pastDocketList: any;
     criminalCaseList: any;
     civilCaseList: any;
     courtHearingList: any;
@@ -25,6 +26,7 @@ interface DataShape {
     cluster3: any;
     cluster4: any;
     cluster5: any;
+    courtProceedingsList: any;
 }
 
 const initialState: DataShape = {
@@ -34,7 +36,8 @@ const initialState: DataShape = {
     citizenList : [],
     officesList : [],
     provinceList : [],
-    docketList : [],
+    currentDocketList : [],
+    pastDocketList : [],
     criminalCaseList : [],
     civilCaseList : [],
     courtHearingList : [],
@@ -50,6 +53,7 @@ const initialState: DataShape = {
     cluster3 : [],
     cluster4 : [],
     cluster5 : [],
+    courtProceedingsList : [],
 }
 
 // ACCOUNT THUNKS
@@ -156,11 +160,19 @@ export const deleteHearing = createAsyncThunk(
 )
 
 // DOCKET THUNKS
-export const getDocketList = createAsyncThunk(
-    'data/getDocketList',
+export const getCurrentDockets = createAsyncThunk(
+    'data/getCurrentDockets',
     async () => {
         const dataRepo = new DataRepository()
-        return await dataRepo.GetDocketList(localStorage.jwt_token)
+        return await dataRepo.GetCurrentDockets(localStorage.jwt_token)
+    }
+)
+
+export const getPastDockets = createAsyncThunk(
+    'data/getPastDockets',
+    async () => {
+        const dataRepo = new DataRepository()
+        return await dataRepo.GetPastDockets(localStorage.jwt_token)
     }
 )
 
@@ -311,6 +323,32 @@ export const getKmeansClustering = createAsyncThunk(
     }
 )
 
+// COURT PROCEEDING THUNKS
+export const newCourtProceeding = createAsyncThunk(
+    'data/newCourtProceeding',
+    async (formData: any) => {
+        const dataRepo = new DataRepository()
+        await dataRepo.NewCourtProceeding(localStorage.jwt_token, formData)
+    }
+)
+
+export const getCourtProceedings = createAsyncThunk(
+    'data/getCourtProceedings',
+    async () => {
+        const dataRepo = new DataRepository()
+        return await dataRepo.GetCourtProceedings(localStorage.jwt_token)
+    }
+)
+
+export const deleteCourtProceeding = createAsyncThunk(
+    'data/deleteCourtProceeding',
+    async (proceeding_id: number) => {
+        const dataRepo = new DataRepository()
+        await dataRepo.DeleteCourtProceeding(localStorage.jwt_token, proceeding_id)
+    }
+)
+
+
 const dataSlice = createSlice({
     name : 'data',
     initialState,
@@ -379,14 +417,24 @@ const dataSlice = createSlice({
             return { ...state, dataLoading : false }
         })
         // DOCKET
-        // Get Docket List
-        builder.addCase(getDocketList.pending, (state) => {
+        // Get Current Dockets
+        builder.addCase(getCurrentDockets.pending, (state) => {
             return { ...state, dataLoading : true }
         })
-        builder.addCase(getDocketList.fulfilled, (state, action) => {
-            return { ...state, dataLoading : false, docketList : action.payload }
+        builder.addCase(getCurrentDockets.fulfilled, (state, action) => {
+            return { ...state, dataLoading : false, currentDocketList : action.payload }
         })
-        builder.addCase(getDocketList.rejected, (state) => {
+        builder.addCase(getCurrentDockets.rejected, (state) => {
+            return { ...state, dataLoading : false }
+        })
+        // Get Past Dockets
+        builder.addCase(getPastDockets.pending, (state) => {
+            return { ...state, dataLoading : true }
+        })
+        builder.addCase(getPastDockets.fulfilled, (state, action) => {
+            return { ...state, dataLoading : false, pastDocketList : action.payload }
+        })
+        builder.addCase(getPastDockets.rejected, (state) => {
             return { ...state, dataLoading : false }
         })
         // Get Criminal Cases
@@ -539,6 +587,16 @@ const dataSlice = createSlice({
             }
         })
         builder.addCase(getKmeansClustering.rejected, (state) => {
+            return { ...state, dataLoading : false }
+        })
+        // COURT PROCEEDINGS
+        builder.addCase(getCourtProceedings.pending, (state) => {
+            return { ...state, dataLoading : true }
+        })
+        builder.addCase(getCourtProceedings.fulfilled, (state, action) => {
+            return { ...state, dataLoading : false, courtProceedingsList : action.payload }
+        })
+        builder.addCase(getCourtProceedings.rejected, (state) => {
             return { ...state, dataLoading : false }
         })
     }

@@ -16,7 +16,7 @@ import UpdateRecord from "../../../components/admin/UpdateRecord";
 
 const BuCorView = () => {
 	const dispatch = useAppDispatch();
-	const { dataLoading, bucorRecords, docketList } = useAppSelector(
+	const { dataLoading, bucorRecords } = useAppSelector(
 		(state) => state.dataState
 	);
 

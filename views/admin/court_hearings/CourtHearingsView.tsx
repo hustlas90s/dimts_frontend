@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import {
 	deleteHearing,
 	getCourtHearings,
-	getDocketList,
+	getCurrentDockets,
 } from "../../../redux/dataSlice";
 import AddNewButton from "../../../components/AddNewButton";
 import PrintButton from "../../../components/PrintButton";
@@ -21,7 +21,7 @@ import moment from "moment";
 
 const CourtHearingsView = () => {
 	const dispatch = useAppDispatch();
-	const { dataLoading, courtHearingList, docketList } = useAppSelector(
+	const { dataLoading, courtHearingList, currentDocketList } = useAppSelector(
 		(state: any) => state.dataState
 	);
 
@@ -45,7 +45,7 @@ const CourtHearingsView = () => {
 	} = useModalIDs();
 
 	useEffect(() => {
-		dispatch(getDocketList());
+		dispatch(getCurrentDockets());
 		dispatch(getCourtHearings());
 	}, []);
 
@@ -138,7 +138,7 @@ const CourtHearingsView = () => {
 				isShow={showAddModal}
 				onConfirm={() => onSubmitNewHearing()}
 				onCancel={() => setShowAddModal(false)}
-				selectOptions={docketList}
+				selectOptions={currentDocketList}
 			/>
 			<UpdateHearing
 				isShow={showEditModal}

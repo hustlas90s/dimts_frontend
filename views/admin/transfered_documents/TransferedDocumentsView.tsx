@@ -4,7 +4,7 @@ import {
 	sendDocumentEmail,
 	getTransferedDocuments,
 	getOfficesList,
-	getDocketList,
+	getCurrentDockets,
 	deleteDocument,
 } from "../../../redux/dataSlice";
 import MoonLoader from "react-spinners/MoonLoader";
@@ -20,7 +20,7 @@ import ViewDocument from "../../../components/admin/ViewDocument";
 
 const ServedDocsView = () => {
 	const dispatch = useAppDispatch();
-	const { dataLoading, transferedDocuments, officesList, docketList } =
+	const { dataLoading, transferedDocuments, officesList, currentDocketList } =
 		useAppSelector((state) => state.dataState);
 	const {
 		viewModal,
@@ -48,7 +48,7 @@ const ServedDocsView = () => {
 	useEffect(() => {
 		dispatch(getTransferedDocuments());
 		dispatch(getOfficesList());
-		dispatch(getDocketList());
+		dispatch(getCurrentDockets());
 	}, []);
 
 	const onViewTransferedDoc = (doc: any) => {
@@ -95,7 +95,7 @@ const ServedDocsView = () => {
 				onConfirm={() => onSubmitNewDocument()}
 				onCancel={() => setShowAddModal(false)}
 				officeOptions={officesList}
-				caseOptions={docketList}
+				caseOptions={currentDocketList}
 			/>
 			<SuccessModal
 				isShow={showSuccessModal}
