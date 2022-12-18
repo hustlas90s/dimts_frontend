@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { deleteDocket, getCivilCases } from "../../../redux/dataSlice";
 import AddNewButton from "../../../components/AddNewButton";
@@ -7,7 +7,6 @@ import MoonLoader from "react-spinners/MoonLoader";
 import CivilCaseTable from "./CivilCaseTable";
 import AdminBreadCrumbs from "../../../components/admin/AdminBreadCrumbs";
 import ViewCase from "../../../components/admin/ViewCase";
-import AddCivilCase from "../../../components/admin/AddCivilCases";
 import UpdateCase from "../../../components/admin/UpdateCase";
 import SuccessModal from "../../../components/SuccessModal";
 import WarningModal from "../../../components/WarningModal";
@@ -16,6 +15,7 @@ import useCrudModals from "../../../hooks/useCrudModals";
 import useModalIDs from "../../../hooks/useModalIDs";
 import moment from "moment";
 import { ExportToCsv } from "export-to-csv";
+import AddCivilCase from "../../../components/admin/AddCivilCases";
 
 const CivilCaseListView = () => {
 	const dispatch = useAppDispatch();
@@ -45,6 +45,8 @@ const CivilCaseListView = () => {
 		successText,
 		setSuccessText,
 	} = useModalIDs();
+	const [searchInput, setSearchInput] = useState("");
+	const [filteredCivilCase, setFilteredCivilCase] = useState([]);
 
 	const onViewCivilCase = (civil_record: any) => {
 		setSelectedObject(civil_record);

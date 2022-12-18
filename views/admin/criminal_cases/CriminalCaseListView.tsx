@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { getCriminalCases, deleteDocket } from "../../../redux/dataSlice";
 import AddNewButton from "../../../components/AddNewButton";
@@ -44,6 +44,8 @@ const CriminalCaseListView = () => {
 		successText,
 		setSuccessText,
 	} = useModalIDs();
+	const [searchInput, setSearchInput] = useState("");
+	const [filteredCase, setFilteredCase] = useState([]);
 
 	useEffect(() => {
 		dispatch(getCriminalCases());
