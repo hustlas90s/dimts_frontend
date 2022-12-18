@@ -48,7 +48,9 @@ const ServedDocsView = () => {
 	const [filteredDocuments, setFilteredDocuments] = useState([]);
 
 	useEffect(() => {
-		dispatch(getTransferedDocuments());
+		dispatch(getTransferedDocuments()).then(() => {
+			setFilteredDocuments(transferedDocuments);
+		});
 		dispatch(getOfficesList());
 		dispatch(getCurrentDockets());
 	}, []);
@@ -164,7 +166,7 @@ const ServedDocsView = () => {
 						<input
 							type="text"
 							placeholder="Search here"
-							className="w-44 h-10 px-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+							className="w-44 py-1 px-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
 							onChange={handleChange}
 							value={searchInput}
 						/>
