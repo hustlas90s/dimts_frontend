@@ -12,7 +12,6 @@ const CriminalCaseTable = ({
 						<th className="py-3 px-6 text-left">Case No.</th>
 						<th className="py-3 px-6 text-left">Crime Type</th>
 						<th className="py-3 px-6 text-left">Judge Assigned</th>
-						<th className="py-3 px-6 text-left">Case Status</th>
 						<th className="py-3 px-6 text-center">Actions</th>
 					</tr>
 				</thead>
@@ -33,9 +32,6 @@ const CriminalCaseTable = ({
 								</td>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
 									{crime.judge_assigned}
-								</td>
-								<td className="py-3 px-6 text-left whitespace-nowrap">
-									{crime.case_status}
 								</td>
 								<td className="py-3 px-6 text-center">
 									<div className="flex items-center justify-center gap-x-5">

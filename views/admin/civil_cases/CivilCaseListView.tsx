@@ -75,7 +75,6 @@ const CivilCaseListView = () => {
 			caseReceived: crime.received_date,
 			caseRaffled: crime.raffled_court,
 			caseJudge: crime.judge_assigned,
-			caseStatus: crime.case_status,
 		});
 		setShowEditModal(true);
 	};
@@ -121,7 +120,6 @@ const CivilCaseListView = () => {
 				received_date: moment(crime.received_date).format("ll"),
 				raffled_court: crime.raffled_court,
 				judge_assigned: crime.judge_assigned,
-				case_status: crime.case_status,
 			};
 		});
 		const csvExporter = new ExportToCsv({
@@ -149,6 +147,8 @@ const CivilCaseListView = () => {
 			/>
 			<UpdateCase
 				isShow={showEditModal}
+				updateTitle="Civil Case"
+				updateText="Update civil record"
 				onConfirm={() => onUpdateCase()}
 				onCancel={() => setShowEditModal(false)}
 				caseType="Civil"

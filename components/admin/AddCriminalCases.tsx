@@ -47,7 +47,6 @@ const AddCriminalCase = ({
 			received_date: formData.caseReceived,
 			raffled_court: formData.caseRaffled,
 			judge_assigned: formData.caseJudge,
-			case_status: formData.caseStatus,
 			qr_code: qrBase64,
 			qr_code_tracker: qrValue,
 		};
@@ -74,18 +73,16 @@ const AddCriminalCase = ({
 			loadingState={showLoading}
 		>
 			<div className="grid grid-cols-2 gap-y-8 gap-x-5">
-				<div className="hidden">
-					<MyInputField
-						control={control}
-						fieldLabel="Type of Case"
-						fieldType="text"
-						fieldName="caseType"
-						fieldRules={fieldRules.requiredRule}
-						defaultValue="Criminal"
-						readOnly={true}
-						setFieldValue={setValue}
-					/>
-				</div>
+				<MyInputField
+					control={control}
+					fieldLabel="Type of Case"
+					fieldType="text"
+					fieldName="caseType"
+					fieldRules={fieldRules.requiredRule}
+					defaultValue="Criminal"
+					readOnly={true}
+					setFieldValue={setValue}
+				/>
 				<MyInputField
 					control={control}
 					fieldLabel="Case No."
@@ -148,33 +145,6 @@ const AddCriminalCase = ({
 					defaultValue=""
 					placeHolder=""
 				/>
-				{/* <MyInputField
-					control={control}
-					fieldLabel="Hearing Date"
-					fieldType="date"
-					fieldName="caseHearing"
-					fieldRules={fieldRules.requiredRule}
-					defaultValue=""
-					placeHolder=""
-				/>
-				<MyInputField
-					control={control}
-					fieldLabel="Arraignment Date"
-					fieldType="date"
-					fieldName="caseArraignment"
-					fieldRules={fieldRules.requiredRule}
-					defaultValue=""
-					placeHolder=""
-				/>
-				<MyInputField
-					control={control}
-					fieldLabel="Initial Trial Date"
-					fieldType="date"
-					fieldName="caseInital"
-					fieldRules={fieldRules.requiredRule}
-					defaultValue=""
-					placeHolder=""
-				/> */}
 				<MyInputField
 					control={control}
 					fieldLabel="Raffled Court"
@@ -189,15 +159,6 @@ const AddCriminalCase = ({
 					fieldLabel="Judge Assigned"
 					fieldType="text"
 					fieldName="caseJudge"
-					fieldRules={fieldRules.requiredRule}
-					defaultValue=""
-					placeHolder=""
-				/>
-				<MyInputField
-					control={control}
-					fieldLabel="Case Status"
-					fieldType="text"
-					fieldName="caseStatus"
 					fieldRules={fieldRules.requiredRule}
 					defaultValue=""
 					placeHolder=""

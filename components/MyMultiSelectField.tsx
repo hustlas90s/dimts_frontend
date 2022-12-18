@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Controller } from "react-hook-form";
 import Select from "react-select";
 
-interface MySelectFieldProps {
+interface MyMultiSelectFieldProps {
 	myControl: any;
 	myOptions: any;
 	fieldName: string;
@@ -60,7 +60,7 @@ const selectStyles = {
 	}),
 };
 
-const MySelectField = ({
+const MyMultiSelectField = ({
 	myControl,
 	myOptions,
 	fieldName,
@@ -68,7 +68,7 @@ const MySelectField = ({
 	fieldRules,
 	defaultValue,
 	setFieldValue,
-}: MySelectFieldProps) => {
+}: MyMultiSelectFieldProps) => {
 	useEffect(() => {
 		setFieldValue ? setFieldValue(fieldName, defaultValue) : null;
 	}, []);
@@ -101,4 +101,4 @@ const MySelectField = ({
 	);
 };
 
-export default MySelectField;
+export default MyMultiSelectField;

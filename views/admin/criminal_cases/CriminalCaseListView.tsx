@@ -76,7 +76,6 @@ const CriminalCaseListView = () => {
 			caseReceived: crime.received_date,
 			caseRaffled: crime.raffled_court,
 			caseJudge: crime.judge_assigned,
-			caseStatus: crime.case_status,
 		});
 		setShowEditModal(true);
 	};
@@ -118,7 +117,6 @@ const CriminalCaseListView = () => {
 				received_date: moment(crime.received_date).format("ll"),
 				raffled_court: crime.raffled_court,
 				judge_assigned: crime.judge_assigned,
-				case_status: crime.case_status,
 			};
 		});
 		const csvExporter = new ExportToCsv({
@@ -146,6 +144,8 @@ const CriminalCaseListView = () => {
 			/>
 			<UpdateCase
 				isShow={showEditModal}
+				updateTitle="Criminal Case"
+				updateText="Update criminal record"
 				onConfirm={() => onUpdateHearing()}
 				onCancel={() => setShowEditModal(false)}
 				caseType="Criminal"

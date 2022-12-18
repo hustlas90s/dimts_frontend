@@ -1,7 +1,7 @@
 import ViewModal from "../ViewModal";
 import moment from "moment";
 
-interface ViewCaseParams {
+interface ViewDocketParams {
 	isShow: boolean;
 	viewTitle: string;
 	viewText: string;
@@ -9,13 +9,13 @@ interface ViewCaseParams {
 	selectedCase: any;
 }
 
-const ViewCase = ({
+const ViewDocket = ({
 	isShow,
 	viewTitle,
 	viewText,
 	onClose,
 	selectedCase,
-}: ViewCaseParams) => {
+}: ViewDocketParams) => {
 	return (
 		<ViewModal
 			isShow={isShow}
@@ -63,6 +63,34 @@ const ViewCase = ({
 				</div>
 				{/*  */}
 				<div className="flex flex-col gap-y-1">
+					<h4 className="font-bold">Hearing Date</h4>
+					<p className="text-sm text-gray-500">
+						{moment(selectedCase.hearing_date).format("LL")}
+					</p>
+				</div>
+				{/*  */}
+				<div className="flex flex-col gap-y-1">
+					<h4 className="font-bold">Arraignment Date</h4>
+					<p className="text-sm text-gray-500">
+						{moment(selectedCase.arraignment_date).format("LL")}
+					</p>
+				</div>
+				{/*  */}
+				<div className="flex flex-col gap-y-1">
+					<h4 className="font-bold">Initial Trial Date</h4>
+					<p className="text-sm text-gray-500">
+						{moment(selectedCase.initial_trial_date).format("LL")}
+					</p>
+				</div>
+				{/*  */}
+				<div className="flex flex-col gap-y-1">
+					<h4 className="font-bold">Last Court Action</h4>
+					<p className="text-sm text-gray-500">
+						{moment(selectedCase.last_court_action).format("LL")}
+					</p>
+				</div>
+				{/*  */}
+				<div className="flex flex-col gap-y-1">
 					<h4 className="font-bold">Raffled Court</h4>
 					<p className="text-sm text-gray-500">{selectedCase.raffled_court}</p>
 				</div>
@@ -86,4 +114,4 @@ const ViewCase = ({
 	);
 };
 
-export default ViewCase;
+export default ViewDocket;

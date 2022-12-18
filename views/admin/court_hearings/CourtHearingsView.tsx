@@ -10,6 +10,7 @@ import PrintButton from "../../../components/PrintButton";
 import MoonLoader from "react-spinners/MoonLoader";
 import CourtHearingsTable from "./CourtHearingsTable";
 import AdminBreadCrumbs from "../../../components/admin/AdminBreadCrumbs";
+import ViewHearing from "../../../components/admin/ViewHearing";
 import AddHearing from "../../../components/admin/AddHearing";
 import SuccessModal from "../../../components/SuccessModal";
 import WarningModal from "../../../components/WarningModal";
@@ -26,6 +27,8 @@ const CourtHearingsView = () => {
 	);
 
 	const {
+		viewModal,
+		setViewModal,
 		showAddModal,
 		setShowAddModal,
 		showEditModal,
@@ -58,6 +61,11 @@ const CourtHearingsView = () => {
 			setShowSuccessModal(false);
 		}, 3000);
 	}, []);
+
+	const onViewCourtHearing = (hearing: any) => {
+		setSelectedObject(hearing);
+		setViewModal(true);
+	};
 
 	const onShowUpdateModal = (hearing_id: number) => {
 		setSelectedID(hearing_id);
@@ -134,6 +142,11 @@ const CourtHearingsView = () => {
 
 	return (
 		<div className="flex flex-col gap-y-5 font-mont text-gray-700">
+			<ViewHearing
+				isShow={viewModal}
+				onClose={() => setViewModal(false)}
+				selectedHearing={selectedObject}
+			/>
 			<AddHearing
 				isShow={showAddModal}
 				onConfirm={() => onSubmitNewHearing()}
@@ -187,6 +200,7 @@ const CourtHearingsView = () => {
 				{!dataLoading && (
 					<CourtHearingsTable
 						courtHearings={courtHearingList}
+						onViewHearing={(hearing: any) => onViewCourtHearing(hearing)}
 						onShowWarning={(hearing_id: number) =>
 							onShowDeleteModal(hearing_id)
 						}

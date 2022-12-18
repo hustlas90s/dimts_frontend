@@ -1,5 +1,7 @@
 import SubmitModal from "../SubmitModal";
 import MyInputField from "../MyInputField";
+import MyInputFieldFull from "../MyInputFieldFull";
+import MySelectField from "../MySelectField";
 import { useForm } from "react-hook-form";
 import { fieldRules } from "../authHelper";
 import { useAppDispatch } from "../../redux/hooks";
@@ -60,6 +62,19 @@ const UpdateHearing = ({
 						setFieldValue={setValue}
 					/>
 				</div>
+				<div className="col-span-2">
+					<MyInputFieldFull
+						control={control}
+						fieldLabel="Case No."
+						fieldType="text"
+						fieldName="hearingCaseNo"
+						fieldRules=""
+						defaultValue={selectedHearing.hearingCaseNo}
+						placeHolder=""
+						readOnly={true}
+						setFieldValue={setValue}
+					/>
+				</div>
 				<MyInputField
 					control={control}
 					fieldLabel="Hearing Schedule"
@@ -90,16 +105,17 @@ const UpdateHearing = ({
 					placeHolder=""
 					setFieldValue={setValue}
 				/>
-				<MyInputField
-					control={control}
-					fieldLabel="Case No."
-					fieldType="disabled"
-					fieldName="hearingCaseNo"
-					fieldRules=""
-					defaultValue={selectedHearing.hearingCaseNo}
-					placeHolder=""
-					readOnly={true}
-					setFieldValue={setValue}
+				<MySelectField
+					myControl={control}
+					myOptions={[
+						{ label: "Pending", value: "Pending" },
+						{ label: "Canceled", value: "Canceled" },
+						{ label: "Completed", value: "Completed" },
+					]}
+					fieldName="hearingStatus"
+					fieldLabel="Status"
+					fieldRules={fieldRules.requiredRule}
+					defaultValue=""
 				/>
 			</div>
 		</SubmitModal>

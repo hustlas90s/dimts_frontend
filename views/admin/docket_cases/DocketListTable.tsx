@@ -1,6 +1,10 @@
 import React from "react";
 
-const DocketListTable = ({ pastDocketList }: any) => {
+const DocketListTable = ({
+	pastDocketList,
+	onViewDocket,
+	onShowWarning,
+}: any) => {
 	return (
 		<div className="overflow-x-auto">
 			<table className="min-w-max w-full table-auto">
@@ -8,8 +12,8 @@ const DocketListTable = ({ pastDocketList }: any) => {
 					<tr className="bg-gray-100 text-gray-600 text-sm leading-normal">
 						<th className="py-3 px-6 text-left">Case No.</th>
 						<th className="py-3 px-6 text-left">Type of Case</th>
+						<th className="py-3 px-6 text-left">Crime Type</th>
 						<th className="py-3 px-6 text-left">Judge Assigned</th>
-						<th className="py-3 px-6 text-left">Case Status</th>
 						<th className="py-3 px-6 text-center">Actions</th>
 					</tr>
 				</thead>
@@ -27,14 +31,17 @@ const DocketListTable = ({ pastDocketList }: any) => {
 									{docket.type_of_case} Case
 								</td>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
-									{docket.judge_assigned}
+									{docket.crime_type}
 								</td>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
-									{docket.case_status}
+									{docket.judge_assigned}
 								</td>
 								<td className="py-3 px-6 text-center">
 									<div className="flex items-center justify-center gap-x-5">
-										<div className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110">
+										<div
+											className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110 hover:cursor-pointer"
+											onClick={() => onViewDocket(docket)}
+										>
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
 												fill="none"
@@ -56,23 +63,10 @@ const DocketListTable = ({ pastDocketList }: any) => {
 												/>
 											</svg>
 										</div>
-										{/* <div className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110">
-											<svg
-												xmlns="http://www.w3.org/2000/svg"
-												fill="none"
-												viewBox="0 0 24 24"
-												stroke="currentColor"
-												className="w-5 h-5"
-											>
-												<path
-													strokeLinecap="round"
-													strokeLinejoin="round"
-													strokeWidth="2"
-													d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-												/>
-											</svg>
-										</div> */}
-										<div className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110">
+										<div
+											className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110 hover:cursor-pointer"
+											onClick={() => onShowWarning(docket.id)}
+										>
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
 												fill="none"

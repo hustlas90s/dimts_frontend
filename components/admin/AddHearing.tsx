@@ -28,6 +28,7 @@ const AddHearing = ({
 			start_time: formData.hearingStartTime,
 			end_time: formData.hearingEndTime,
 			case: formData.hearingCase,
+			status: "Pending",
 		};
 		dispatch(createNewHearing(data)).then(() => onConfirm());
 	};
@@ -35,8 +36,8 @@ const AddHearing = ({
 	return (
 		<SubmitModal
 			isShow={isShow}
-			addTitle="citizen Account"
-			addText="Create new citizen account"
+			addTitle="Court Hearing"
+			addText="Create new court hearing"
 			onConfirm={handleSubmit(onSubmit)}
 			onCancel={onCancel}
 		>

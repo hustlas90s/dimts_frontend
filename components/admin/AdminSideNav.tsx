@@ -406,7 +406,7 @@ const AdminSideNav = () => {
 			{/* DOCUMENTS */}
 			<div
 				className={`w-full flex items-center gap-x-5 px-5 py-3 ${
-					router.pathname === "transfered_documents"
+					router.pathname === "/admin/transfered_documents"
 						? "bg-purple-50"
 						: "bg-transparent"
 				} rounded-lg hover:cursor-pointer`}

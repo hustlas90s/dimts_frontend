@@ -9,6 +9,8 @@ import MyTextAreaField from "../MyTextArea";
 
 interface UpdateCaseParams {
 	isShow: boolean;
+	updateTitle: string;
+	updateText: string;
 	onConfirm(): void;
 	onCancel(): void;
 	caseType: string;
@@ -18,6 +20,8 @@ interface UpdateCaseParams {
 
 const UpdateCase = ({
 	isShow,
+	updateTitle,
+	updateText,
 	onConfirm,
 	onCancel,
 	caseType,
@@ -57,24 +61,22 @@ const UpdateCase = ({
 	return (
 		<SubmitModal
 			isShow={isShow}
-			addTitle="Criminal Cases"
-			addText="Update criminal record"
+			addTitle={updateTitle}
+			addText={updateText}
 			onConfirm={handleSubmit(onSubmit)}
 			onCancel={onCancel}
 		>
 			<div className="grid grid-cols-2 gap-y-8 gap-x-5">
-				<div className="hidden">
-					<MyInputField
-						control={control}
-						fieldLabel="Type of Case"
-						fieldType="hidden"
-						fieldName="caseType"
-						fieldRules={fieldRules.requiredRule}
-						defaultValue={caseType}
-						readOnly={true}
-						setFieldValue={setValue}
-					/>
-				</div>
+				<MyInputField
+					control={control}
+					fieldLabel="Type of Case"
+					fieldType="text"
+					fieldName="caseType"
+					fieldRules={fieldRules.requiredRule}
+					defaultValue={caseType}
+					readOnly={true}
+					setFieldValue={setValue}
+				/>
 				<MyInputField
 					control={control}
 					fieldLabel="Case No."
@@ -158,16 +160,6 @@ const UpdateCase = ({
 					fieldName="caseJudge"
 					fieldRules={fieldRules.requiredRule}
 					defaultValue={selectedCase.caseJudge}
-					placeHolder=""
-					setFieldValue={setValue}
-				/>
-				<MyInputField
-					control={control}
-					fieldLabel="Case Status"
-					fieldType="text"
-					fieldName="caseStatus"
-					fieldRules={fieldRules.requiredRule}
-					defaultValue={selectedCase.caseStatus}
 					placeHolder=""
 					setFieldValue={setValue}
 				/>

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import AdminBreadCrumbs from "../../../components/admin/AdminBreadCrumbs";
 import DashboardCalendar from "./DashboardCalendar";
 import UpcomingHearings from "./UpcomingHearings";
@@ -20,8 +20,20 @@ const DashboardView = () => {
 		upcomingHearingList,
 		recentDocuments,
 	} = useAppSelector((state) => state.dataState);
+	const [hasRecentEmail, setHasRecentEmail] = useState(false);
 
 	useEffect(() => {
+		recentDocuments.find((doc: any) => {
+			const current_date = new Date();
+			if (
+				doc.date_created ===
+				`${current_date.getFullYear()}-${
+					current_date.getMonth() + 1
+				}-${current_date.getDate()}`
+			) {
+				setHasRecentEmail(true);
+			}
+		});
 		dispatch(getCourtHearings());
 		dispatch(getUpcomingHearings());
 		dispatch(getRecentDocuments());
@@ -31,6 +43,21 @@ const DashboardView = () => {
 		<div className="flex flex-col gap-y-5 font-mont text-gray-700">
 			<AdminBreadCrumbs activeText="Dashboard" />
 			{/*  */}
+			{hasRecentEmail && (
+				<div className="w-full bg-purple-100 text-purple-600 font-medium flex justify-center items-center p-5 gap-x-5 rounded-lg">
+					<p className="text-base">
+						You have recently emailed a document, check recent documents section
+					</p>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						viewBox="0 0 20 20"
+						fill="currentColor"
+						className="w-5 h-5"
+					>
+						<path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+					</svg>
+				</div>
+			)}
 			<div className="w-full bg-white font-mont flex flex-col gap-y-5 text-gray-700 p-5 shadow border-b border-gray-200 rounded-lg">
 				<div className="w-full flex flex-col justify-between items-center gap-y-5">
 					<h4 className="self-start text-xl font-black tracking-wider">
