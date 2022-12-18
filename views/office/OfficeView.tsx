@@ -11,101 +11,132 @@ import SuccessModal from "../../components/SuccessModal";
 import useCrudModals from "../../hooks/useCrudModals";
 
 const OfficeView = () => {
-	const dispatch = useAppDispatch();
-	const { dataLoading, officeDocuments } = useAppSelector(
-		(state) => state.dataState
-	);
-	const { userProfile } = useAppSelector((state) => state.authState);
-	const { showSuccessModal, setShowSuccessModal } = useCrudModals();
+    const dispatch = useAppDispatch();
+    const { dataLoading, officeDocuments } = useAppSelector(
+        (state) => state.dataState
+    );
+    const { userProfile } = useAppSelector((state) => state.authState);
+    const { showSuccessModal, setShowSuccessModal } = useCrudModals();
 
-	const [trackerError, setTrackerError] = useState(false);
+    const [trackerError, setTrackerError] = useState(false);
+    const [searchInput, setSearchInput] = useState("");
+    const [filteredDocuments, setFilteredDocuments] = useState([]);
 
-	const { handleSubmit, control } = useForm();
+    const { handleSubmit, control } = useForm();
 
-	useEffect(() => {
-		dispatch(getOfficeDocuments());
-	}, []);
+    useEffect(() => {
+        dispatch(getOfficeDocuments()).then(() =>
+            setFilteredDocuments(officeDocuments)
+        );
+    }, []);
 
-	const afterSubmission = useCallback(() => {
-		dispatch(getOfficeDocuments());
-		setShowSuccessModal(true);
-		setTimeout(() => {
-			setShowSuccessModal(false);
-		}, 3000);
-	}, [showSuccessModal]);
+    const afterSubmission = useCallback(() => {
+        dispatch(getOfficeDocuments()).then(() =>
+            setFilteredDocuments(officeDocuments)
+        );
+        setShowSuccessModal(true);
+        setTimeout(() => {
+            setShowSuccessModal(false);
+        }, 3000);
+    }, [showSuccessModal]);
 
-	const onSubmitQrTracker = (formData: any) => {
-		const selectedDocument = officeDocuments.find(
-			(doc: any) => doc.case__qr_code_tracker === formData.officeQrTracker
-		);
-		if (!selectedDocument) {
-			setTrackerError(true);
-			return;
-		}
-		setTrackerError(false);
-		const data = {
-			status: "Acknowledged",
-		};
-		dispatch(
-			updateDocument({ formData: data, document_id: selectedDocument.id })
-		).then(() => afterSubmission());
-	};
+    const onSubmitQrTracker = (formData: any) => {
+        const selectedDocument = officeDocuments.find(
+            (doc: any) => doc.case__qr_code_tracker === formData.officeQrTracker
+        );
+        if (!selectedDocument) {
+            setTrackerError(true);
+            return;
+        }
+        setTrackerError(false);
+        const data = {
+            status: "Acknowledged",
+        };
+        dispatch(
+            updateDocument({ formData: data, document_id: selectedDocument.id })
+        ).then(() => afterSubmission());
+    };
 
-	return (
-		<div className="relative min-h-screen flex flex-col items-center gap-y-20 font-mont text-gray-700">
-			<SuccessModal
-				isShow={showSuccessModal}
-				successTitle="Transfered Documents"
-				successText="Document has been acknowledged"
-				onConfirm={() => setShowSuccessModal(false)}
-			/>
-			<div className="w-[80%] bg-white font-mont flex flex-col gap-y-5 text-gray-700 p-5 shadow border-b border-gray-200 rounded-lg mt-10">
-				<h4 className="text-xl font-black tracking-wider">
-					{userProfile.first_name}
-				</h4>
-				<div className="w-full border-b border-gray-200 -mt-3"></div>
-				<div className="w-full flex flex-col items-center gap-y-5 py-5">
-					<div className="flex items-center gap-x-5">
-						<div className="w-20 border-b border-gray-400"></div>
-						<p className="text-sm">Enter QR Code Tracker</p>
-						<div className="w-20 border-b border-gray-400"></div>
-					</div>
-					<InputWithSubmit
-						control={control}
-						fieldType="text"
-						fieldName="officeQrTracker"
-						fieldRules={fieldRules.requiredRule}
-						placeHolder="QR Code Tracker"
-						onClickSubmit={handleSubmit(onSubmitQrTracker)}
-					/>
-					{trackerError && (
-						<p className="w-96 text-xs text-rose-500 -mt-4">
-							Invalid QR Code Tracker
-						</p>
-					)}
-				</div>
-			</div>
-			<div className="w-[80%] bg-white font-mont flex flex-col gap-y-5 text-gray-700 p-5 shadow border-b border-gray-200 rounded-lg">
-				<h4 className="text-xl font-black tracking-wider">
-					Transfered Documents
-				</h4>
-				<div className="w-full border-b border-gray-200 -mt-3"></div>
-				{dataLoading && (
-					<div className="w-full flex justify-center items-center">
-						<MoonLoader
-							loading={dataLoading}
-							color="#9333ea"
-							speedMultiplier={1}
-							size={70}
-						/>
-					</div>
-				)}
-				{!dataLoading && (
-					<OfficeDocumentsTable officeDocuments={officeDocuments} />
-				)}
-			</div>
-		</div>
-	);
+    const handleChange = (e: any) => {
+        e.preventDefault();
+        setSearchInput(e.target.value);
+        if (searchInput.length > 0) {
+            const filtered_list = officeDocuments.filter((documents: any) => {
+                return documents
+                    .toLowerCase()
+                    .includes(searchInput.toLowerCase());
+            });
+            setFilteredDocuments(filtered_list);
+        } else {
+            setFilteredDocuments(officeDocuments);
+        }
+    };
+
+    return (
+        <div className="relative min-h-screen flex flex-col items-center gap-y-20 font-mont text-gray-700">
+            <SuccessModal
+                isShow={showSuccessModal}
+                successTitle="Transfered Documents"
+                successText="Document has been acknowledged"
+                onConfirm={() => setShowSuccessModal(false)}
+            />
+            <div className="w-[80%] bg-white font-mont flex flex-col gap-y-5 text-gray-700 p-5 shadow border-b border-gray-200 rounded-lg mt-10">
+                <h4 className="text-xl font-black tracking-wider">
+                    {userProfile.first_name}
+                </h4>
+                <div className="w-full border-b border-gray-200 -mt-3"></div>
+                <div className="w-full flex flex-col items-center gap-y-5 py-5">
+                    <div className="flex items-center gap-x-5">
+                        <div className="w-20 border-b border-gray-400"></div>
+                        <p className="text-sm">Enter QR Code Tracker</p>
+                        <div className="w-20 border-b border-gray-400"></div>
+                    </div>
+                    <InputWithSubmit
+                        control={control}
+                        fieldType="text"
+                        fieldName="officeQrTracker"
+                        fieldRules={fieldRules.requiredRule}
+                        placeHolder="QR Code Tracker"
+                        onClickSubmit={handleSubmit(onSubmitQrTracker)}
+                    />
+                    {trackerError && (
+                        <p className="w-96 text-xs text-rose-500 -mt-4">
+                            Invalid QR Code Tracker
+                        </p>
+                    )}
+                </div>
+            </div>
+            <div className="w-[80%] bg-white font-mont flex flex-col gap-y-5 text-gray-700 p-5 shadow border-b border-gray-200 rounded-lg">
+                <div className="flex flex-row justify-between">
+                    <h4 className="text-xl font-black tracking-wider">
+                        Transfered Documents
+                    </h4>
+                    <input
+                        type="text"
+                        placeholder="Search Case No."
+                        className="w-44 py-1 px-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                        onChange={handleChange}
+                        value={searchInput}
+                    />
+                </div>
+
+                <div className="w-full border-b border-gray-200 -mt-3"></div>
+                {dataLoading && (
+                    <div className="w-full flex justify-center items-center">
+                        <MoonLoader
+                            loading={dataLoading}
+                            color="#9333ea"
+                            speedMultiplier={1}
+                            size={70}
+                        />
+                    </div>
+                )}
+                {!dataLoading && (
+                    <OfficeDocumentsTable officeDocuments={filteredDocuments} />
+                )}
+            </div>
+        </div>
+    );
 };
 
 export default OfficeView;
