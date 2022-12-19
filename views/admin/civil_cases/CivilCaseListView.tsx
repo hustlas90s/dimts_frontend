@@ -142,11 +142,12 @@ const CivilCaseListView = () => {
 	const handleChange = (e: any) => {
 		e.preventDefault();
 		setSearchInput(e.target.value);
-		if (searchInput.length > 0) {
-			const filtered_list = civilCaseList.filter((civil: any) => {
-				return civil.case_no.toLowerCase().includes(searchInput.toLowerCase());
-			});
-			setFilteredCivilCase(filtered_list);
+		if (e.target.value.length) {
+			setFilteredCivilCase(
+				civilCaseList.filter((civil: any) => {
+					return civil.case_no.includes(searchInput);
+				})
+			);
 		} else {
 			setFilteredCivilCase(civilCaseList);
 		}

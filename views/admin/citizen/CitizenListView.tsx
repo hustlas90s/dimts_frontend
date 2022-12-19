@@ -75,12 +75,13 @@ const CitizenListView = () => {
 	const handleChange = (e: any) => {
 		e.preventDefault();
 		setSearchInput(e.target.value);
-		if (searchInput.length > 0) {
-			const filtered_list = citizenList.filter((citizen: any) => {
-				const citizen_name = `${citizen.first_name} ${citizen.last_name}`;
-				return citizen_name.toLowerCase().includes(searchInput.toLowerCase());
-			});
-			setFilteredCitizen(filtered_list);
+		if (e.target.value.length) {
+			setFilteredCitizen(
+				citizenList.filter((citizen: any) => {
+					const citizen_name = `${citizen.first_name} ${citizen.last_name}`;
+					return citizen_name.toLowerCase().includes(searchInput.toLowerCase());
+				})
+			);
 		} else {
 			setFilteredCitizen(citizenList);
 		}

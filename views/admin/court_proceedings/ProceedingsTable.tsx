@@ -3,6 +3,7 @@ import moment from "moment";
 const CourtHearingsTable = ({
 	courtProceedings,
 	onViewProceeding,
+	onShowEdit,
 	onShowWarning,
 }: any) => {
 	return (
@@ -24,10 +25,10 @@ const CourtHearingsTable = ({
 									{proceeding.case__case_no}
 								</td>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
-									{proceeding.hearing__hearing_type}
+									{moment(proceeding.proceeding_schedule).format("LL")}
 								</td>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
-									{moment(proceeding.hearing__hearing_schedule).format("LL")}
+									{proceeding.proceeding_type}
 								</td>
 								<td className="py-3 px-6 text-center">
 									<div className="flex items-center justify-center gap-x-5">
@@ -58,7 +59,7 @@ const CourtHearingsTable = ({
 										</div>
 										<div
 											className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110 cursor-pointer"
-											// onClick={() => onShowEdit(proceeding.id)}
+											onClick={() => onShowEdit(proceeding.id)}
 										>
 											<svg
 												xmlns="http://www.w3.org/2000/svg"

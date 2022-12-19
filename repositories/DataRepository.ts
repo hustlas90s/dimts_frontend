@@ -273,6 +273,14 @@ export default class DataRepository {
         })
         return data.results
     }
+    async UpdateCourtProceeding(jwt_token: string, formData: any, proceeding_id: number) {
+        const { data } = await backendConn.put(`court_proceeding/update/${ proceeding_id }`, formData, {
+            headers : {
+                Authorization : `Bearer ${ jwt_token }`
+            }
+        })
+        return data.results
+    }
     // DELETE REQUESTS
     // Delete an account
     async DeleteAccount(jwt_token: string, account_id: number) {

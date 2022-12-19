@@ -10,6 +10,7 @@ import MoonLoader from "react-spinners/MoonLoader";
 import ProceedingsTable from "./ProceedingsTable";
 import AdminBreadCrumbs from "../../../components/admin/AdminBreadCrumbs";
 import AddProceeding from "../../../components/admin/AddProceeding";
+import UpdateProceeding from "../../../components/admin/UpdateProceeding";
 import SuccessModal from "../../../components/SuccessModal";
 import WarningModal from "../../../components/WarningModal";
 import useCrudModals from "../../../hooks/useCrudModals";
@@ -28,18 +29,26 @@ const CourtProceedingsView = () => {
 		setShowAddModal,
 		showSuccessModal,
 		setShowSuccessModal,
+		showEditModal,
+		setShowEditModal,
 		showDeleteModal,
 		setShowDeleteModal,
 	} = useCrudModals();
-	const { selectedID, setSelectedID, selectedObject, setSelectedObject } =
-		useModalIDs();
+	const {
+		selectedID,
+		setSelectedID,
+		selectedObject,
+		setSelectedObject,
+		successText,
+		setSuccessText,
+	} = useModalIDs();
 	const [searchInput, setSearchInput] = useState("");
 	const [filteredProceedings, setFilteredProceedings] = useState([]);
 
 	useEffect(() => {
 		dispatch(getCurrentDockets());
-		dispatch(getCourtProceedings()).then(() =>
-			setFilteredProceedings(courtProceedingsList)
+		dispatch(getCourtProceedings()).then((res: any) =>
+			setFilteredProceedings(res.payload)
 		);
 	}, []);
 
@@ -49,15 +58,46 @@ const CourtProceedingsView = () => {
 	};
 
 	const onSubmitNewProceeding = useCallback(() => {
-		dispatch(getCourtProceedings()).then(() =>
-			setFilteredProceedings(courtProceedingsList)
+		dispatch(getCourtProceedings()).then((res: any) =>
+			setFilteredProceedings(res.payload)
 		);
-		setShowAddModal(false);
+		setSuccessText("Creation of new court proceeding is successful");
 		setShowSuccessModal(true);
+		setShowAddModal(false);
 		setTimeout(() => {
 			setShowSuccessModal(false);
 		}, 3000);
 	}, [showAddModal]);
+
+	const onShowUpdateModal = (proceeding_id: number) => {
+		setSelectedID(proceeding_id);
+		const proceeding = courtProceedingsList.find(
+			(proceeding: any) => proceeding.id === proceeding_id
+		);
+		setSelectedObject({
+			proceedingID: proceeding.id,
+			proceedingCaseNo: proceeding.case__case_no,
+			proceedingSchedule: proceeding.proceeding_schedule,
+			proceedingType: proceeding.proceeding_type,
+			proceedingStartTime: proceeding.start_time,
+			proceedingEndTime: proceeding.end_time,
+			proceedingStatus: proceeding.status,
+			proceedingRemarks: proceeding.remarks,
+		});
+		setShowEditModal(true);
+	};
+
+	const onUpdateProceeding = () => {
+		dispatch(getCourtProceedings()).then((res: any) =>
+			setFilteredProceedings(res.payload)
+		);
+		setSuccessText("Updating of court hearing schedule is successful");
+		setShowSuccessModal(true);
+		setShowEditModal(false);
+		setTimeout(() => {
+			setShowSuccessModal(false);
+		}, 3000);
+	};
 
 	const onShowDeleteModal = (proceeding_id: number) => {
 		setSelectedID(proceeding_id);
@@ -66,8 +106,8 @@ const CourtProceedingsView = () => {
 
 	const onDeleteHearing = () => {
 		dispatch(deleteCourtProceeding(selectedID)).then(() => {
-			dispatch(getCourtProceedings()).then(() =>
-				setFilteredProceedings(courtProceedingsList)
+			dispatch(getCourtProceedings()).then((res: any) =>
+				setFilteredProceedings(res.payload)
 			);
 			setShowDeleteModal(false);
 		});
@@ -76,13 +116,12 @@ const CourtProceedingsView = () => {
 	const handleChange = (e: any) => {
 		e.preventDefault();
 		setSearchInput(e.target.value);
-		if (searchInput.length > 0) {
-			const filtered_list = courtProceedingsList.filter((proceeding: any) => {
-				return proceeding.case_no
-					.toLowerCase()
-					.includes(searchInput.toLowerCase());
-			});
-			setFilteredProceedings(filtered_list);
+		if (e.target.value) {
+			setFilteredProceedings(
+				courtProceedingsList.filter((proceeding: any) => {
+					return proceeding.case__case_no.includes(searchInput);
+				})
+			);
 		} else {
 			setFilteredProceedings(courtProceedingsList);
 		}
@@ -101,10 +140,16 @@ const CourtProceedingsView = () => {
 				onCancel={() => setShowAddModal(false)}
 				selectOptions={currentDocketList}
 			/>
+			<UpdateProceeding
+				isShow={showEditModal}
+				onConfirm={() => onUpdateProceeding()}
+				onCancel={() => setShowEditModal(false)}
+				selectedProceeding={selectedObject}
+			/>
 			<SuccessModal
 				isShow={showSuccessModal}
 				successTitle="Court Hearing"
-				successText="Creation of new court proceeding is successful"
+				successText={successText}
 				onConfirm={() => setShowSuccessModal(false)}
 			/>
 			<WarningModal
@@ -153,6 +198,7 @@ const CourtProceedingsView = () => {
 						onViewProceeding={(proceeding: any) =>
 							onViewCourtProceeding(proceeding)
 						}
+						onShowEdit={(proceeding: any) => onShowUpdateModal(proceeding)}
 						onShowWarning={(proceeding_id: number) =>
 							onShowDeleteModal(proceeding_id)
 						}

@@ -73,11 +73,12 @@ const CitizenListView = () => {
 	const handleChange = (e: any) => {
 		e.preventDefault();
 		setSearchInput(e.target.value);
-		if (searchInput.length > 0) {
-			const filtered_list = pastDocketList.filter((docket: any) => {
-				return docket.case_no.toLowerCase().includes(searchInput.toLowerCase());
-			});
-			setFilteredDocket(filtered_list);
+		if (e.target.value.length) {
+			setFilteredDocket(
+				pastDocketList.filter((docket: any) => {
+					return docket.case_no.includes(searchInput);
+				})
+			);
 		} else {
 			setFilteredDocket(pastDocketList);
 		}

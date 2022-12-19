@@ -55,7 +55,6 @@ const StaffListView = () => {
 			dispatch(getStaffList()).then((res: any) => {
 				setFilteredStaff(res.payload);
 			});
-			setFilteredStaff(staffList);
 			setShowDeleteModal(false);
 		});
 	};
@@ -63,12 +62,13 @@ const StaffListView = () => {
 	const handleChange = (e: any) => {
 		e.preventDefault();
 		setSearchInput(e.target.value);
-		if (searchInput.length > 0) {
-			const filtered_list = staffList.filter((staff: any) => {
-				const staff_name = `${staff.first_name} ${staff.last_name}`;
-				return staff_name.toLowerCase().includes(searchInput.toLowerCase());
-			});
-			setFilteredStaff(filtered_list);
+		if (e.target.value.length) {
+			setFilteredStaff(
+				staffList.filter((staff: any) => {
+					const staff_name = `${staff.first_name} ${staff.last_name}`;
+					return staff_name.toLowerCase().includes(searchInput.toLowerCase());
+				})
+			);
 		} else {
 			setFilteredStaff(staffList);
 		}

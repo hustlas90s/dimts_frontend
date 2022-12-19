@@ -157,12 +157,11 @@ const CourtHearingsView = () => {
 		e.preventDefault();
 		setSearchInput(e.target.value);
 		if (searchInput.length > 0) {
-			const filtered_list = courtHearingList.filter((hearings: any) => {
-				return hearings.case__case_no
-					.toLowerCase()
-					.includes(searchInput.toLowerCase());
-			});
-			setFilteredHearings(filtered_list);
+			setFilteredHearings(
+				courtHearingList.filter((hearings: any) => {
+					return hearings.case__case_no.includes(searchInput);
+				})
+			);
 		} else {
 			setFilteredHearings(courtHearingList);
 		}

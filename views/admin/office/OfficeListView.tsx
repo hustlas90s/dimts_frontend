@@ -67,13 +67,14 @@ const OfficeListView = () => {
 	const handleChange = (e: any) => {
 		e.preventDefault();
 		setSearchInput(e.target.value);
-		if (searchInput.length > 0) {
-			const filtered_list = officesList.filter((office: any) => {
-				return office.first_name
-					.toLowerCase()
-					.includes(searchInput.toLowerCase());
-			});
-			setFilteredOffice(filtered_list);
+		if (e.target.value.length) {
+			setFilteredOffice(
+				officesList.filter((office: any) => {
+					return office.first_name
+						.toLowerCase()
+						.includes(searchInput.toLowerCase());
+				})
+			);
 		} else {
 			setFilteredOffice(officesList);
 		}

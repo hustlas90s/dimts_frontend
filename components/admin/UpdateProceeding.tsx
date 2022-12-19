@@ -2,52 +2,57 @@ import SubmitModal from "../SubmitModal";
 import MyInputField from "../MyInputField";
 import MyInputFieldFull from "../MyInputFieldFull";
 import MySelectField from "../MySelectField";
+import MyTextAreaField from "../MyTextArea";
 import { useForm } from "react-hook-form";
 import { fieldRules } from "../authHelper";
 import { useAppDispatch } from "../../redux/hooks";
-import { updateHearing } from "../../redux/dataSlice";
+import { updateProceeding } from "../../redux/dataSlice";
 
-interface UpdateHearingParams {
+interface UpdateProceedingParams {
 	isShow: boolean;
 	onConfirm(): void;
 	onCancel(): void;
-	selectedHearing: any;
+	selectedProceeding: any;
 }
 
-const UpdateHearing = ({
+const UpdateProceeding = ({
 	isShow,
 	onConfirm,
 	onCancel,
-	selectedHearing,
-}: UpdateHearingParams) => {
+	selectedProceeding,
+}: UpdateProceedingParams) => {
 	const { control, handleSubmit, setValue } = useForm();
 	const dispatch = useAppDispatch();
 
 	const onSubmit = (formData: any) => {
 		if (
-			Object.entries(selectedHearing).toString() ===
+			Object.entries(selectedProceeding).toString() ===
 			Object.entries(formData).toString()
 		) {
 			onCancel();
 			return;
 		}
 		const data = {
-			hearing_schedule: formData.hearingSchedule,
-			hearing_type: formData.hearingType,
-			start_time: formData.hearingStartTime,
-			end_time: formData.hearingEndTime,
-			status: formData.hearingStatus,
+			proceeding_schedule: formData.proceedingSchedule,
+			proceeding_type: formData.proceedingType,
+			start_time: formData.proceedingStartTime,
+			end_time: formData.proceedingEndTime,
+			status: formData.proceedingStatus,
+			remarks: formData.proceedingRemarks,
 		};
 		dispatch(
-			updateHearing({ formData: data, hearing_id: selectedHearing.hearingID })
+			updateProceeding({
+				formData: data,
+				proceeding_id: selectedProceeding.proceedingID,
+			})
 		).then(() => onConfirm());
 	};
 
 	return (
 		<SubmitModal
 			isShow={isShow}
-			addTitle="Court Hearing"
-			addText="Update court hearing schedule"
+			addTitle="Court Proceeding"
+			addText="Update court proceeding schedule"
 			onConfirm={handleSubmit(onSubmit)}
 			onCancel={onCancel}
 		>
@@ -57,9 +62,9 @@ const UpdateHearing = ({
 						control={control}
 						fieldLabel=""
 						fieldType="hidden"
-						fieldName="hearingID"
+						fieldName="proceedingID"
 						fieldRules=""
-						defaultValue={selectedHearing.hearingID}
+						defaultValue={selectedProceeding.proceedingID}
 						placeHolder=""
 						setFieldValue={setValue}
 					/>
@@ -68,20 +73,20 @@ const UpdateHearing = ({
 					control={control}
 					fieldLabel="Case No."
 					fieldType="text"
-					fieldName="hearingCaseNo"
+					fieldName="proceedingCaseNo"
 					fieldRules=""
-					defaultValue={selectedHearing.hearingCaseNo}
+					defaultValue={selectedProceeding.proceedingCaseNo}
 					placeHolder=""
 					readOnly={true}
 					setFieldValue={setValue}
 				/>
 				<MyInputField
 					control={control}
-					fieldLabel="Hearing Schedule"
+					fieldLabel="Proceeding Schedule"
 					fieldType="date"
-					fieldName="hearingSchedule"
+					fieldName="proceedingSchedule"
 					fieldRules={fieldRules.requiredRule}
-					defaultValue={selectedHearing.hearingSchedule}
+					defaultValue={selectedProceeding.proceedingSchedule}
 					placeHolder=""
 					setFieldValue={setValue}
 				/>
@@ -93,18 +98,18 @@ const UpdateHearing = ({
 						{ label: "Initial Trial", value: "Initial Trial" },
 						{ label: "Last Court Action", value: "Last Court Action" },
 					]}
-					fieldName="hearingType"
-					fieldLabel="Hearing Type"
+					fieldName="proceedingType"
+					fieldLabel="Proceeding Type"
 					fieldRules={fieldRules.requiredRule}
-					defaultValue={selectedHearing.hearingType}
+					defaultValue={selectedProceeding.proceedingType}
 				/>
 				<MyInputField
 					control={control}
 					fieldLabel="Start Time"
 					fieldType="time"
-					fieldName="hearingStartTime"
+					fieldName="proceedingStartTime"
 					fieldRules={fieldRules.requiredRule}
-					defaultValue={selectedHearing.hearingStartTime}
+					defaultValue={selectedProceeding.proceedingStartTime}
 					placeHolder=""
 					setFieldValue={setValue}
 				/>
@@ -112,9 +117,9 @@ const UpdateHearing = ({
 					control={control}
 					fieldLabel="End Time"
 					fieldType="time"
-					fieldName="hearingEndTime"
+					fieldName="proceedingEndTime"
 					fieldRules={fieldRules.requiredRule}
-					defaultValue={selectedHearing.hearingEndTime}
+					defaultValue={selectedProceeding.proceedingEndTime}
 					placeHolder=""
 					setFieldValue={setValue}
 				/>
@@ -125,14 +130,25 @@ const UpdateHearing = ({
 						{ label: "Canceled", value: "Canceled" },
 						{ label: "Completed", value: "Completed" },
 					]}
-					fieldName="hearingStatus"
+					fieldName="proceedingStatus"
 					fieldLabel="Status"
 					fieldRules={fieldRules.requiredRule}
-					defaultValue=""
+					defaultValue={selectedProceeding.proceedingStatus}
 				/>
+				<div className="col-span-2">
+					<MyTextAreaField
+						control={control}
+						fieldLabel="Remarks"
+						fieldName="proceedingRemarks"
+						fieldRules={fieldRules.requiredRule}
+						defaultValue={selectedProceeding.proceedingRemarks}
+						placeHolder=""
+						setFieldValue={setValue}
+					/>
+				</div>
 			</div>
 		</SubmitModal>
 	);
 };
 
-export default UpdateHearing;
+export default UpdateProceeding;

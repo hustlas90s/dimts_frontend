@@ -139,13 +139,12 @@ const CriminalCaseListView = () => {
 	const handleChange = (e: any) => {
 		e.preventDefault();
 		setSearchInput(e.target.value);
-		if (searchInput.length > 0) {
-			const filtered_list = criminalCaseList.filter((criminal: any) => {
-				return criminal.case_no
-					.toLowerCase()
-					.includes(searchInput.toLowerCase());
-			});
-			setFilteredCase(filtered_list);
+		if (e.target.value.length) {
+			setFilteredCase(
+				criminalCaseList.filter((criminal: any) => {
+					return criminal.case_no.includes(searchInput);
+				})
+			);
 		} else {
 			setFilteredCase(criminalCaseList);
 		}

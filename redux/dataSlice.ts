@@ -340,6 +340,14 @@ export const getCourtProceedings = createAsyncThunk(
     }
 )
 
+export const updateProceeding = createAsyncThunk(
+    'data/updateProceeding',
+    async (args: { formData: any, proceeding_id: number }) => { 
+        const dataRepo = new DataRepository()
+        await dataRepo.UpdateCourtProceeding(localStorage.jwt_token, args.formData, args.proceeding_id)
+    }
+)
+
 export const deleteCourtProceeding = createAsyncThunk(
     'data/deleteCourtProceeding',
     async (proceeding_id: number) => {
