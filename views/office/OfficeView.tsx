@@ -1,6 +1,5 @@
 import { useCallback, useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import ImageUploader from "../../components/ImageUploader";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { getOfficeDocuments, updateDocument } from "../../redux/dataSlice";
 import { fieldRules } from "../../components/authHelper";
@@ -31,8 +30,8 @@ const OfficeView = () => {
 	}, []);
 
 	const afterSubmission = useCallback(() => {
-		dispatch(getOfficeDocuments()).then(() =>
-			setFilteredDocuments(officeDocuments)
+		dispatch(getOfficeDocuments()).then((res: any) =>
+			setFilteredDocuments(res.payload)
 		);
 		setShowSuccessModal(true);
 		setTimeout(() => {

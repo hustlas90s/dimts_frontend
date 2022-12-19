@@ -24,37 +24,41 @@ const DashboardView = () => {
 	const [hearingActivity, setHearingActivity] = useState(false);
 
 	useEffect(() => {
-		setHasRecentEmail(
-			recentDocuments.find((doc: any) => {
-				const current_date = new Date();
-				if (
-					doc.date_created ===
-					`${current_date.getFullYear()}-${
-						current_date.getMonth() + 1
-					}-${current_date.getDate()}`
-				) {
-					return true;
-				}
-				return false;
-			})
-		);
-		setHearingActivity(
-			upcomingHearingList.find((hearing: any) => {
-				const current_date = new Date();
-				if (
-					hearing.updated_at ===
-					`${current_date.getFullYear()}-${
-						current_date.getMonth() + 1
-					}-${current_date.getDate()}`
-				) {
-					return true;
-				}
-				return false;
-			})
-		);
-		dispatch(getCourtHearings());
+		dispatch(getCourtHearings()).then((res: any) => {
+			console.log("Court hearings: ", res.payload);
+			setHearingActivity(
+				res.payload.find((hearing: any) => {
+					const current_date = new Date();
+					if (
+						hearing.updated_at ===
+						`${current_date.getFullYear()}-${
+							current_date.getMonth() + 1
+						}-${current_date.getDate()}`
+					) {
+						return true;
+					}
+					return false;
+				})
+			);
+		});
 		dispatch(getUpcomingHearings());
-		dispatch(getRecentDocuments());
+		dispatch(getRecentDocuments()).then((res: any) => {
+			console.log("Recent documents: ", res.payload);
+			setHasRecentEmail(
+				res.payload.find((doc: any) => {
+					const current_date = new Date();
+					if (
+						doc.date_created ===
+						`${current_date.getFullYear()}-${
+							current_date.getMonth() + 1
+						}-${current_date.getDate()}`
+					) {
+						return true;
+					}
+					return false;
+				})
+			);
+		});
 	}, []);
 
 	return (

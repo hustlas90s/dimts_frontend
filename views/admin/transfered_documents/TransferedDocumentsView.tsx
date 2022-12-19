@@ -48,8 +48,8 @@ const ServedDocsView = () => {
 	const [filteredDocuments, setFilteredDocuments] = useState([]);
 
 	useEffect(() => {
-		dispatch(getTransferedDocuments()).then(() => {
-			setFilteredDocuments(transferedDocuments);
+		dispatch(getTransferedDocuments()).then((res: any) => {
+			setFilteredDocuments(res.payload);
 		});
 		dispatch(getOfficesList());
 		dispatch(getCurrentDockets());
@@ -61,8 +61,8 @@ const ServedDocsView = () => {
 	};
 
 	const onSubmitNewDocument = useCallback(() => {
-		dispatch(getTransferedDocuments()).then(() =>
-			setFilteredDocuments(transferedDocuments)
+		dispatch(getTransferedDocuments()).then((res: any) =>
+			setFilteredDocuments(res.payload)
 		);
 		setSuccessText("Sending of document is successful");
 		setShowAddModal(false);
@@ -80,8 +80,8 @@ const ServedDocsView = () => {
 	const onDeleteDocument = useCallback(() => {
 		setSuccessText("Deletion of transfered document is successful");
 		dispatch(deleteDocument(selectedID)).then(() => {
-			dispatch(getTransferedDocuments()).then(() =>
-				setFilteredDocuments(transferedDocuments)
+			dispatch(getTransferedDocuments()).then((res: any) =>
+				setFilteredDocuments(res.payload)
 			);
 			setShowWarningModal(false);
 			setShowDeleteModal(true);

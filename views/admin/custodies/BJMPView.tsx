@@ -70,7 +70,9 @@ const BJMPView = () => {
 	};
 
 	const onUpdateRecord = () => {
-		dispatch(getBJMPDetainees()).then(() => setFilteredBJMP(bjmpRecords));
+		dispatch(getBJMPDetainees()).then((res: any) =>
+			setFilteredBJMP(res.payload)
+		);
 		setSuccessText("Updating of BJMP record is successful");
 		setShowSuccessModal(true);
 		setShowEditModal(false);
@@ -87,7 +89,9 @@ const BJMPView = () => {
 	const onDeleteRecord = useCallback(() => {
 		setSuccessText("Deletion of BJMP record is successful");
 		dispatch(deleteDetainee(selectedID)).then(() => {
-			dispatch(getBJMPDetainees()).then(() => setFilteredBJMP(bjmpRecords));
+			dispatch(getBJMPDetainees()).then((res: any) =>
+				setFilteredBJMP(res.payload)
+			);
 			setShowWarningModal(false);
 			setShowDeleteModal(true);
 			setTimeout(() => {
@@ -111,8 +115,8 @@ const BJMPView = () => {
 	};
 
 	useEffect(() => {
-		dispatch(getBJMPDetainees()).then(() => {
-			setFilteredBJMP(bjmpRecords);
+		dispatch(getBJMPDetainees()).then((res: any) => {
+			setFilteredBJMP(res.payload);
 		});
 	}, []);
 

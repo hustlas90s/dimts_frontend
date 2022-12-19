@@ -1,4 +1,5 @@
 import ViewModal from "../ViewModal";
+import moment from "moment";
 
 interface ViewDocumentParams {
 	isShow: boolean;
@@ -54,7 +55,7 @@ const ViewDocument = ({
 					<div className="flex flex-col gap-y-1">
 						<h4 className="font-bold">Date Submitted</h4>
 						<p className="text-sm text-gray-500">
-							{selectedDocument.date_received}
+							{moment(selectedDocument.date_received).format("LL")}
 						</p>
 					</div>
 					{/* Status */}

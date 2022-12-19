@@ -50,8 +50,8 @@ const PNPView = () => {
 	const [filteredPNP, setFilteredPNP] = useState([]);
 
 	useEffect(() => {
-		dispatch(getPNPDetainees()).then(() => {
-			setFilteredPNP(pnpRecords);
+		dispatch(getPNPDetainees()).then((res: any) => {
+			setFilteredPNP(res.payload);
 		});
 		dispatch(getCriminalCases());
 	}, []);
@@ -62,7 +62,7 @@ const PNPView = () => {
 	};
 
 	const onSubmitNewRecord = useCallback(() => {
-		dispatch(getPNPDetainees()).then(() => setFilteredPNP(pnpRecords));
+		dispatch(getPNPDetainees()).then((res: any) => setFilteredPNP(res.payload));
 		setSuccessText("Creation of new pnp record is successful");
 		setShowAddModal(false);
 		setShowSuccessModal(true);
@@ -90,7 +90,7 @@ const PNPView = () => {
 	};
 
 	const onUpdateHearing = () => {
-		dispatch(getPNPDetainees()).then(() => setFilteredPNP(pnpRecords));
+		dispatch(getPNPDetainees()).then((res: any) => setFilteredPNP(res.payload));
 		setSuccessText("Updating of pnp record is successful");
 		setShowSuccessModal(true);
 		setShowEditModal(false);
@@ -107,7 +107,9 @@ const PNPView = () => {
 	const onDeleteRecord = useCallback(() => {
 		setSuccessText("Deletion of pnp record is successful");
 		dispatch(deleteDetainee(selectedID)).then(() => {
-			dispatch(getPNPDetainees()).then(() => setFilteredPNP(pnpRecords));
+			dispatch(getPNPDetainees()).then((res: any) =>
+				setFilteredPNP(res.payload)
+			);
 			setShowWarningModal(false);
 			setShowDeleteModal(true);
 			setTimeout(() => {

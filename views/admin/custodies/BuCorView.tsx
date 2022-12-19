@@ -70,7 +70,9 @@ const BuCorView = () => {
 	};
 
 	const onUpdateHearing = () => {
-		dispatch(getBuCorDetainees()).then(() => setFilteredBuCor(bucorRecords));
+		dispatch(getBuCorDetainees()).then((res: any) =>
+			setFilteredBuCor(res.payload)
+		);
 		setSuccessText("Updating of Bucor record is successful");
 		setShowSuccessModal(true);
 		setShowEditModal(false);
@@ -87,7 +89,9 @@ const BuCorView = () => {
 	const onDeleteRecord = useCallback(() => {
 		setSuccessText("Deletion of Bucor record is successful");
 		dispatch(deleteDetainee(selectedID)).then(() => {
-			dispatch(getBuCorDetainees()).then(() => setFilteredBuCor(bucorRecords));
+			dispatch(getBuCorDetainees()).then((res: any) =>
+				setFilteredBuCor(res.payload)
+			);
 			setShowWarningModal(false);
 			setShowDeleteModal(true);
 			setTimeout(() => {
@@ -111,8 +115,8 @@ const BuCorView = () => {
 	};
 
 	useEffect(() => {
-		dispatch(getBuCorDetainees()).then(() => {
-			setFilteredBuCor(bucorRecords);
+		dispatch(getBuCorDetainees()).then((res: any) => {
+			setFilteredBuCor(res.payload);
 		});
 	}, []);
 
