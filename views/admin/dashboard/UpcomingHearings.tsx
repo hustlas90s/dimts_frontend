@@ -1,6 +1,7 @@
 import moment from "moment";
 
 const UpcomingHearings = ({ upcomingHearings }: any) => {
+	const current_date = new Date();
 	return (
 		<div className="w-full overflow-x-auto">
 			<table className="min-w-max w-full table-auto">
@@ -25,7 +26,12 @@ const UpcomingHearings = ({ upcomingHearings }: any) => {
 									{moment(hearing.hearing_schedule).format("LL")}
 								</td>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
-									{hearing.status}
+									{hearing.hearing_schedule ===
+									`${current_date.getFullYear()}-${
+										current_date.getMonth() + 1
+									}-${current_date.getDate()}`
+										? "On-Going"
+										: hearing.status}
 								</td>
 							</tr>
 						);

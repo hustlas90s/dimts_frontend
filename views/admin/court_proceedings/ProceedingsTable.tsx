@@ -11,9 +11,8 @@ const CourtHearingsTable = ({
 				<thead>
 					<tr className="bg-gray-100 text-gray-600 text-sm leading-normal">
 						<th className="py-3 px-6 text-left">Case No.</th>
-						<th className="py-3 px-6 text-left">Crime Type</th>
-						<th className="py-3 px-6 text-left">Proceeding Type</th>
 						<th className="py-3 px-6 text-left">Date</th>
+						<th className="py-3 px-6 text-left">Proceeding Type</th>
 						<th className="py-3 px-6 text-center">Actions</th>
 					</tr>
 				</thead>
@@ -25,17 +24,10 @@ const CourtHearingsTable = ({
 									{proceeding.case__case_no}
 								</td>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
-									{proceeding.case__crime_type.includes("[")
-										? proceeding.case__crime_type
-												.slice(1, -1)
-												.replace(/['"]+/g, "")
-										: proceeding.case__crime_type}
+									{proceeding.hearing__hearing_type}
 								</td>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
-									{proceeding.proceeding_type}
-								</td>
-								<td className="py-3 px-6 text-left whitespace-nowrap">
-									{moment(proceeding.proceeding_date).format("LL")}
+									{moment(proceeding.hearing__hearing_schedule).format("LL")}
 								</td>
 								<td className="py-3 px-6 text-center">
 									<div className="flex items-center justify-center gap-x-5">
@@ -61,6 +53,25 @@ const CourtHearingsTable = ({
 													strokeLinejoin="round"
 													strokeWidth="2"
 													d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+												/>
+											</svg>
+										</div>
+										<div
+											className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110 cursor-pointer"
+											// onClick={() => onShowEdit(proceeding.id)}
+										>
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												fill="none"
+												viewBox="0 0 24 24"
+												stroke="currentColor"
+												className="w-5 h-5"
+											>
+												<path
+													strokeLinecap="round"
+													strokeLinejoin="round"
+													strokeWidth="2"
+													d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
 												/>
 											</svg>
 										</div>

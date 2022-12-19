@@ -75,6 +75,13 @@ const ViewHearing = ({
 				</div>
 				{/*  */}
 				<div className="flex flex-col gap-y-1">
+					<h4 className="font-bold">Hearing Type</h4>
+					<p className="text-sm text-gray-500">
+						{selectedHearing.hearing_type}
+					</p>
+				</div>
+				{/*  */}
+				<div className="flex flex-col gap-y-1">
 					<h4 className="font-bold">Start Time</h4>
 					<p className="text-sm text-gray-500">
 						{TimeText(start_time_hour, start_time_minutes)}

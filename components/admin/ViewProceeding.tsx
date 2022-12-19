@@ -43,7 +43,7 @@ const ViewProceeding = ({
 				<div className="flex flex-col gap-y-1">
 					<h4 className="font-bold">Proceeding Type</h4>
 					<p className="text-sm text-gray-500">
-						{selectedProceeding.proceeding_type}
+						{selectedProceeding.hearing__hearing_type}
 					</p>
 				</div>
 				{/*  */}

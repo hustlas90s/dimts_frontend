@@ -35,6 +35,7 @@ const UpdateHearing = ({
 			hearing_schedule: formData.hearingSchedule,
 			start_time: formData.hearingStartTime,
 			end_time: formData.hearingEndTime,
+			status: formData.hearingStatus,
 		};
 		dispatch(
 			updateHearing({ formData: data, hearing_id: selectedHearing.hearingID })
@@ -62,19 +63,17 @@ const UpdateHearing = ({
 						setFieldValue={setValue}
 					/>
 				</div>
-				<div className="col-span-2">
-					<MyInputFieldFull
-						control={control}
-						fieldLabel="Case No."
-						fieldType="text"
-						fieldName="hearingCaseNo"
-						fieldRules=""
-						defaultValue={selectedHearing.hearingCaseNo}
-						placeHolder=""
-						readOnly={true}
-						setFieldValue={setValue}
-					/>
-				</div>
+				<MyInputFieldFull
+					control={control}
+					fieldLabel="Case No."
+					fieldType="text"
+					fieldName="hearingCaseNo"
+					fieldRules=""
+					defaultValue={selectedHearing.hearingCaseNo}
+					placeHolder=""
+					readOnly={true}
+					setFieldValue={setValue}
+				/>
 				<MyInputField
 					control={control}
 					fieldLabel="Hearing Schedule"
@@ -84,6 +83,19 @@ const UpdateHearing = ({
 					defaultValue={selectedHearing.hearingSchedule}
 					placeHolder=""
 					setFieldValue={setValue}
+				/>
+				<MySelectField
+					myControl={control}
+					myOptions={[
+						{ label: "Hearing", value: "Hearing" },
+						{ label: "Arraignment", value: "Arraignment" },
+						{ label: "Initial Trial", value: "Initial Trial" },
+						{ label: "Last Court Action", value: "Last Court Action" },
+					]}
+					fieldName="hearingType"
+					fieldLabel="Hearing Type"
+					fieldRules={fieldRules.requiredRule}
+					defaultValue={selectedHearing.hearingType}
 				/>
 				<MyInputField
 					control={control}

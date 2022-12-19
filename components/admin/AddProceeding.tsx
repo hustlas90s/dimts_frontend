@@ -59,7 +59,6 @@ const AddProceeding = ({
 					<MySelectField
 						myControl={control}
 						myOptions={[
-							{ label: "Hearing", value: "Hearing" },
 							{ label: "Arraignment", value: "Arraignment" },
 							{ label: "Initial Trial", value: "Initial Trial" },
 							{ label: "Last Court Action", value: "Last Court Action" },
