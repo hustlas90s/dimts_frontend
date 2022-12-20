@@ -181,6 +181,16 @@ export default class DataRepository {
         })
         return JSON.parse(data)
     }
+    // Get Case Proceedings
+    async GetCaseProceedings(jwt_token: string, case_no: string) {
+        const { data } = await backendConn.get(`court_proceedings/${case_no}`, {
+            headers : {
+                Authorization : `Bearer ${ jwt_token }`,
+                'Content-Type' : 'aplication/json'
+            }
+        })
+        return data.results
+    }
     // POST REQUESTS
     // Create new court hearing
     async NewCourtHearing(jwt_token: string, formData: any) {

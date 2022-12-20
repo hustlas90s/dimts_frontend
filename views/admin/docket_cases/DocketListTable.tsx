@@ -31,7 +31,9 @@ const DocketListTable = ({
 									{docket.type_of_case} Case
 								</td>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
-									{docket.crime_type}
+									{docket.crime_type.includes("[")
+										? docket.crime_type.slice(1, -1).replace(/['"]+/g, "")
+										: docket.crime_type}
 								</td>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
 									{docket.judge_assigned}

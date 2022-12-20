@@ -69,17 +69,6 @@ const UpdateProceeding = ({
 						setFieldValue={setValue}
 					/>
 				</div>
-				<MyInputFieldFull
-					control={control}
-					fieldLabel="Case No."
-					fieldType="text"
-					fieldName="proceedingCaseNo"
-					fieldRules=""
-					defaultValue={selectedProceeding.proceedingCaseNo}
-					placeHolder=""
-					readOnly={true}
-					setFieldValue={setValue}
-				/>
 				<MyInputField
 					control={control}
 					fieldLabel="Proceeding Schedule"
@@ -90,7 +79,7 @@ const UpdateProceeding = ({
 					placeHolder=""
 					setFieldValue={setValue}
 				/>
-				<MySelectField
+				{/* <MySelectField
 					myControl={control}
 					myOptions={[
 						{ label: "Hearing", value: "Hearing" },
@@ -102,7 +91,7 @@ const UpdateProceeding = ({
 					fieldLabel="Proceeding Type"
 					fieldRules={fieldRules.requiredRule}
 					defaultValue={selectedProceeding.proceedingType}
-				/>
+				/> */}
 				<MyInputField
 					control={control}
 					fieldLabel="Start Time"

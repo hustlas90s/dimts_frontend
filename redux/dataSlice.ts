@@ -27,6 +27,7 @@ interface DataShape {
     cluster4: any;
     cluster5: any;
     courtProceedingsList: any;
+    caseProceedingsList: any;
 }
 
 const initialState: DataShape = {
@@ -54,6 +55,7 @@ const initialState: DataShape = {
     cluster4 : [],
     cluster5 : [],
     courtProceedingsList : [],
+    caseProceedingsList : [],
 }
 
 // ACCOUNT THUNKS
@@ -340,6 +342,14 @@ export const getCourtProceedings = createAsyncThunk(
     }
 )
 
+export const getCaseProceedings = createAsyncThunk(
+    'data/getCaseProceedings',
+    async (case_no: any) => {
+        const dataRepo = new DataRepository()
+        return await dataRepo.GetCaseProceedings(localStorage.jwt_token, case_no)
+    }
+)
+
 export const updateProceeding = createAsyncThunk(
     'data/updateProceeding',
     async (args: { formData: any, proceeding_id: number }) => { 
@@ -598,6 +608,7 @@ const dataSlice = createSlice({
             return { ...state, dataLoading : false }
         })
         // COURT PROCEEDINGS
+        // Get Court Proceedings
         builder.addCase(getCourtProceedings.pending, (state) => {
             return { ...state, dataLoading : true }
         })
@@ -605,6 +616,16 @@ const dataSlice = createSlice({
             return { ...state, dataLoading : false, courtProceedingsList : action.payload }
         })
         builder.addCase(getCourtProceedings.rejected, (state) => {
+            return { ...state, dataLoading : false }
+        })
+        // Get Case Proceedings
+        builder.addCase(getCaseProceedings.pending, (state) => {
+            return { ...state, dataLoading : true }
+        })
+        builder.addCase(getCaseProceedings.fulfilled, (state, action) => {
+            return { ...state, dataLoading : false, caseProceedingsList : action.payload }
+        })
+        builder.addCase(getCaseProceedings.rejected, (state) => {
             return { ...state, dataLoading : false }
         })
     }
