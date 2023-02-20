@@ -32,6 +32,16 @@ export default class DataRepository {
         })
         return data.results
     }
+    // Get All Dockets
+    async GetAllDockets(jwt_token: string) {
+        const { data } = await backendConn.get('all_dockets/', {
+            headers : {
+                Authorization : `Bearer ${ jwt_token }`,
+                'Content-Type' : 'aplication/json'
+            }
+        })
+        return data.results
+    }
     // Get Current Dockets
     async GetCurrentDockets(jwt_token: string) {
         const { data } = await backendConn.get('current_dockets/', {

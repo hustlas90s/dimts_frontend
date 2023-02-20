@@ -8,6 +8,9 @@ import ViewDocket from "../../../components/admin/ViewDocket";
 import WarningModal from "../../../components/WarningModal";
 import useCrudModals from "../../../hooks/useCrudModals";
 import useModalIDs from "../../../hooks/useModalIDs";
+import PrintButton from "../../../components/PrintButton";
+import moment from "moment";
+import { ExportToCsv } from "export-to-csv";
 
 const CitizenListView = () => {
 	const dispatch = useAppDispatch();
@@ -84,6 +87,26 @@ const CitizenListView = () => {
 		}
 	};
 
+	const onExportCases = () => {
+		const csvCases = pastDocketList.map((docket: any) => {
+			return {
+				case_no: docket.case_no,
+				type_of_case: docket.type_of_case,
+				document_title: docket.document_title,
+				case_title: docket.case_title,
+				crime_type: docket.crime_type,
+				received_date: moment(docket.received_date).format("ll"),
+				raffled_court: docket.raffled_court,
+				judge_assigned: docket.judge_assigned,
+			};
+		});
+		const csvExporter = new ExportToCsv({
+			useKeysAsHeaders: true,
+			filename: "Docket Cases",
+		});
+		csvCases.length ? csvExporter.generateCsv(csvCases) : null;
+	};
+
 	return (
 		<div className="flex flex-col gap-y-5 font-mont text-gray-700">
 			<ViewDocket
@@ -104,13 +127,16 @@ const CitizenListView = () => {
 				{/*  */}
 				<div className="w-full flex justify-between">
 					<h4 className="text-xl font-black tracking-wider">Docket Cases</h4>
-					<input
-						type="text"
-						placeholder="Search Case No."
-						className="w-44 py-1 px-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
-						onChange={handleChange}
-						value={searchInput}
-					/>
+					<div className="flex gap-x-5 items-center">
+						<PrintButton onClickPrint={() => onExportCases()} />
+						<input
+							type="text"
+							placeholder="Search Case No."
+							className="w-44 py-1 px-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+							onChange={handleChange}
+							value={searchInput}
+						/>
+					</div>
 				</div>
 				{/*  */}
 				<div className="w-full border-b border-gray-200 -mt-3"></div>

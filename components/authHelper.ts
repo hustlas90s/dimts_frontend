@@ -40,5 +40,12 @@ export const fieldRules = {
             value : 8,
             message : "Input takes at least 8 characters"
         }
+    },
+    requiredDateFieldRule : {
+        required : "This field is required",
+        min : {
+            value : new Date().toString(),
+            message : "Date must be greater than today"
+        }
     }
 }

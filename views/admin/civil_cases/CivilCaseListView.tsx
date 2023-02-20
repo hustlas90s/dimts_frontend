@@ -136,7 +136,7 @@ const CivilCaseListView = () => {
 			useKeysAsHeaders: true,
 			filename: "Civil Cases",
 		});
-		csvExporter.generateCsv(csvCases);
+		csvCases.length ? csvExporter.generateCsv(csvCases) : null;
 	};
 
 	const handleChange = (e: any) => {

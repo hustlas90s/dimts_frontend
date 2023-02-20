@@ -8,6 +8,7 @@ import { fieldRules } from "../authHelper";
 import { useAppDispatch } from "../../redux/hooks";
 import { createNewDocket } from "../../redux/dataSlice";
 import { QRCodeCanvas } from "qrcode.react";
+import MyInputFieldFull from "../MyInputFieldFull";
 
 interface AddCriminalCaseParams {
 	isShow: boolean;
@@ -73,25 +74,30 @@ const AddCriminalCase = ({
 			loadingState={showLoading}
 		>
 			<div className="grid grid-cols-2 gap-y-8 gap-x-5">
-				<MyInputField
-					control={control}
-					fieldLabel="Type of Case"
-					fieldType="text"
-					fieldName="caseType"
-					fieldRules={fieldRules.requiredRule}
-					defaultValue="Criminal"
-					readOnly={true}
-					setFieldValue={setValue}
-				/>
-				<MyInputField
-					control={control}
-					fieldLabel="Case No."
-					fieldType="text"
-					fieldName="caseNo"
-					fieldRules={fieldRules.requiredRule}
-					defaultValue=""
-					placeHolder=""
-				/>
+				<div className="hidden col-span-2">
+					<MyInputField
+						control={control}
+						fieldLabel="Type of Case"
+						fieldType="text"
+						fieldName="caseType"
+						fieldRules={fieldRules.requiredRule}
+						defaultValue="Criminal"
+						readOnly={true}
+						setFieldValue={setValue}
+					/>
+				</div>
+				<div className="col-span-2">
+					<MyInputFieldFull
+						control={control}
+						fieldLabel="Case No."
+						fieldType="text"
+						fieldName="caseNo"
+						fieldRules={fieldRules.requiredRule}
+						defaultValue=""
+						placeHolder=""
+					/>
+				</div>
+
 				<MyInputField
 					control={control}
 					fieldLabel="Document Title"

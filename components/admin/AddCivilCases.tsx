@@ -2,13 +2,12 @@ import { useState, useEffect } from "react";
 import { nanoid } from "@reduxjs/toolkit";
 import SubmitModal from "../SubmitModal";
 import MyInputField from "../MyInputField";
+import MyInputFieldFull from "../MyInputFieldFull";
 import MyMultiSelectField from "../MyMultiSelectField";
-import MySelectField from "../MySelectField";
 import { useForm } from "react-hook-form";
 import { fieldRules } from "../authHelper";
 import { useAppDispatch } from "../../redux/hooks";
 import { createNewDocket } from "../../redux/dataSlice";
-import MyTextAreaField from "../MyTextArea";
 import { QRCodeCanvas } from "qrcode.react";
 
 interface AddCivilCaseParams {
@@ -75,25 +74,29 @@ const AddCivilCase = ({
 			loadingState={showLoading}
 		>
 			<div className="grid grid-cols-2 gap-y-8 gap-x-5">
-				<MyInputField
-					control={control}
-					fieldLabel="Type of Case"
-					fieldType="text"
-					fieldName="caseType"
-					fieldRules={fieldRules.requiredRule}
-					defaultValue="Civil"
-					readOnly={true}
-					setFieldValue={setValue}
-				/>
-				<MyInputField
-					control={control}
-					fieldLabel="Case No."
-					fieldType="text"
-					fieldName="caseNo"
-					fieldRules={fieldRules.requiredRule}
-					defaultValue=""
-					placeHolder=""
-				/>
+				<div className="hidden col-span-2">
+					<MyInputField
+						control={control}
+						fieldLabel="Type of Case"
+						fieldType="text"
+						fieldName="caseType"
+						fieldRules={fieldRules.requiredRule}
+						defaultValue="Civil"
+						readOnly={true}
+						setFieldValue={setValue}
+					/>
+				</div>
+				<div className="col-span-2">
+					<MyInputFieldFull
+						control={control}
+						fieldLabel="Case No."
+						fieldType="text"
+						fieldName="caseNo"
+						fieldRules={fieldRules.requiredRule}
+						defaultValue=""
+						placeHolder=""
+					/>
+				</div>
 				<MyInputField
 					control={control}
 					fieldLabel="Document Title"

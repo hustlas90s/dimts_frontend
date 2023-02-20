@@ -9,6 +9,7 @@ interface DataShape {
     citizenList: any;
     officesList: any;
     provinceList: any;
+    allDocketList: any;
     currentDocketList: any;
     pastDocketList: any;
     criminalCaseList: any;
@@ -37,6 +38,7 @@ const initialState: DataShape = {
     citizenList : [],
     officesList : [],
     provinceList : [],
+    allDocketList : [],
     currentDocketList : [],
     pastDocketList : [],
     criminalCaseList : [],
@@ -162,6 +164,14 @@ export const deleteHearing = createAsyncThunk(
 )
 
 // DOCKET THUNKS
+export const getAllDockets = createAsyncThunk(
+    'data/getAllDockets',
+    async () => {
+        const dataRepo = new DataRepository()
+        return await dataRepo.GetAllDockets(localStorage.jwt_token)
+    }
+)
+
 export const getCurrentDockets = createAsyncThunk(
     'data/getCurrentDockets',
     async () => {
@@ -435,6 +445,16 @@ const dataSlice = createSlice({
             return { ...state, dataLoading : false }
         })
         // DOCKET
+        // Get All Dockets
+        builder.addCase(getAllDockets.pending, (state) => {
+            return { ...state, dataLoading : true }
+        })
+        builder.addCase(getAllDockets.fulfilled, (state, action) => {
+            return { ...state, dataLoading : false, allDocketList : action.payload }
+        })
+        builder.addCase(getAllDockets.rejected, (state) => {
+            return { ...state, dataLoading : false }
+        })
         // Get Current Dockets
         builder.addCase(getCurrentDockets.pending, (state) => {
             return { ...state, dataLoading : true }

@@ -5,7 +5,7 @@ import {
 	getCourtProceedings,
 	getCurrentDockets,
 } from "../../../redux/dataSlice";
-import AddNewButton from "../../../components/AddNewButton";
+import PrintButton from "../../../components/PrintButton";
 import MoonLoader from "react-spinners/MoonLoader";
 import ProceedingsTable from "./CourtProceedingsTable";
 import AdminBreadCrumbs from "../../../components/admin/AdminBreadCrumbs";
@@ -16,6 +16,8 @@ import WarningModal from "../../../components/WarningModal";
 import useCrudModals from "../../../hooks/useCrudModals";
 import useModalIDs from "../../../hooks/useModalIDs";
 import ViewProceeding from "../../../components/admin/ViewProceeding";
+import { ExportToCsv } from "export-to-csv";
+import moment from "moment";
 
 const CourtProceedingsView = () => {
 	const dispatch = useAppDispatch();
@@ -113,6 +115,43 @@ const CourtProceedingsView = () => {
 		});
 	};
 
+	const onExportProceedings = () => {
+		const TimeText = (hours_time: number, minutes_time: string) => {
+			return hours_time > 12
+				? `${hours_time - 12} : ${minutes_time} PM`
+				: `${hours_time} : ${minutes_time} AM`;
+		};
+		const csvProocedings = courtProceedingsList.map((proceeding: any) => {
+			let start_time_hour = proceeding.start_time.substring(0, 2) * 1;
+			let start_time_minutes = proceeding.start_time.substring(
+				3,
+				proceeding.start_time.length
+			);
+			let end_time_hour = proceeding.end_time.substring(0, 2) * 1;
+			let end_time_minutes = proceeding.end_time.substring(
+				3,
+				proceeding.end_time.length
+			);
+			return {
+				case_no: proceeding.case__case_no,
+				crime_type: proceeding.case__crime_type,
+				proceeding_schedule: moment(proceeding.proceeding_schedule).format(
+					"ll"
+				),
+				start_time: TimeText(start_time_hour, start_time_minutes),
+				end_time: TimeText(end_time_hour, end_time_minutes),
+				status: proceeding.status,
+				proceeding_type: proceeding.proceeding_type,
+				remarks: proceeding.remarks,
+			};
+		});
+		const csvExporter = new ExportToCsv({
+			useKeysAsHeaders: true,
+			filename: "Court Hearings",
+		});
+		csvExporter.generateCsv(csvProocedings);
+	};
+
 	const handleChange = (e: any) => {
 		e.preventDefault();
 		setSearchInput(e.target.value);
@@ -166,10 +205,7 @@ const CourtProceedingsView = () => {
 						Court Proceedings
 					</h4>
 					<div className="flex gap-x-5 items-center">
-						{/* <AddNewButton
-                            btnText="New Proceeding"
-                            onClickAdd={() => setShowAddModal(true)}
-                        /> */}
+						<PrintButton onClickPrint={() => onExportProceedings()} />
 						<input
 							type="text"
 							placeholder="Search Case No."

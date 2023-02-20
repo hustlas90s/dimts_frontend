@@ -133,7 +133,7 @@ const CriminalCaseListView = () => {
 			useKeysAsHeaders: true,
 			filename: "Criminal Cases",
 		});
-		csvExporter.generateCsv(csvCases);
+		csvCases.length ? csvExporter.generateCsv(csvCases) : null;
 	};
 
 	const handleChange = (e: any) => {

@@ -1,5 +1,3 @@
-import moment from "moment";
-
 const CalendarMeeting = ({ hearing }: any) => {
 	let start_time_hour = hearing.start_time.substring(0, 2) * 1;
 	let start_time_minutes = hearing.start_time.substring(

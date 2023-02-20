@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { fieldRules } from "../authHelper";
 import { useAppDispatch } from "../../redux/hooks";
 import { createNewHearing } from "../../redux/dataSlice";
+import MyTextAreaField from "../MyTextArea";
 
 interface AddHearingParams {
 	isShow: boolean;
@@ -29,6 +30,7 @@ const AddHearing = ({
 			start_time: formData.hearingStartTime,
 			end_time: formData.hearingEndTime,
 			case: formData.hearingCase,
+			remarks: formData.hearingRemarks,
 			status: "Pending",
 		};
 		dispatch(createNewHearing(data)).then(() => onConfirm());
@@ -58,7 +60,7 @@ const AddHearing = ({
 					fieldLabel="Hearing Schedule"
 					fieldType="date"
 					fieldName="hearingSchedule"
-					fieldRules={fieldRules.requiredRule}
+					fieldRules={fieldRules.requiredDateFieldRule}
 					defaultValue=""
 					placeHolder=""
 				/>
@@ -80,6 +82,15 @@ const AddHearing = ({
 					defaultValue=""
 					placeHolder=""
 				/>
+				<div className="col-span-2">
+					<MyTextAreaField
+						control={control}
+						fieldLabel="Remarks"
+						fieldName="hearingRemarks"
+						fieldRules={fieldRules.requiredRule}
+						defaultValue=""
+					/>
+				</div>
 			</div>
 		</SubmitModal>
 	);

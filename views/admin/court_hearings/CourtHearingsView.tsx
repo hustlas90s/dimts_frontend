@@ -19,6 +19,7 @@ import useCrudModals from "../../../hooks/useCrudModals";
 import useModalIDs from "../../../hooks/useModalIDs";
 import { ExportToCsv } from "export-to-csv";
 import moment from "moment";
+import _ from "lodash";
 
 const CourtHearingsView = () => {
 	const dispatch = useAppDispatch();
@@ -150,7 +151,7 @@ const CourtHearingsView = () => {
 			useKeysAsHeaders: true,
 			filename: "Court Hearings",
 		});
-		csvExporter.generateCsv(csvHearings);
+		csvHearings.length ? csvExporter.generateCsv(csvHearings) : null;
 	};
 
 	const handleChange = (e: any) => {
@@ -232,14 +233,41 @@ const CourtHearingsView = () => {
 					</div>
 				)}
 				{!dataLoading && (
-					<CourtHearingsTable
-						courtHearings={filteredHearings}
-						onViewHearing={(hearing: any) => onViewCourtHearing(hearing)}
-						onShowWarning={(hearing_id: number) =>
-							onShowDeleteModal(hearing_id)
-						}
-						onShowEdit={(hearing_id: number) => onShowUpdateModal(hearing_id)}
-					/>
+					<div className="flex flex-col gap-y-5">
+						<CourtHearingsTable
+							courtHearings={filteredHearings}
+							onViewHearing={(hearing: any) => onViewCourtHearing(hearing)}
+							onShowWarning={(hearing_id: number) =>
+								onShowDeleteModal(hearing_id)
+							}
+							onShowEdit={(hearing_id: number) => onShowUpdateModal(hearing_id)}
+						/>
+						<div className="self-end flex gap-x-2 items-center">
+							<p className="text-sm font-medium">Sort by: </p>
+							<select
+								className="w-40 px-3 py-1 focus:outline-none border border-gray-200 focus:border-purple-400 rounded-lg appearance-none"
+								defaultValue=""
+								onChange={(e: any) => {
+									setFilteredHearings((oldFilteredHearings) =>
+										_.orderBy(
+											oldFilteredHearings,
+											["hearing_schedule"],
+											[e.target.value]
+										)
+									);
+								}}
+							>
+								<option
+									disabled
+									value=""
+								>
+									Select Option
+								</option>
+								<option value="desc">Ascending</option>
+								<option value="asc">Descending</option>
+							</select>
+						</div>
+					</div>
 				)}
 			</div>
 		</div>

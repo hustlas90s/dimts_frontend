@@ -6,6 +6,7 @@ import {
 	getCurrentDockets,
 } from "../../../redux/dataSlice";
 import MoonLoader from "react-spinners/MoonLoader";
+import PrintButton from "../../../components/PrintButton";
 import CaseProceedingsTable from "./CaseProceedingsTable";
 import AdminBreadCrumbs from "../../../components/admin/AdminBreadCrumbs";
 import UpdateProceeding from "../../../components/admin/UpdateProceeding";
@@ -15,6 +16,8 @@ import useCrudModals from "../../../hooks/useCrudModals";
 import useModalIDs from "../../../hooks/useModalIDs";
 import ViewProceeding from "../../../components/admin/ViewProceeding";
 import { useRouter } from "next/router";
+import { ExportToCsv } from "export-to-csv";
+import moment from "moment";
 
 const CaseProceedingView = () => {
 	const dispatch = useAppDispatch();
@@ -92,6 +95,42 @@ const CaseProceedingView = () => {
 		});
 	};
 
+	const onExportProceedings = () => {
+		const TimeText = (hours_time: number, minutes_time: string) => {
+			return hours_time > 12
+				? `${hours_time - 12} : ${minutes_time} PM`
+				: `${hours_time} : ${minutes_time} AM`;
+		};
+		const csvProocedings = caseProceedingsList.map((proceeding: any) => {
+			let start_time_hour = proceeding.start_time.substring(0, 2) * 1;
+			let start_time_minutes = proceeding.start_time.substring(
+				3,
+				proceeding.start_time.length
+			);
+			let end_time_hour = proceeding.end_time.substring(0, 2) * 1;
+			let end_time_minutes = proceeding.end_time.substring(
+				3,
+				proceeding.end_time.length
+			);
+			return {
+				case_no: id,
+				proceeding_schedule: moment(proceeding.proceeding_schedule).format(
+					"ll"
+				),
+				start_time: TimeText(start_time_hour, start_time_minutes),
+				end_time: TimeText(end_time_hour, end_time_minutes),
+				status: proceeding.status,
+				proceeding_type: proceeding.proceeding_type,
+				remarks: proceeding.remarks,
+			};
+		});
+		const csvExporter = new ExportToCsv({
+			useKeysAsHeaders: true,
+			filename: "Court Hearings",
+		});
+		csvProocedings.length ? csvExporter.generateCsv(csvProocedings) : null;
+	};
+
 	return (
 		<div className="flex flex-col gap-y-5 font-mont text-gray-700">
 			<ViewProceeding
@@ -122,23 +161,28 @@ const CaseProceedingView = () => {
 				{/*  */}
 				<div className="w-full flex justify-between items-center">
 					<h4 className="text-xl font-black tracking-wider">{id}</h4>
-					<div
-						className="flex justify-center items-center gap-x-1 hover:cursor-pointer"
-						onClick={() => router.back()}
-					>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							viewBox="0 0 20 20"
-							fill="currentColor"
-							className="w-5 h-5 text-purple-500"
+					<div className="flex gap-x-5 items-center">
+						{caseProceedingsList.length > 0 ? (
+							<PrintButton onClickPrint={() => onExportProceedings()} />
+						) : null}
+						<div
+							className="flex justify-center items-center gap-x-1 hover:cursor-pointer"
+							onClick={() => router.back()}
 						>
-							<path
-								fillRule="evenodd"
-								d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z"
-								clipRule="evenodd"
-							/>
-						</svg>
-						<p className="text-purple-500 text-sm">Back</p>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								viewBox="0 0 20 20"
+								fill="currentColor"
+								className="w-5 h-5 text-purple-500"
+							>
+								<path
+									fillRule="evenodd"
+									d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z"
+									clipRule="evenodd"
+								/>
+							</svg>
+							<p className="text-purple-500 text-sm">Back</p>
+						</div>
 					</div>
 				</div>
 				{/*  */}
@@ -156,6 +200,7 @@ const CaseProceedingView = () => {
 				)}
 				{!dataLoading && (
 					<CaseProceedingsTable
+						caseNo={id}
 						caseProceedings={caseProceedingsList}
 						onViewProceeding={(proceeding: any) =>
 							onViewCourtProceeding(proceeding)

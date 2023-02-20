@@ -4,7 +4,6 @@ import {
 	ResponsiveContainer,
 	XAxis,
 	YAxis,
-	ZAxis,
 	CartesianGrid,
 	Tooltip,
 	Legend,
@@ -14,7 +13,6 @@ import {
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { getKmeansClustering } from "../../../redux/dataSlice";
 import { MoonLoader } from "react-spinners";
-import cluster from "cluster";
 
 const ClusteringView = () => {
 	const dispatch = useAppDispatch();

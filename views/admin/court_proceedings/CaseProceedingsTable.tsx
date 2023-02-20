@@ -1,9 +1,9 @@
 import moment from "moment";
+import Link from "next/link";
 
 const CaseProceedingsTable = ({
+	caseNo,
 	caseProceedings,
-	onViewProceeding,
-	onShowEdit,
 	onShowWarning,
 }: any) => {
 	const TimeText = (hours_time: number, minutes_time: string) => {
@@ -55,16 +55,20 @@ const CaseProceedingsTable = ({
 								</td>
 								<td className="py-3 px-6 text-center">
 									<div className="flex items-center justify-center gap-x-5">
-										<div
-											className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110 cursor-pointer"
-											onClick={() => onViewProceeding(proceeding)}
+										<Link
+											href={{
+												pathname:
+													"/admin/court_proceedings/proceeding_calendar",
+												query: { id: caseNo },
+											}}
+											className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110"
 										>
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
 												fill="none"
 												viewBox="0 0 24 24"
 												stroke="currentColor"
-												className="w-5 h-5"
+												className="w-5 h-5 hover:cursor-pointer"
 											>
 												<path
 													strokeLinecap="round"
@@ -79,8 +83,8 @@ const CaseProceedingsTable = ({
 													d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
 												/>
 											</svg>
-										</div>
-										<div
+										</Link>
+										{/* <div
 											className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110 cursor-pointer"
 											onClick={() => onShowEdit(proceeding.id)}
 										>
@@ -98,7 +102,7 @@ const CaseProceedingsTable = ({
 													d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
 												/>
 											</svg>
-										</div>
+										</div> */}
 										<div
 											className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110 cursor-pointer"
 											onClick={() => onShowWarning(proceeding.id)}
