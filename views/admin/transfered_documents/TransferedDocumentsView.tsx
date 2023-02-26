@@ -1,7 +1,6 @@
 import { useEffect, useCallback, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import {
-	sendDocumentEmail,
 	getTransferedDocuments,
 	getOfficesList,
 	getCurrentDockets,

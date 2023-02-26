@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import DataRepository from '../repositories/DataRepository'
 import AuthRepository from '../repositories/AuthRepository'
+import moment from "moment";
 
 interface DataShape {
     dataLoading: boolean;
@@ -29,6 +30,10 @@ interface DataShape {
     cluster5: any;
     courtProceedingsList: any;
     caseProceedingsList: any;
+    activityLogs: any;
+    isNewData: boolean;
+    documentLogs: any;
+    casesSummaryList: any;
 }
 
 const initialState: DataShape = {
@@ -58,6 +63,10 @@ const initialState: DataShape = {
     cluster5 : [],
     courtProceedingsList : [],
     caseProceedingsList : [],
+    activityLogs : [],
+    isNewData : false,
+    documentLogs : [],
+    casesSummaryList : []
 }
 
 // ACCOUNT THUNKS
@@ -164,6 +173,14 @@ export const deleteHearing = createAsyncThunk(
 )
 
 // DOCKET THUNKS
+export const fetchCasesSummary = createAsyncThunk(
+    'data/fetchCasesSummary',
+    async () => {
+        const dataRepo = new DataRepository()
+        return await dataRepo.FetchCasesSummary(localStorage.jwt_token)
+    }
+)
+
 export const getAllDockets = createAsyncThunk(
     'data/getAllDockets',
     async () => {
@@ -294,6 +311,14 @@ export const getTransferedDocuments = createAsyncThunk(
     }
 )
 
+export const getDocumentLogs = createAsyncThunk(
+    'data/getDocumentLogs',
+    async (args: { document: any; tracker: any; }) => {
+        const dataRepo = new DataRepository()
+        return await dataRepo.GetDocumentLogs(localStorage.jwt_token, Number(args.document), args.tracker)
+    }
+)
+
 export const getOfficeDocuments = createAsyncThunk(
     'data/getOfficeDocuments',
     async () => {
@@ -380,7 +405,14 @@ export const deleteCourtProceeding = createAsyncThunk(
 const dataSlice = createSlice({
     name : 'data',
     initialState,
-    reducers : {},
+    reducers : {
+        changeIsNewData : (state, action) => {
+            return { ...state, isNewData : action.payload }
+        },
+        updateActivityLogs : (state, action) => {
+            return { ...state, activityLogs : action.payload }
+        }
+    },
     extraReducers : builder => {
         // ACCOUNTS
         // Get User Info
@@ -445,6 +477,16 @@ const dataSlice = createSlice({
             return { ...state, dataLoading : false }
         })
         // DOCKET
+        // Get All Dockets
+        builder.addCase(fetchCasesSummary.pending, (state) => {
+            return { ...state, dataLoading : true }
+        })
+        builder.addCase(fetchCasesSummary.fulfilled, (state, action) => {
+            return { ...state, dataLoading : false, casesSummaryList : action.payload }
+        })
+        builder.addCase(fetchCasesSummary.rejected, (state) => {
+            return { ...state, dataLoading : false }
+        })
         // Get All Dockets
         builder.addCase(getAllDockets.pending, (state) => {
             return { ...state, dataLoading : true }
@@ -578,6 +620,16 @@ const dataSlice = createSlice({
         builder.addCase(getTransferedDocuments.rejected, (state) => {
             return { ...state, dataLoading : false }
         })
+        // Get Document Logs
+        builder.addCase(getDocumentLogs.pending, (state) => {
+            return { ...state, dataLoading : true }
+        })
+        builder.addCase(getDocumentLogs.fulfilled, (state, action) => {
+            return { ...state, dataLoading : false, documentLogs : action.payload }
+        })
+        builder.addCase(getDocumentLogs.rejected, (state) => {
+            return { ...state, dataLoading : false }
+        })
         // Get Office Documents
         builder.addCase(getOfficeDocuments.pending, (state) => {
             return { ...state, dataLoading : true }
@@ -650,5 +702,10 @@ const dataSlice = createSlice({
         })
     }
 })
+
+export const {
+    changeIsNewData,
+    updateActivityLogs
+} = dataSlice.actions
 
 export default dataSlice.reducer

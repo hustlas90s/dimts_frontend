@@ -1,30 +1,46 @@
 import { Fragment, useEffect } from "react";
 import { Popover, Transition } from "@headlessui/react";
 import { useRouter } from "next/router";
-import { io } from "socket.io-client";
+import db from "../../firebaseConfig";
+import { onSnapshot, collection } from "firebase/firestore";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { changeIsNewData, updateActivityLogs } from "../../redux/dataSlice";
 
 const AdminTopNav = () => {
-	// const socket = io("http://127.0.0.1:8000/notif_socket/");
-
+	const dispatch = useAppDispatch();
+	const { isNewData, activityLogs } = useAppSelector(
+		(state) => state.dataState
+	);
+	const collectionRef = collection(db, "activity-logs");
 	const router = useRouter();
 	const onLogout = () => {
 		localStorage.clear();
 		router.push("/");
 	};
 
-	// useEffect(() => {
-	// 	console.log("This is the socket: ", socket);
-	// 	socket.on("connect", () => {
-	// 		console.log(`Connected to socket ${socket.id}`);
-	// 	});
-	// 	return () => {
-	// 		socket.disconnect();
-	// 	};
-	// }, []);
-
-	// const handleClick = () => {
-	// 	socket.emit("message", { data: "Hello from React" });
-	// };
+	useEffect(() => {
+		const unsub = onSnapshot(collectionRef, (querySnapshot) => {
+			const items: any = [];
+			querySnapshot.forEach((doc) => {
+				items.push(doc.data());
+			});
+			if (localStorage.previousActivities !== undefined) {
+				if (JSON.stringify(items) !== localStorage.previousActivities) {
+					localStorage.previousActivities = JSON.stringify(items);
+					dispatch(updateActivityLogs(items));
+					dispatch(changeIsNewData(true));
+				} else {
+					dispatch(changeIsNewData(false));
+				}
+			} else {
+				localStorage.previousActivities = JSON.stringify(items);
+				dispatch(changeIsNewData(true));
+			}
+		});
+		return () => {
+			unsub();
+		};
+	}, [db]);
 
 	return (
 		<div className="w-full h-full shadow border-b border-gray-200 flex justify-between items-center px-10 font-mont text-gray-700">
@@ -37,37 +53,40 @@ const AdminTopNav = () => {
 						<>
 							<Popover.Button
 								className="p-3 rounded-full bg-purple-100"
-								// onClick={handleClick}
+								onClick={() => dispatch(changeIsNewData(false))}
 							>
 								<div className="flex items-center gap-x-1">
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										fill="none"
-										viewBox="0 0 24 24"
-										strokeWidth={1.5}
-										stroke="currentColor"
-										className="w-5 h-5 "
-									>
-										<path
-											strokeLinecap="round"
-											strokeLinejoin="round"
-											d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"
-										/>
-									</svg>
-									{/* <svg
-										xmlns="http://www.w3.org/2000/svg"
-										fill="none"
-										viewBox="0 0 24 24"
-										strokeWidth={2}
-										stroke="currentColor"
-										className="w-5 h-5 text-white"
-									>
-										<path
-											strokeLinecap="round"
-											strokeLinejoin="round"
-											d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0M3.124 7.5A8.969 8.969 0 015.292 3m13.416 0a8.969 8.969 0 012.168 4.5"
-										/>
-									</svg> */}
+									{isNewData ? (
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											fill="none"
+											viewBox="0 0 24 24"
+											strokeWidth={2}
+											stroke="currentColor"
+											className="w-5 h-5 text-purple-600"
+										>
+											<path
+												strokeLinecap="round"
+												strokeLinejoin="round"
+												d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0M3.124 7.5A8.969 8.969 0 015.292 3m13.416 0a8.969 8.969 0 012.168 4.5"
+											/>
+										</svg>
+									) : (
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											fill="none"
+											viewBox="0 0 24 24"
+											strokeWidth={1.5}
+											stroke="currentColor"
+											className="w-5 h-5 "
+										>
+											<path
+												strokeLinecap="round"
+												strokeLinejoin="round"
+												d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"
+											/>
+										</svg>
+									)}
 								</div>
 							</Popover.Button>
 							<Transition
@@ -79,7 +98,64 @@ const AdminTopNav = () => {
 								leaveFrom="opacity-100 translate-y-0"
 								leaveTo="opacity-0 translate-y-1"
 							>
-								<Popover.Panel className="absolute z-10 mt-3 right-1 bg-white p-5 rounded-lg shadow border-b-200 w-96"></Popover.Panel>
+								<Popover.Panel className="absolute z-10 mt-3 right-1 bg-white p-5 rounded-lg shadow border-b-200 w-96 flex flex-col gap-y-5">
+									{activityLogs !== undefined && activityLogs.length
+										? activityLogs.map((activity: any, index: number) => {
+												return (
+													<div
+														className={`flex items-center gap-x-3  ${
+															index === activityLogs.length - 1
+																? ""
+																: "border-b border-gray-200 pb-3"
+														}`}
+														key={index}
+													>
+														<div className="bg-purple-100 p-3 rounded-full">
+															{activity.activity_type === "hearing" ? (
+																<svg
+																	xmlns="http://www.w3.org/2000/svg"
+																	fill="none"
+																	viewBox="0 0 24 24"
+																	strokeWidth={1.5}
+																	stroke="currentColor"
+																	className="w-6 h-6 text-purple-600"
+																>
+																	<path
+																		strokeLinecap="round"
+																		strokeLinejoin="round"
+																		d="M10.34 15.84c-.688-.06-1.386-.09-2.09-.09H7.5a4.5 4.5 0 110-9h.75c.704 0 1.402-.03 2.09-.09m0 9.18c.253.962.584 1.892.985 2.783.247.55.06 1.21-.463 1.511l-.657.38c-.551.318-1.26.117-1.527-.461a20.845 20.845 0 01-1.44-4.282m3.102.069a18.03 18.03 0 01-.59-4.59c0-1.586.205-3.124.59-4.59m0 9.18a23.848 23.848 0 018.835 2.535M10.34 6.66a23.847 23.847 0 008.835-2.535m0 0A23.74 23.74 0 0018.795 3m.38 1.125a23.91 23.91 0 011.014 5.395m-1.014 8.855c-.118.38-.245.754-.38 1.125m.38-1.125a23.91 23.91 0 001.014-5.395m0-3.46c.495.413.811 1.035.811 1.73 0 .695-.316 1.317-.811 1.73m0-3.46a24.347 24.347 0 010 3.46"
+																	/>
+																</svg>
+															) : (
+																<svg
+																	xmlns="http://www.w3.org/2000/svg"
+																	fill="none"
+																	viewBox="0 0 24 24"
+																	strokeWidth={1.5}
+																	stroke="currentColor"
+																	className="w-6 h-6 text-purple-600"
+																>
+																	<path
+																		strokeLinecap="round"
+																		strokeLinejoin="round"
+																		d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
+																	/>
+																</svg>
+															)}
+														</div>
+														<div className="flex flex-wrap flex-col">
+															<h4 className="text-sm font-bold">
+																{activity.activity_name}
+															</h4>
+															<p className="text-xs">
+																{activity.activity_description}
+															</p>
+														</div>
+													</div>
+												);
+										  })
+										: null}
+								</Popover.Panel>
 							</Transition>
 						</>
 					)}
@@ -89,7 +165,7 @@ const AdminTopNav = () => {
 					{({ open }) => (
 						<>
 							<Popover.Button className="p-3 rounded-full bg-purple-100">
-								<Popover.Button className="flex items-center gap-x-1">
+								<div className="flex items-center gap-x-1">
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
 										fill="none"
@@ -115,8 +191,8 @@ const AdminTopNav = () => {
 											d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
 											clipRule="evenodd"
 										/>
-									</svg>
-								</Popover.Button>
+									</svg>{" "}
+								</div>
 							</Popover.Button>
 							<Transition
 								as={Fragment}

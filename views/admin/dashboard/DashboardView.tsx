@@ -8,9 +8,11 @@ import {
 	getCourtHearings,
 	getUpcomingHearings,
 	getRecentDocuments,
+	fetchCasesSummary,
 } from "../../../redux/dataSlice";
 import { MoonLoader } from "react-spinners";
 import Link from "next/link";
+import CasesSummary from "./CasesSummary";
 
 const DashboardView = () => {
 	const dispatch = useAppDispatch();
@@ -19,13 +21,14 @@ const DashboardView = () => {
 		courtHearingList,
 		upcomingHearingList,
 		recentDocuments,
+		casesSummaryList,
 	} = useAppSelector((state) => state.dataState);
 	const [hasRecentEmail, setHasRecentEmail] = useState(false);
 	const [hearingActivity, setHearingActivity] = useState(false);
 
 	useEffect(() => {
+		dispatch(fetchCasesSummary()).then((res) => console.log("Payload: ", res));
 		dispatch(getCourtHearings()).then((res: any) => {
-			console.log("Court hearings: ", res.payload);
 			setHearingActivity(
 				res.payload.find((hearing: any) => {
 					const current_date = new Date();
@@ -43,7 +46,6 @@ const DashboardView = () => {
 		});
 		dispatch(getUpcomingHearings());
 		dispatch(getRecentDocuments()).then((res: any) => {
-			console.log("Recent documents: ", res.payload);
 			setHasRecentEmail(
 				res.payload.find((doc: any) => {
 					const current_date = new Date();
@@ -98,6 +100,27 @@ const DashboardView = () => {
 					</svg>
 				</div>
 			)}
+			{/* CASES SUMMARY */}
+			<div className="w-full bg-white font-mont flex flex-col gap-y-5 text-gray-700 p-5 shadow border-b border-gray-200 rounded-lg">
+				<div className="w-full flex flex-col justify-between items-center gap-y-5">
+					<h4 className="self-start text-xl font-black tracking-wider">
+						Cases Summary
+					</h4>
+					<div className="w-full border-b border-gray-200 -mt-3"></div>
+					{dataLoading && (
+						<div className="w-full flex justify-center items-center">
+							<MoonLoader
+								loading={dataLoading}
+								color="#9333ea"
+								speedMultiplier={1}
+								size={70}
+							/>
+						</div>
+					)}
+					{!dataLoading && <CasesSummary caseList={casesSummaryList} />}
+				</div>
+			</div>
+			{/* CALENDAR OF EVENTS */}
 			<div className="w-full bg-white font-mont flex flex-col gap-y-5 text-gray-700 p-5 shadow border-b border-gray-200 rounded-lg">
 				<div className="w-full flex flex-col justify-between items-center gap-y-5">
 					<h4 className="self-start text-xl font-black tracking-wider">

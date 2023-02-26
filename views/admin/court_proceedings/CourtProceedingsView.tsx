@@ -18,6 +18,9 @@ import useModalIDs from "../../../hooks/useModalIDs";
 import ViewProceeding from "../../../components/admin/ViewProceeding";
 import { ExportToCsv } from "export-to-csv";
 import moment from "moment";
+import { DateRange } from "react-date-range";
+import FilterButton from "../../../components/FilterButton";
+import _ from "lodash";
 
 const CourtProceedingsView = () => {
 	const dispatch = useAppDispatch();
@@ -46,6 +49,15 @@ const CourtProceedingsView = () => {
 	} = useModalIDs();
 	const [searchInput, setSearchInput] = useState("");
 	const [filteredProceedings, setFilteredProceedings] = useState([]);
+	const [selection, setSelection] = useState([
+		{
+			startDate: new Date(),
+			endDate: new Date(),
+			key: "selection",
+		},
+	]);
+	const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
+	const [hasFilter, setHasFilter] = useState<boolean>(false);
 
 	useEffect(() => {
 		dispatch(getCurrentDockets());
@@ -166,6 +178,33 @@ const CourtProceedingsView = () => {
 		}
 	};
 
+	const onDateFilter = (item: any) => {
+		const { selection } = item;
+		setSelection([selection]);
+		if (
+			moment(selection.startDate).format("MM-DD-YYYY") !==
+			moment(selection.endDate).format("MM-DD-YYYY")
+		) {
+			setShowDatePicker(false);
+		} else if (selection.startDate === "" && selection.endDate === "") {
+			setShowDatePicker(false);
+		}
+		const filteredValues: any = _.filter(courtProceedingsList, (proceeding) => {
+			return (
+				_.gte(
+					moment(proceeding.proceeding_schedule).format("MM-DD-YYYY"),
+					moment(selection.beginDate).format("MM-DD-YYYY")
+				) &&
+				_.lte(
+					moment(proceeding.proceeding_schedule).format("MM-DD-YYYY"),
+					moment(selection.endDate).format("MM-DD-YYYY")
+				)
+			);
+		});
+		setHasFilter(true);
+		setFilteredProceedings(filteredValues);
+	};
+
 	return (
 		<div className="flex flex-col gap-y-5 font-mont text-gray-700">
 			<ViewProceeding
@@ -206,6 +245,21 @@ const CourtProceedingsView = () => {
 					</h4>
 					<div className="flex gap-x-5 items-center">
 						<PrintButton onClickPrint={() => onExportProceedings()} />
+						<div className="relative">
+							<FilterButton
+								onClickFilter={() => setShowDatePicker(!showDatePicker)}
+							/>
+							{showDatePicker && (
+								<DateRange
+									// editableDateInputs={true}
+									onChange={(item: any) => onDateFilter(item)}
+									moveRangeOnFirstSelection={false}
+									ranges={selection}
+									className="absolute -left-56 mt-2"
+									rangeColors={["#9333ea"]}
+								/>
+							)}
+						</div>
 						<input
 							type="text"
 							placeholder="Search Case No."
@@ -239,6 +293,17 @@ const CourtProceedingsView = () => {
 							onShowDeleteModal(proceeding_id)
 						}
 					/>
+				)}
+				{hasFilter && (
+					<button
+						className="self-end text-sm text-purple-400 hover:text-purple-600 hover:underline"
+						onClick={() => {
+							setFilteredProceedings(courtProceedingsList);
+							setHasFilter(false);
+						}}
+					>
+						Clear Filter
+					</button>
 				)}
 			</div>
 		</div>

@@ -20,12 +20,18 @@ import useModalIDs from "../../../hooks/useModalIDs";
 import { ExportToCsv } from "export-to-csv";
 import moment from "moment";
 import _ from "lodash";
+import db from "../../../firebaseConfig";
+import { collection, doc, setDoc } from "firebase/firestore";
+import FilterButton from "../../../components/FilterButton";
+import { DateRange } from "react-date-range";
 
 const CourtHearingsView = () => {
 	const dispatch = useAppDispatch();
 	const { dataLoading, courtHearingList, currentDocketList } = useAppSelector(
 		(state: any) => state.dataState
 	);
+
+	const collectionRef = collection(db, "activity-logs");
 
 	const {
 		viewModal,
@@ -50,6 +56,16 @@ const CourtHearingsView = () => {
 	const [searchInput, setSearchInput] = useState("");
 	const [filteredHearings, setFilteredHearings] = useState([]);
 
+	const [selection, setSelection] = useState([
+		{
+			startDate: new Date(),
+			endDate: new Date(),
+			key: "selection",
+		},
+	]);
+	const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
+	const [hasFilter, setHasFilter] = useState<boolean>(false);
+
 	useEffect(() => {
 		dispatch(getCurrentDockets());
 		dispatch(getCourtHearings()).then((res: any) =>
@@ -58,11 +74,22 @@ const CourtHearingsView = () => {
 	}, []);
 
 	const onSubmitNewHearing = useCallback(() => {
+		const newActivity = {
+			activity_description: "New court hearing is created",
+			activity_name: "Hearing Schedule",
+			activity_type: "hearing",
+		};
+		const activityRef = doc(collectionRef);
 		dispatch(getCourtHearings()).then((res: any) =>
 			setFilteredHearings(res.payload)
 		);
 		setShowAddModal(false);
 		setSuccessText("Creation of new court hearing is successful");
+		try {
+			setDoc(activityRef, newActivity);
+		} catch (error) {
+			console.log(error);
+		}
 		setShowSuccessModal(true);
 		setTimeout(() => {
 			setShowSuccessModal(false);
@@ -168,6 +195,33 @@ const CourtHearingsView = () => {
 		}
 	};
 
+	const onDateFilter = (item: any) => {
+		const { selection } = item;
+		setSelection([selection]);
+		if (
+			moment(selection.startDate).format("MM-DD-YYYY") !==
+			moment(selection.endDate).format("MM-DD-YYYY")
+		) {
+			setShowDatePicker(false);
+		} else if (selection.startDate === "" && selection.endDate === "") {
+			setShowDatePicker(false);
+		}
+		const filteredValues: any = _.filter(courtHearingList, (heraing) => {
+			return (
+				_.gte(
+					moment(heraing.hearing_schedule).format("MM-DD-YYYY"),
+					moment(selection.beginDate).format("MM-DD-YYYY")
+				) &&
+				_.lte(
+					moment(heraing.hearing_schedule).format("MM-DD-YYYY"),
+					moment(selection.endDate).format("MM-DD-YYYY")
+				)
+			);
+		});
+		setHasFilter(true);
+		setFilteredHearings(filteredValues);
+	};
+
 	return (
 		<div className="flex flex-col gap-y-5 font-mont text-gray-700">
 			<ViewHearing
@@ -206,6 +260,21 @@ const CourtHearingsView = () => {
 					<h4 className="text-xl font-black tracking-wider">Court Hearings</h4>
 					<div className="flex gap-x-5 items-center">
 						<PrintButton onClickPrint={() => onExportHearings()} />
+						<div className="relative">
+							<FilterButton
+								onClickFilter={() => setShowDatePicker(!showDatePicker)}
+							/>
+							{showDatePicker && (
+								<DateRange
+									// editableDateInputs={true}
+									onChange={(item: any) => onDateFilter(item)}
+									moveRangeOnFirstSelection={false}
+									ranges={selection}
+									className="absolute -left-56 mt-2"
+									rangeColors={["#9333ea"]}
+								/>
+							)}
+						</div>
 						<AddNewButton
 							btnText="New Hearing"
 							onClickAdd={() => setShowAddModal(true)}
@@ -242,30 +311,44 @@ const CourtHearingsView = () => {
 							}
 							onShowEdit={(hearing_id: number) => onShowUpdateModal(hearing_id)}
 						/>
-						<div className="self-end flex gap-x-2 items-center">
-							<p className="text-sm font-medium">Sort by: </p>
-							<select
-								className="w-40 px-3 py-1 focus:outline-none border border-gray-200 focus:border-purple-400 rounded-lg appearance-none"
-								defaultValue=""
-								onChange={(e: any) => {
-									setFilteredHearings((oldFilteredHearings) =>
-										_.orderBy(
-											oldFilteredHearings,
-											["hearing_schedule"],
-											[e.target.value]
-										)
-									);
-								}}
-							>
-								<option
-									disabled
-									value=""
+
+						<div className="self-end flex justify-between items-center">
+							{/* <div className="self-end flex gap-x-2 items-center">
+								<p className="text-sm font-medium">Sort by: </p>
+								<select
+									className="w-40 px-3 py-1 focus:outline-none border border-gray-200 focus:border-purple-400 rounded-lg appearance-none"
+									defaultValue=""
+									onChange={(e: any) => {
+										setFilteredHearings((oldFilteredHearings) =>
+											_.orderBy(
+												oldFilteredHearings,
+												["hearing_schedule"],
+												[e.target.value]
+											)
+										);
+									}}
 								>
-									Select Option
-								</option>
-								<option value="desc">Ascending</option>
-								<option value="asc">Descending</option>
-							</select>
+									<option
+										disabled
+										value=""
+									>
+										Select Option
+									</option>
+									<option value="desc">Ascending</option>
+									<option value="asc">Descending</option>
+								</select>
+							</div> */}
+							{hasFilter && (
+								<button
+									className="text-sm text-purple-400 hover:text-purple-600 hover:underline"
+									onClick={() => {
+										setFilteredHearings(courtHearingList);
+										setHasFilter(false);
+									}}
+								>
+									Clear Filter
+								</button>
+							)}
 						</div>
 					</div>
 				)}

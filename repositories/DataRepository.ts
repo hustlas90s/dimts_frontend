@@ -201,6 +201,27 @@ export default class DataRepository {
         })
         return data.results
     }
+    // Get Document Logs
+    async GetDocumentLogs(jwt_token: string, document: number, tracker: string) {
+        const { data } = await backendConn.get(`document_logs/${document}/${tracker}`, {
+            headers : {
+                Authorization : `Bearer ${ jwt_token }`,
+                'Content-Type' : 'aplication/json'
+            }
+        })
+        return data.results
+    }
+    // Get Cases Summary
+    async FetchCasesSummary(jwt_token: string) {
+        const { data } = await backendConn.get(`cases_summary/`, {
+            headers : {
+                Authorization : `Bearer ${ jwt_token }`,
+                'Content-Type' : 'aplication/json'
+            }
+        })
+        console.log('Cases summary parsed response: ', JSON.parse(data))
+        return JSON.parse(data)
+    }
     // POST REQUESTS
     // Create new court hearing
     async NewCourtHearing(jwt_token: string, formData: any) {

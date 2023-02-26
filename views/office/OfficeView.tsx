@@ -8,6 +8,8 @@ import MoonLoader from "react-spinners/MoonLoader";
 import OfficeDocumentsTable from "./OfficeDocumentsTable";
 import SuccessModal from "../../components/SuccessModal";
 import useCrudModals from "../../hooks/useCrudModals";
+import db from "../../firebaseConfig";
+import { collection, doc, setDoc } from "firebase/firestore";
 
 const OfficeView = () => {
 	const dispatch = useAppDispatch();
@@ -16,6 +18,8 @@ const OfficeView = () => {
 	);
 	const { userProfile } = useAppSelector((state) => state.authState);
 	const { showSuccessModal, setShowSuccessModal } = useCrudModals();
+
+	const collectionRef = collection(db, "activity-logs");
 
 	const [trackerError, setTrackerError] = useState(false);
 	const [searchInput, setSearchInput] = useState("");
@@ -53,7 +57,20 @@ const OfficeView = () => {
 		};
 		dispatch(
 			updateDocument({ formData: data, document_id: selectedDocument.id })
-		).then(() => afterSubmission());
+		).then(() => {
+			const newActivity = {
+				activity_description: `Mailed document has been acknowledged by the Office of ${userProfile?.first_name}`,
+				activity_name: "Mailed Documents",
+				activity_type: "document",
+			};
+			const activityRef = doc(collectionRef);
+			try {
+				setDoc(activityRef, newActivity);
+			} catch (error) {
+				console.log(error);
+			}
+			afterSubmission();
+		});
 	};
 
 	const handleChange = (e: any) => {

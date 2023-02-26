@@ -18,7 +18,6 @@ export default class AuthRepository {
                 'Content-Type' : 'application/x-www-form-urlencoded'
             }
         })
-        console.log('Auth Repo LoginAccount: ', res.data)
         return res.data
     }
     // Register Account

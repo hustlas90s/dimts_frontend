@@ -23,9 +23,7 @@ const LoginView = () => {
 			.then((res: any) => {
 				if (res.payload) {
 					const decoded: any = jwt_decode(res.payload.access);
-					console.log("This is the decoded token: ", decoded);
 					dispatch(getAccountDetails(decoded.user_id)).then((res) => {
-						console.log("Login account details: ", res);
 						router.push(`/${res.payload.role}`);
 					});
 				} else {
