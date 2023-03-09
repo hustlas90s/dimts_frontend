@@ -50,6 +50,28 @@ const ViewRecord = ({
 				</div>
 				{/*  */}
 				<div className="flex flex-col gap-y-1">
+					<h4 className="font-bold">Birthdate</h4>
+					<p className="text-sm text-gray-500">
+						{moment(selectedRecord.birthdate).format("LL")}
+					</p>
+				</div>
+				{/*  */}
+				<div className="flex flex-col gap-y-1">
+					<h4 className="font-bold">Height</h4>
+					<p className="text-sm text-gray-500">{selectedRecord.height} cm</p>
+				</div>
+				{/*  */}
+				<div className="flex flex-col gap-y-1">
+					<h4 className="font-bold">Weight</h4>
+					<p className="text-sm text-gray-500">{selectedRecord.weight} kg</p>
+				</div>
+				{/*  */}
+				<div className="flex flex-col gap-y-1">
+					<h4 className="font-bold">Blood Type</h4>
+					<p className="text-sm text-gray-500">{selectedRecord.blood_type}</p>
+				</div>
+				{/*  */}
+				<div className="flex flex-col gap-y-1">
 					<h4 className="font-bold">Date Arrived</h4>
 					<p className="text-sm text-gray-500">
 						{moment(selectedRecord.date_arrived).format("LL")}
@@ -70,6 +92,13 @@ const ViewRecord = ({
 					<p className="text-sm text-gray-500">
 						{selectedRecord.assigned_personnel}
 					</p>
+				</div>
+				{/*  */}
+				<div className="col-span-2">
+					<div className="flex flex-col gap-y-1">
+						<h4 className="font-bold">Address</h4>
+						<p className="text-sm text-gray-500">{selectedRecord.address}</p>
+					</div>
 				</div>
 				{/*  */}
 				<div className="col-span-2">

@@ -11,25 +11,24 @@ import {
 	Scatter,
 } from "recharts";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { getKmeansClustering } from "../../../redux/dataSlice";
+import { getClustering } from "../../../redux/dataSlice";
 import { MoonLoader } from "react-spinners";
 
 const ClusteringView = () => {
 	const dispatch = useAppDispatch();
-	const { dataLoading, cluster1, cluster2, cluster3, cluster4, cluster5 } =
-		useAppSelector((state) => state.dataState);
+	const { dataLoading, clusterList } = useAppSelector(
+		(state) => state.dataState
+	);
 
 	useEffect(() => {
-		dispatch(getKmeansClustering());
+		dispatch(getClustering());
 	}, []);
 
 	return (
 		<div className="flex flex-col gap-y-5 font-mont text-gray-700">
-			<AdminBreadCrumbs activeText="K-Means Clustering" />
+			<AdminBreadCrumbs activeText="DBSCAN Clustering" />
 			<div className="w-full bg-white font-mont flex flex-col gap-y-5 text-gray-700 p-5 shadow border-b border-gray-200 rounded-lg">
-				<h4 className="text-xl font-black tracking-wider">
-					K-Means Clustering
-				</h4>
+				<h4 className="text-xl font-black tracking-wider">DBSCAN Clustering</h4>
 				<div className="w-full border-b border-gray-200 -mt-3"></div>
 				{dataLoading && (
 					<div className="w-full flex justify-center items-center">
@@ -52,45 +51,25 @@ const ClusteringView = () => {
 								vertical={false}
 							/>
 							<XAxis
-								dataKey="x"
+								dataKey="year"
 								strokeWidth={0.5}
 								axisLine={true}
 								tickLine={false}
 								hide
 							/>
 							<YAxis
-								dataKey="y"
+								dataKey="cluster"
 								strokeWidth={0.5}
 								axisLine={true}
 								tickLine={false}
 								domain={[1, 8]}
 							/>
-							<Tooltip cursor={{ strokeDasharray: "3 3" }} />
 							<Legend />
+							<Tooltip cursor={{ strokeDasharray: "3 3" }} />
 							<Scatter
-								name="Cluster 1"
-								data={cluster1}
+								// name="Custom Name"
+								data={clusterList}
 								fill="#8884d8"
-							/>
-							<Scatter
-								name="Cluster 2"
-								data={cluster2}
-								fill="#82ca9d"
-							/>
-							<Scatter
-								name="Cluster 3"
-								data={cluster3}
-								fill="pink"
-							/>
-							<Scatter
-								name="Cluster 4"
-								data={cluster4}
-								fill="#0d9488"
-							/>
-							<Scatter
-								name="Cluster 5"
-								data={cluster5}
-								fill="#6366f1"
 							/>
 						</ScatterChart>
 					</ResponsiveContainer>

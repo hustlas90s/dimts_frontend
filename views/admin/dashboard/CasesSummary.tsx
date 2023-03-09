@@ -48,7 +48,6 @@ const CasesSummary = ({ caseList }: { caseList: any }) => {
 					}}
 					domain={[0, "dataMax"]}
 					tick={(value) => {
-						console.log("Tick payload: ", value);
 						if (value.visibleTicksCount % 1 === 0) {
 							return value.visibleTicksCount;
 						}

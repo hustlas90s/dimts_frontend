@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { getCriminalCases, deleteDocket } from "../../../redux/dataSlice";
+import {
+	getCriminalCases,
+	getCourtProceedings,
+	deleteDocket,
+} from "../../../redux/dataSlice";
 import AddNewButton from "../../../components/AddNewButton";
 import PrintButton from "../../../components/PrintButton";
 import MoonLoader from "react-spinners/MoonLoader";
@@ -19,9 +23,8 @@ import moment from "moment";
 
 const CriminalCaseListView = () => {
 	const dispatch = useAppDispatch();
-	const { dataLoading, criminalCaseList } = useAppSelector(
-		(state: any) => state.dataState
-	);
+	const { dataLoading, criminalCaseList, courtProceedingsList } =
+		useAppSelector((state: any) => state.dataState);
 	const {
 		viewModal,
 		setViewModal,
@@ -51,6 +54,7 @@ const CriminalCaseListView = () => {
 		dispatch(getCriminalCases()).then((res: any) =>
 			setFilteredCase(res.payload)
 		);
+		dispatch(getCourtProceedings());
 	}, []);
 
 	const onViewCriminalCase = (criminal_record: any) => {
@@ -229,10 +233,8 @@ const CriminalCaseListView = () => {
 				)}
 				{!dataLoading && (
 					<CriminalCaseTable
+						courtProceedings={courtProceedingsList}
 						criminalCases={filteredCase}
-						onViewCase={(criminal_record: any) =>
-							onViewCriminalCase(criminal_record)
-						}
 						onShowWarning={(e: number) => onShowWarningModal(e)}
 						onShowEdit={(crime_id: number) => onShowUpdateModal(crime_id)}
 					/>

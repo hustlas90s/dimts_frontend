@@ -23,17 +23,17 @@ interface DataShape {
     transferedDocuments: any;
     officeDocuments: any;
     recentDocuments: any;
-    cluster1: any;
-    cluster2: any;
-    cluster3: any;
-    cluster4: any;
-    cluster5: any;
+    clusterList: any;
     courtProceedingsList: any;
     caseProceedingsList: any;
     activityLogs: any;
     isNewData: boolean;
     documentLogs: any;
     casesSummaryList: any;
+    criminalCaseCitizensList: any;
+    civilCaseCitizensList: any;
+    docketCaseCitizensList: any;
+    citizenCasesList: any;
 }
 
 const initialState: DataShape = {
@@ -56,17 +56,17 @@ const initialState: DataShape = {
     transferedDocuments : [],
     officeDocuments: [],
     recentDocuments : [],
-    cluster1 : [],
-    cluster2 : [],
-    cluster3 : [],
-    cluster4 : [],
-    cluster5 : [],
+    clusterList : [],
     courtProceedingsList : [],
     caseProceedingsList : [],
     activityLogs : [],
     isNewData : false,
     documentLogs : [],
-    casesSummaryList : []
+    casesSummaryList : [],
+    criminalCaseCitizensList : [],
+    civilCaseCitizensList : [],
+    docketCaseCitizensList : [],
+    citizenCasesList : []
 }
 
 // ACCOUNT THUNKS
@@ -352,11 +352,11 @@ export const deleteDocument = createAsyncThunk(
 ) 
 
 // CLUSTERING
-export const getKmeansClustering = createAsyncThunk(
-    'data/getKmeansClustering',
+export const getClustering = createAsyncThunk(
+    'data/getClustering',
     async () => {
         const dataRepo = new DataRepository()
-        return await dataRepo.GetKmeansClustering(localStorage.jwt_token)
+        return await dataRepo.GetClustering(localStorage.jwt_token)
     }
 )
 
@@ -398,6 +398,55 @@ export const deleteCourtProceeding = createAsyncThunk(
     async (proceeding_id: number) => {
         const dataRepo = new DataRepository()
         await dataRepo.DeleteCourtProceeding(localStorage.jwt_token, proceeding_id)
+    }
+)
+
+// CASE CITIZEN THUNKS
+export const newCaseCitizens = createAsyncThunk(
+    'data/newCaseCitizens',
+    async (formData: any) => {
+        const dataRepo = new DataRepository()
+        await dataRepo.NewCaseCitizens(localStorage.jwt_token, formData)
+    }
+)
+
+export const criminalCaseCitizens = createAsyncThunk(
+    'data/criminalCaseCitizens',
+    async (case_id: number) => {
+        const dataRepo = new DataRepository()
+        return await dataRepo.CriminalCaseCitizens(localStorage.jwt_token, case_id)
+    }
+)
+
+export const civilCaseCitizens = createAsyncThunk(
+    'data/civilCaseCitizens',
+    async (case_id: number) => {
+        const dataRepo = new DataRepository()
+        return await dataRepo.CivilCaseCitizens(localStorage.jwt_token, case_id)
+    }
+)
+
+export const docketCaseCitizens = createAsyncThunk(
+    'data/docketCaseCitizens',
+    async (case_id: number) => {
+        const dataRepo = new DataRepository()
+        return await dataRepo.DocketCaseCitizens(localStorage.jwt_token, case_id)
+    }
+)
+
+export const citizenCases = createAsyncThunk(
+    'data/citizenCases',
+    async () => {
+        const dataRepo = new DataRepository()
+        return await dataRepo.CitizenCases(localStorage.jwt_token)
+    }
+)
+
+export const deleteCaseCitizen = createAsyncThunk(
+    'data/deleteCaseCitizen',
+    async (pk: number) => {
+        const dataRepo = new DataRepository()
+        await dataRepo.DeleteCaseCitizen(localStorage.jwt_token, pk)
     }
 )
 
@@ -651,32 +700,17 @@ const dataSlice = createSlice({
             return { ...state, dataLoading : false }
         })
         // Get Kmeans Clustering
-        builder.addCase(getKmeansClustering.pending, (state) => {
+        builder.addCase(getClustering.pending, (state) => {
             return { ...state, dataLoading : true }
         })
-        builder.addCase(getKmeansClustering.fulfilled, (state, action) => {
-            const clusterDates = [5, 8, 7.5, 7.1, 7.2, 6, 6.5, 8.2, 8.3, 5.4, 5, 6.1, 8.1]
+        builder.addCase(getClustering.fulfilled, (state, action) => {
             return { 
                 ...state, 
                 dataLoading : false, 
-                cluster1 : action.payload.cluster1.map((cluster: any, key: any) => {
-                    return  { x : cluster, y : clusterDates.reverse()[key] }
-                }),
-                cluster2 : action.payload.cluster2.map((cluster: any, key: any) => {
-                    return  { x : cluster, y : clusterDates[key] }
-                }),
-                cluster3 : action.payload.cluster3.map((cluster: any, key: any) => {
-                    return  { x : cluster, y : clusterDates.reverse()[key] }
-                }),
-                cluster4 : action.payload.cluster4.map((cluster: any, key: any) => {
-                    return  { x : cluster, y : clusterDates[key] }
-                }),
-                cluster5 : action.payload.cluster5.map((cluster: any, key: any) => {
-                    return  { x : cluster, y : clusterDates.reverse()[key] }
-                })
+                clusterList : action.payload
             }
         })
-        builder.addCase(getKmeansClustering.rejected, (state) => {
+        builder.addCase(getClustering.rejected, (state) => {
             return { ...state, dataLoading : false }
         })
         // COURT PROCEEDINGS
@@ -698,6 +732,47 @@ const dataSlice = createSlice({
             return { ...state, dataLoading : false, caseProceedingsList : action.payload }
         })
         builder.addCase(getCaseProceedings.rejected, (state) => {
+            return { ...state, dataLoading : false }
+        })
+        // CASE CITIZENS
+        // Criminal Case Citizens
+        builder.addCase(criminalCaseCitizens.pending, (state) => {
+            return { ...state, dataLoading : true }
+        })
+        builder.addCase(criminalCaseCitizens.fulfilled, (state, action) => {
+            return { ...state, dataLoading : false, criminalCaseCitizensList : action.payload }
+        })
+        builder.addCase(criminalCaseCitizens.rejected, (state) => {
+            return { ...state, dataLoading : false }
+        })
+        // Civil Case Citizens
+        builder.addCase(civilCaseCitizens.pending, (state) => {
+            return { ...state, dataLoading : true }
+        })
+        builder.addCase(civilCaseCitizens.fulfilled, (state, action) => {
+            return { ...state, dataLoading : false, civilCaseCitizensList : action.payload }
+        })
+        builder.addCase(civilCaseCitizens.rejected, (state) => {
+            return { ...state, dataLoading : false }
+        })
+        // Docket Case Citizens
+        builder.addCase(docketCaseCitizens.pending, (state) => {
+            return { ...state, dataLoading : true }
+        })
+        builder.addCase(docketCaseCitizens.fulfilled, (state, action) => {
+            return { ...state, dataLoading : false, docketCaseCitizensList : action.payload }
+        })
+        builder.addCase(docketCaseCitizens.rejected, (state) => {
+            return { ...state, dataLoading : false }
+        })
+        // Citizen Cases
+        builder.addCase(citizenCases.pending, (state) => {
+            return { ...state, dataLoading : true }
+        })
+        builder.addCase(citizenCases.fulfilled, (state, action) => {
+            return { ...state, dataLoading : false, citizenCasesList : action.payload }
+        })
+        builder.addCase(citizenCases.rejected, (state) => {
             return { ...state, dataLoading : false }
         })
     }

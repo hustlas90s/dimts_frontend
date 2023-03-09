@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { deleteDocket, getCivilCases } from "../../../redux/dataSlice";
+import {
+	deleteDocket,
+	getCivilCases,
+	getCourtProceedings,
+} from "../../../redux/dataSlice";
 import AddNewButton from "../../../components/AddNewButton";
 import PrintButton from "../../../components/PrintButton";
 import MoonLoader from "react-spinners/MoonLoader";
@@ -19,7 +23,7 @@ import AddCivilCase from "../../../components/admin/AddCivilCases";
 
 const CivilCaseListView = () => {
 	const dispatch = useAppDispatch();
-	const { dataLoading, civilCaseList } = useAppSelector(
+	const { dataLoading, civilCaseList, courtProceedingsList } = useAppSelector(
 		(state: any) => state.dataState
 	);
 
@@ -118,6 +122,7 @@ const CivilCaseListView = () => {
 		dispatch(getCivilCases()).then((res: any) =>
 			setFilteredCivilCase(res.payload)
 		);
+		dispatch(getCourtProceedings());
 	}, []);
 
 	const onExportCases = () => {
@@ -232,8 +237,8 @@ const CivilCaseListView = () => {
 				)}
 				{!dataLoading && (
 					<CivilCaseTable
+						courtProceedings={courtProceedingsList}
 						civilCases={filteredCivilCase}
-						onViewCase={(civil_record: any) => onViewCivilCase(civil_record)}
 						onShowWarning={(civil_id: number) => onShowWarningModal(civil_id)}
 						onShowEdit={(civild_id: number) => onShowUpdateModal(civild_id)}
 					/>

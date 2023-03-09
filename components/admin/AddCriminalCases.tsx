@@ -34,7 +34,6 @@ const AddCriminalCase = ({
 	const onSubmit = (formData: any) => {
 		let qrImage: any = document.getElementById("qr-gen");
 		let qrBase64 = qrImage.toDataURL("image/jpeg");
-		console.log(qrBase64);
 		setShowLoading(true);
 		const crimes = formData.caseCrimeType.map((crime: any) => {
 			return crime.value;
@@ -50,6 +49,7 @@ const AddCriminalCase = ({
 			judge_assigned: formData.caseJudge,
 			qr_code: qrBase64,
 			qr_code_tracker: qrValue,
+			imprisonment_span: formData.caseImprisonment,
 		};
 		setTimeout(() => {
 			console.log(data);
@@ -86,32 +86,11 @@ const AddCriminalCase = ({
 						setFieldValue={setValue}
 					/>
 				</div>
-				<div className="col-span-2">
-					<MyInputFieldFull
-						control={control}
-						fieldLabel="Case No."
-						fieldType="text"
-						fieldName="caseNo"
-						fieldRules={fieldRules.requiredRule}
-						defaultValue=""
-						placeHolder=""
-					/>
-				</div>
-
-				<MyInputField
+				<MyInputFieldFull
 					control={control}
-					fieldLabel="Document Title"
+					fieldLabel="Case No."
 					fieldType="text"
-					fieldName="caseDocTitle"
-					fieldRules={fieldRules.requiredRule}
-					defaultValue=""
-					placeHolder=""
-				/>
-				<MyInputField
-					control={control}
-					fieldLabel="Case Title"
-					fieldType="text"
-					fieldName="caseTitle"
+					fieldName="caseNo"
 					fieldRules={fieldRules.requiredRule}
 					defaultValue=""
 					placeHolder=""
@@ -141,6 +120,33 @@ const AddCriminalCase = ({
 					fieldLabel="Crime Type"
 					fieldRules={fieldRules.requiredRule}
 					defaultValue=""
+				/>
+				<MyInputField
+					control={control}
+					fieldLabel="Imprisonment (Years)"
+					fieldType="text"
+					fieldName="caseImprisonment"
+					fieldRules={fieldRules.requiredNumberRule}
+					defaultValue=""
+					placeHolder=""
+				/>
+				<MyInputField
+					control={control}
+					fieldLabel="Document Title"
+					fieldType="text"
+					fieldName="caseDocTitle"
+					fieldRules={fieldRules.requiredRule}
+					defaultValue=""
+					placeHolder=""
+				/>
+				<MyInputField
+					control={control}
+					fieldLabel="Case Title"
+					fieldType="text"
+					fieldName="caseTitle"
+					fieldRules={fieldRules.requiredRule}
+					defaultValue=""
+					placeHolder=""
 				/>
 				<MyInputField
 					control={control}

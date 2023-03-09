@@ -85,6 +85,11 @@ const PNPView = () => {
 			recordDetained: record.detained_in,
 			recordCase: record.case__case_no,
 			recordRemarks: record.remarks,
+			recordHeight: record.height,
+			recordWeight: record.weight,
+			recordBirthdate: record.birthdate,
+			recordBloodType: record.blood_type,
+			recordAddress: record.address,
 		});
 		setShowEditModal(true);
 	};

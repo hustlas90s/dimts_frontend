@@ -36,14 +36,21 @@ const UpdateRecord = ({
 			onCancel();
 			return;
 		}
+		console.log("Selected Record: ", Object.entries(selectedRecord));
+		console.log("Form data: ", Object.entries(formData));
 		onConfirm();
 		const data = {
 			name: formData.recordName,
+			height: formData.recordHeight,
+			weight: formData.recordWeight,
+			birthdate: formData.recordBirthdate,
+			blood_type: formData.recordBloodType,
 			date_arrived: formData.recordDateArrived,
 			date_released: formData.recordDateReleased
 				? formData.recordDateReleased
 				: "",
 			assigned_personnel: formData.recordPersonnel,
+			address: formData.recordAddress,
 			remarks: formData.recordRemarks,
 			detained_in: formData.recordDetained,
 		};
@@ -79,6 +86,51 @@ const UpdateRecord = ({
 					fieldName="recordName"
 					fieldRules={fieldRules.requiredRule}
 					defaultValue={selectedRecord.recordName}
+					setFieldValue={setValue}
+				/>
+				<MyInputField
+					control={control}
+					fieldLabel="Height (cm)"
+					fieldType="number"
+					fieldName="recordHeight"
+					fieldRules={fieldRules.requiredNumberRule}
+					defaultValue={selectedRecord.recordHeight}
+					setFieldValue={setValue}
+				/>
+				<MyInputField
+					control={control}
+					fieldLabel="Weight (kg)"
+					fieldType="number"
+					fieldName="recordWeight"
+					fieldRules={fieldRules.requiredNumberRule}
+					defaultValue={selectedRecord.recordWeight}
+					setFieldValue={setValue}
+				/>
+				<MyInputField
+					control={control}
+					fieldLabel="Birthdate"
+					fieldType="date"
+					fieldName="recordBirthdate"
+					fieldRules={fieldRules.requiredRule}
+					defaultValue={selectedRecord.recordBirthdate}
+					setFieldValue={setValue}
+				/>
+				<MySelectField
+					myControl={control}
+					myOptions={[
+						{ label: "A (+)", value: "A (+)" },
+						{ label: "A (-)", value: "A (-)" },
+						{ label: "B (+)", value: "B (+)" },
+						{ label: "B (-)", value: "B (-)" },
+						{ label: "O (+)", value: "O (+)" },
+						{ label: "O (-)", value: "O (-)" },
+						{ label: "AB (+)", value: "AB (+)" },
+						{ label: "AB (-)", value: "AB (-)" },
+					]}
+					fieldName="recordBloodType"
+					fieldLabel="Blood Type"
+					fieldRules={fieldRules.requiredRule}
+					defaultValue={selectedRecord.recordBloodType}
 					setFieldValue={setValue}
 				/>
 				<MyInputField
@@ -131,6 +183,16 @@ const UpdateRecord = ({
 					readOnly={true}
 					setFieldValue={setValue}
 				/>
+				<div className="col-span-2">
+					<MyTextAreaField
+						control={control}
+						fieldLabel="Address"
+						fieldName="recordAddress"
+						fieldRules={fieldRules.requiredRule}
+						defaultValue={selectedRecord.recordAddress}
+						setFieldValue={setValue}
+					/>
+				</div>
 				<div className="col-span-2">
 					<MyTextAreaField
 						control={control}

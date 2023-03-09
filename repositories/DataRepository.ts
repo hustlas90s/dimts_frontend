@@ -171,15 +171,15 @@ export default class DataRepository {
         })
         return JSON.parse(data)
     }
-    // Get Kmeans Clustering
-    async GetKmeansClustering(jwt_token: string) {
+    // Get Clustering
+    async GetClustering(jwt_token: string) {
         const {data} = await backendConn.get('clustering/', {
             headers : {
                 Authorization : `Bearer ${ jwt_token }`,
                 'Content-Type' : 'aplication/json'
             }
         })
-        return JSON.parse(data)
+        return data.clusters_by_year
     }
     // Get Court Proceedings
     async GetCourtProceedings(jwt_token: string) {
@@ -222,7 +222,53 @@ export default class DataRepository {
         console.log('Cases summary parsed response: ', JSON.parse(data))
         return JSON.parse(data)
     }
+    // Criminal Case Citizens
+    async CriminalCaseCitizens(jwt_token: string, case_id: number) {
+        const { data } = await backendConn.get(`criminal_case_citizens/${case_id}`, {
+            headers : {
+                Authorization : `Bearer ${ jwt_token }`
+            }
+        })
+        return JSON.parse(data)
+    }
+    // Civil Case Citizens
+    async CivilCaseCitizens(jwt_token: string, case_id: number) {
+        const { data } = await backendConn.get(`civil_case_citizens/${case_id}`, {
+            headers : {
+                Authorization : `Bearer ${ jwt_token }`
+            }
+        })
+        return JSON.parse(data)
+    }
+    // Docket Case Citizens
+    async DocketCaseCitizens(jwt_token: string, case_id: number) {
+        const { data } = await backendConn.get(`docket_case_citizens/${case_id}`, {
+            headers : {
+                Authorization : `Bearer ${ jwt_token }`
+            }
+        })
+        return JSON.parse(data)
+    }
+    // Citizen Cases
+    async CitizenCases(jwt_token: string) {
+        const { data } = await backendConn.get('citizen_cases/', {
+            headers : {
+                Authorization : `Bearer ${ jwt_token }`
+            }
+        })
+        return JSON.parse(data)
+    }
     // POST REQUESTS
+    // New Case Citizens 
+    async NewCaseCitizens(jwt_token: string, formData: any) { 
+        console.log('NewCaseCitizens data: ', formData)
+        const { data } = await backendConn.post('new_case_citizens/', formData, {
+            headers : {
+                Authorization : `Bearer ${ jwt_token }`
+            }
+        })
+        return data
+    }
     // Create new court hearing
     async NewCourtHearing(jwt_token: string, formData: any) {
         const { data } = await backendConn.post('new_hearing/', formData, {
@@ -371,6 +417,15 @@ export default class DataRepository {
     // Delete Court Proceeding
     async DeleteCourtProceeding(jwt_token: string, proceeding_id: number) {
         const { data } = await backendConn.delete(`court_proceeding/delete/${ proceeding_id }`, {
+            headers : {
+                Authorization : `Bearer ${ jwt_token }`
+            }
+        })
+        return data.results
+    }
+    // Delete Case Citizen
+    async DeleteCaseCitizen(jwt_token: string, pk: number) {
+        const { data } = await backendConn.delete(`case_citizen/delete/${ pk }`, {
             headers : {
                 Authorization : `Bearer ${ jwt_token }`
             }

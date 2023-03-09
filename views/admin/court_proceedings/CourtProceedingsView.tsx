@@ -161,7 +161,7 @@ const CourtProceedingsView = () => {
 			useKeysAsHeaders: true,
 			filename: "Court Hearings",
 		});
-		csvExporter.generateCsv(csvProocedings);
+		csvProocedings.length ? csvExporter.generateCsv(csvProocedings) : null;
 	};
 
 	const handleChange = (e: any) => {

@@ -1,9 +1,32 @@
+import Link from "next/link";
+import { useRouter } from "next/router";
+
+interface CivilCaseTableProps {
+	courtProceedings: any;
+	civilCases: any;
+	onShowEdit: any;
+	onShowWarning: any;
+}
+
 const CivilCaseTable = ({
+	courtProceedings,
 	civilCases,
-	onViewCase,
 	onShowWarning,
 	onShowEdit,
-}: any) => {
+}: CivilCaseTableProps) => {
+	const router = useRouter();
+
+	const onViewCaseProceedings = (case_no: string) => {
+		const hasProceeding = courtProceedings.find(
+			(proceeding: any) => case_no === proceeding.case__case_no
+		);
+		if (!hasProceeding) {
+			router.push(`court_hearings/`);
+			return;
+		}
+		router.push(`court_proceedings/proceeding?id=${case_no}`);
+	};
+
 	return (
 		<div className="overflow-x-auto">
 			<table className="min-w-max w-full table-auto">
@@ -22,7 +45,10 @@ const CivilCaseTable = ({
 								key={crime.id}
 								className="border-b border-gray-200 hover:bg-gray-50"
 							>
-								<td className="py-3 px-6 text-left whitespace-nowrap">
+								<td
+									className="py-3 px-6 text-left whitespace-nowrap hover:cursor-pointer"
+									onClick={() => onViewCaseProceedings(crime.case_no)}
+								>
 									{crime.case_no}
 								</td>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
@@ -35,16 +61,22 @@ const CivilCaseTable = ({
 								</td>
 								<td className="py-3 px-6 text-center">
 									<div className="flex items-center justify-center gap-x-5">
-										<div
+										<Link
+											href={{
+												pathname: "/admin/civil_cases/case",
+												query: {
+													case_id: crime.id,
+												},
+											}}
 											className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110 cursor-pointer"
-											onClick={() => onViewCase(crime)}
+											// onClick={() => onViewCase(crime)}
 										>
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
 												fill="none"
 												viewBox="0 0 24 24"
 												stroke="currentColor"
-												className="w-5 h-5"
+												className="w-5 h-5 hover:cursor-pointer"
 											>
 												<path
 													strokeLinecap="round"
@@ -59,7 +91,7 @@ const CivilCaseTable = ({
 													d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
 												/>
 											</svg>
-										</div>
+										</Link>
 										<div
 											className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110 cursor-pointer"
 											onClick={() => onShowEdit(crime.id)}

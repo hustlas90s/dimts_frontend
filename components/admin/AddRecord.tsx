@@ -31,11 +31,13 @@ const AddRecord = ({
 
 	const onSubmit = (formData: any) => {
 		const data = {
-			name: `${formData.recordFirstName} ${formData.recordLastName}`,
+			name: `${formData.recordFirstName} ${formData.recordMiddleName} ${formData.recordLastName} ${formData.recordSuffix}`,
+			height: formData.recordHeight,
+			weight: formData.recordWeight,
+			birthdate: formData.recordBirthdate,
+			blood_type: formData.recordBloodType,
+			address: formData.recordAddress,
 			date_arrived: formData.recordDateArrived,
-			date_released: formData.recordDateReleased
-				? formData.recordDateReleased
-				: "",
 			assigned_personnel: formData.recordPersonnel,
 			remarks: formData.recordRemarks,
 			detained_in: detainedIn,
@@ -53,11 +55,31 @@ const AddRecord = ({
 			onCancel={onCancel}
 		>
 			<div className="grid grid-cols-2 gap-y-8 gap-x-5">
+				<div className="col-span-2">
+					<MySelectField
+						myControl={control}
+						myOptions={selectOptions.map((option: any) => {
+							return { label: option.case_no, value: option.id };
+						})}
+						fieldName="recordCase"
+						fieldLabel="Case"
+						fieldRules={fieldRules.requiredRule}
+						defaultValue=""
+					/>
+				</div>
 				<MyInputField
 					control={control}
 					fieldLabel="First Name"
 					fieldType="text"
 					fieldName="recordFirstName"
+					fieldRules={fieldRules.requiredRule}
+					defaultValue=""
+				/>
+				<MyInputField
+					control={control}
+					fieldLabel="Middle Name"
+					fieldType="text"
+					fieldName="recordMiddleName"
 					fieldRules={fieldRules.requiredRule}
 					defaultValue=""
 				/>
@@ -71,17 +93,58 @@ const AddRecord = ({
 				/>
 				<MyInputField
 					control={control}
-					fieldLabel="Date Arrived"
+					fieldLabel="Suffix"
+					fieldType="text"
+					fieldName="recordSuffix"
+					fieldRules=""
+					defaultValue=""
+				/>
+				<MyInputField
+					control={control}
+					fieldLabel="Height (cm)"
+					fieldType="text"
+					fieldName="recordHeight"
+					fieldRules={fieldRules.requiredNumberRule}
+					defaultValue=""
+				/>
+				<MyInputField
+					control={control}
+					fieldLabel="Weight (kg)"
+					fieldType="text"
+					fieldName="recordWeight"
+					fieldRules={fieldRules.requiredNumberRule}
+					defaultValue=""
+				/>
+				<MyInputField
+					control={control}
+					fieldLabel="Birthdate"
 					fieldType="date"
-					fieldName="recordDateArrived"
+					fieldName="recordBirthdate"
+					fieldRules={fieldRules.requiredRule}
+					defaultValue=""
+				/>
+				<MySelectField
+					myControl={control}
+					myOptions={[
+						{ label: "A (+)", value: "A (+)" },
+						{ label: "A (-)", value: "A (-)" },
+						{ label: "B (+)", value: "B (+)" },
+						{ label: "B (-)", value: "B (-)" },
+						{ label: "O (+)", value: "O (+)" },
+						{ label: "O (-)", value: "O (-)" },
+						{ label: "AB (+)", value: "AB (+)" },
+						{ label: "AB (-)", value: "AB (-)" },
+					]}
+					fieldName="recordBloodType"
+					fieldLabel="Blood Type"
 					fieldRules={fieldRules.requiredRule}
 					defaultValue=""
 				/>
 				<MyInputField
 					control={control}
-					fieldLabel="Date Released"
+					fieldLabel="Date Arrived"
 					fieldType="date"
-					fieldName="recordDateReleased"
+					fieldName="recordDateArrived"
 					fieldRules=""
 					defaultValue=""
 				/>
@@ -93,16 +156,15 @@ const AddRecord = ({
 					fieldRules={fieldRules.requiredRule}
 					defaultValue=""
 				/>
-				<MySelectField
-					myControl={control}
-					myOptions={selectOptions.map((option: any) => {
-						return { label: option.case_no, value: option.id };
-					})}
-					fieldName="recordCase"
-					fieldLabel="Case"
-					fieldRules={fieldRules.requiredRule}
-					defaultValue=""
-				/>
+				<div className="col-span-2">
+					<MyTextAreaField
+						control={control}
+						fieldLabel="Address"
+						fieldName="recordAddress"
+						fieldRules={fieldRules.requiredRule}
+						defaultValue=""
+					/>
+				</div>
 				<div className="col-span-2">
 					<MyTextAreaField
 						control={control}

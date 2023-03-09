@@ -11,6 +11,13 @@ export const fieldRules = {
             message : "Alphabet characters only"
         }
     },
+    requiredNumberRule : {
+        required : "This field is required",
+        pattern : {
+            value : /^\d+$/,
+            message : "Numeric characters only"
+        }
+    },
     requiredMobileNumberRule : {
         required : "This field is required",
         pattern : {
