@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import AdminBreadCrumbs from "../../../components/admin/AdminBreadCrumbs";
 import {
 	ResponsiveContainer,
@@ -20,8 +20,19 @@ const ClusteringView = () => {
 		(state) => state.dataState
 	);
 
+	const [chartLegends, setChartLegends] = useState([
+		{ value: "2022", type: "plainline", color: "#112E51" },
+		{ value: "2023", type: "plainline", color: "#0071bc" },
+	]);
+
 	useEffect(() => {
-		dispatch(getClustering());
+		dispatch(getClustering()).then((res) => {
+			const { payload } = res;
+			const tempLegends = payload.map((cluster: any) => {
+				return { value: cluster.year, type: "plainline", color: "#8884d8" };
+			});
+			setChartLegends(tempLegends);
+		});
 	}, []);
 
 	return (
@@ -64,7 +75,12 @@ const ClusteringView = () => {
 								tickLine={false}
 								domain={[1, 8]}
 							/>
-							<Legend />
+							<Legend
+								payload={[
+									{ value: "2022", type: "square", color: "#4c1d95" },
+									{ value: "2023", type: "square", color: "#8b5cf6" },
+								]}
+							/>
 							<Tooltip cursor={{ strokeDasharray: "3 3" }} />
 							<Scatter
 								// name="Custom Name"
