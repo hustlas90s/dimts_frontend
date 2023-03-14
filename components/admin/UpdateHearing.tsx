@@ -2,16 +2,18 @@ import SubmitModal from "../SubmitModal";
 import MyInputField from "../MyInputField";
 import MyInputFieldFull from "../MyInputFieldFull";
 import MySelectField from "../MySelectField";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { fieldRules } from "../authHelper";
 import { useAppDispatch } from "../../redux/hooks";
-import { updateHearing } from "../../redux/dataSlice";
+import { updateHearing, updateDocket } from "../../redux/dataSlice";
+import { useState, useEffect } from "react";
 
 interface UpdateHearingParams {
 	isShow: boolean;
 	onConfirm(): void;
 	onCancel(): void;
 	selectedHearing: any;
+	docketList: any;
 }
 
 const UpdateHearing = ({
@@ -19,9 +21,26 @@ const UpdateHearing = ({
 	onConfirm,
 	onCancel,
 	selectedHearing,
+	docketList,
 }: UpdateHearingParams) => {
 	const { control, handleSubmit, setValue } = useForm();
 	const dispatch = useAppDispatch();
+	const [caseDetails, setCaseDetails] = useState<any>();
+
+	const onCloseCase = (hearingIsClosed: any, hearingImprisonment: any) => {
+		if (hearingIsClosed !== undefined && hearingIsClosed) {
+			dispatch(
+				updateDocket({
+					formData: {
+						is_closed: hearingIsClosed,
+						imprisonment_span: hearingImprisonment,
+					},
+					docket_id: caseDetails?.id,
+				})
+			);
+			return;
+		}
+	};
 
 	const onSubmit = (formData: any) => {
 		if (
@@ -38,10 +57,28 @@ const UpdateHearing = ({
 			end_time: formData.hearingEndTime,
 			status: formData.hearingStatus,
 		};
+		formData?.hearingIsClosed !== undefined
+			? onCloseCase(formData?.hearingIsClosed, formData?.hearingImprisonment)
+			: null;
 		dispatch(
 			updateHearing({ formData: data, hearing_id: selectedHearing.hearingID })
 		).then(() => onConfirm());
 	};
+
+	const hearingType = useWatch({
+		control,
+		name: "hearingType",
+		defaultValue: "Hearing",
+	});
+
+	useEffect(() => {
+		console.log("Hearing: ", selectedHearing);
+		const currentCase = docketList.find(
+			(docket: any) => docket.case_no === selectedHearing.hearingCaseNo
+		);
+		console.log("Current case: ", currentCase);
+		setCaseDetails(currentCase);
+	}, [isShow]);
 
 	return (
 		<SubmitModal
@@ -97,6 +134,7 @@ const UpdateHearing = ({
 					fieldLabel="Hearing Type"
 					fieldRules={fieldRules.requiredRule}
 					defaultValue={selectedHearing.hearingType}
+					setFieldValue={setValue}
 				/>
 				<MyInputField
 					control={control}
@@ -128,8 +166,35 @@ const UpdateHearing = ({
 					fieldName="hearingStatus"
 					fieldLabel="Status"
 					fieldRules={fieldRules.requiredRule}
-					defaultValue=""
+					defaultValue={selectedHearing.hearingStatus}
+					setFieldValue={setValue}
 				/>
+				{hearingType.toLowerCase() === "last court action" && (
+					<MySelectField
+						myControl={control}
+						myOptions={[
+							{ label: "Yes", value: true },
+							{ label: "No", value: false },
+						]}
+						fieldName="hearingIsClosed"
+						fieldLabel="Close Case?"
+						fieldRules={fieldRules.requiredRule}
+						defaultValue={caseDetails?.is_closed}
+						setFieldValue={setValue}
+					/>
+				)}
+				{hearingType.toLowerCase() === "last court action" && (
+					<MyInputField
+						control={control}
+						fieldLabel="Imprisonment"
+						fieldType="number"
+						fieldName="hearingImprisonment"
+						fieldRules={fieldRules.requiredNumberRule}
+						defaultValue={caseDetails?.imprisonment_span ?? 0}
+						placeHolder=""
+						setFieldValue={setValue}
+					/>
+				)}
 			</div>
 		</SubmitModal>
 	);

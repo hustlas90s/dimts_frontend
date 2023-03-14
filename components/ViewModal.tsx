@@ -50,7 +50,7 @@ const ViewModal = ({
 							leaveFrom="opacity-100 scale-100"
 							leaveTo="opacity-0 scale-95"
 						>
-							<Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all flex flex-col gap-y-3">
+							<Dialog.Panel className="w-full max-w-max transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all flex flex-col gap-y-3">
 								<div className="w-full flex justify-between">
 									<div className="flex flex-col">
 										<Dialog.Title

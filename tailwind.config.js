@@ -8,6 +8,12 @@ module.exports = {
     "./views/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+    listStyleType: {
+      disc: 'disc',
+      decimal: 'decimal',
+      square: 'square',
+      roman: 'upper-roman',
+    },
     fontFamily : {
       'mont' : 'Montserrat, Arial'
     },

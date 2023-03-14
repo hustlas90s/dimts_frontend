@@ -4,6 +4,7 @@ import {
 	deleteHearing,
 	getCourtHearings,
 	getCurrentDockets,
+	getAllDockets,
 } from "../../../redux/dataSlice";
 import AddNewButton from "../../../components/AddNewButton";
 import PrintButton from "../../../components/PrintButton";
@@ -27,9 +28,8 @@ import { DateRange } from "react-date-range";
 
 const CourtHearingsView = () => {
 	const dispatch = useAppDispatch();
-	const { dataLoading, courtHearingList, currentDocketList } = useAppSelector(
-		(state: any) => state.dataState
-	);
+	const { dataLoading, courtHearingList, currentDocketList, allDocketList } =
+		useAppSelector((state: any) => state.dataState);
 
 	const collectionRef = collection(db, "activity-logs");
 
@@ -71,6 +71,7 @@ const CourtHearingsView = () => {
 		dispatch(getCourtHearings()).then((res: any) =>
 			setFilteredHearings(res.payload)
 		);
+		dispatch(getAllDockets());
 	}, []);
 
 	const onSubmitNewHearing = useCallback(() => {
@@ -146,22 +147,7 @@ const CourtHearingsView = () => {
 	};
 
 	const onExportHearings = () => {
-		const TimeText = (hours_time: number, minutes_time: string) => {
-			return hours_time > 12
-				? `${hours_time - 12} : ${minutes_time} PM`
-				: `${hours_time} : ${minutes_time} AM`;
-		};
 		const csvHearings = courtHearingList.map((hearing: any) => {
-			let start_time_hour = hearing.start_time.substring(0, 2) * 1;
-			let start_time_minutes = hearing.start_time.substring(
-				3,
-				hearing.start_time.length
-			);
-			let end_time_hour = hearing.end_time.substring(0, 2) * 1;
-			let end_time_minutes = hearing.end_time.substring(
-				3,
-				hearing.end_time.length
-			);
 			return {
 				type_of_case: hearing.case__type_of_case,
 				crime_type: hearing.case__crime_type,
@@ -170,8 +156,8 @@ const CourtHearingsView = () => {
 				case_title: hearing.case__case_title,
 				hearing_schedule: moment(hearing.hearing_schedule).format("ll"),
 				hearing_type: hearing.hearing_type,
-				start_time: TimeText(start_time_hour, start_time_minutes),
-				end_time: TimeText(end_time_hour, end_time_minutes),
+				start_time: moment(hearing.start_time, "HH:mm").format("hh:mm A"),
+				end_time: moment(hearing.end_time, "HH:mm").format("hh:mm A"),
 			};
 		});
 		const csvExporter = new ExportToCsv({
@@ -228,6 +214,7 @@ const CourtHearingsView = () => {
 				isShow={viewModal}
 				onClose={() => setViewModal(false)}
 				selectedHearing={selectedObject}
+				allDockets={allDocketList}
 			/>
 			<AddHearing
 				isShow={showAddModal}
@@ -240,6 +227,7 @@ const CourtHearingsView = () => {
 				onConfirm={() => onUpdateHearing()}
 				onCancel={() => setShowEditModal(false)}
 				selectedHearing={selectedObject}
+				docketList={currentDocketList}
 			/>
 			<SuccessModal
 				isShow={showSuccessModal}

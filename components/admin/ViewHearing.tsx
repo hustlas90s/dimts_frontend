@@ -1,43 +1,31 @@
 import ViewModal from "../ViewModal";
 import moment from "moment";
+import { useEffect, useState } from "react";
 
 interface ViewHearingParams {
 	isShow: boolean;
 	onClose(): void;
 	selectedHearing: any;
+	allDockets: any;
 }
 
 const ViewHearing = ({
 	isShow,
 	onClose,
 	selectedHearing,
+	allDockets,
 }: ViewHearingParams) => {
-	const TimeText = (hours_time: number, minutes_time: string) => {
-		return hours_time > 12
-			? `${hours_time - 12} : ${minutes_time} PM`
-			: `${hours_time} : ${minutes_time} AM`;
-	};
+	const [caseDetails, setCaseDetails] = useState<any>();
 
-	let start_time_hour =
-		selectedHearing?.start_time !== undefined
-			? selectedHearing.start_time.substring(0, 2) * 1
-			: 0;
-	let start_time_minutes =
-		selectedHearing?.start_time !== undefined
-			? selectedHearing.start_time.substring(
-					3,
-					selectedHearing.start_time.length
-			  )
-			: 0;
-
-	let end_time_hour =
-		selectedHearing?.end_time !== undefined
-			? selectedHearing.end_time.substring(0, 2) * 1
-			: 0;
-	let end_time_minutes =
-		selectedHearing?.end_time !== undefined
-			? selectedHearing.end_time.substring(3, selectedHearing.end_time.length)
-			: 0;
+	useEffect(() => {
+		console.log("Selected hearing: ", selectedHearing);
+		console.log("All dockets: ", allDockets);
+		const currentCase = allDockets.find(
+			(case_: any) => case_.case_no === selectedHearing.case__case_no
+		);
+		console.log("Current case: ", currentCase);
+		setCaseDetails(currentCase);
+	}, [selectedHearing]);
 
 	return (
 		<ViewModal
@@ -46,58 +34,70 @@ const ViewHearing = ({
 			viewText="View court hearing schedule"
 			onClose={onClose}
 		>
-			<div className="grid grid-cols-2 gap-y-8 gap-x-5">
+			<div className="flex gap-x-12 font-mont text-gray-700">
 				{/*  */}
-				<div className="flex flex-col gap-y-1">
-					<h4 className="font-bold">Case No</h4>
-					<p className="text-sm text-gray-500">
-						{selectedHearing.case__case_no}
+				<div className="flex flex-col justify-center items-center">
+					<img
+						src={caseDetails?.qr_code ?? ""}
+						className="w-auto h-56"
+						alt="QRcode"
+					/>
+					<p className="text-sm font-medium">
+						{caseDetails?.qr_code_tracker ?? ""}
 					</p>
 				</div>
 				{/*  */}
-				<div className="flex flex-col gap-y-1">
-					<h4 className="font-bold">Crime Type</h4>
-					<p className="text-sm text-gray-500">
-						{selectedHearing.case__type_of_case !== undefined &&
-						selectedHearing?.case__type_of_case.includes("[")
-							? selectedHearing.case__type_of_case
-									.slice(1, -1)
-									.replace(/['"]+/g, "")
-							: selectedHearing.case__type_of_case}
-					</p>
-				</div>
-				{/*  */}
-				<div className="flex flex-col gap-y-1">
-					<h4 className="font-bold">Hearing Schedule</h4>
-					<p className="text-sm text-gray-500">
-						{selectedHearing.hearing_schedule}
-					</p>
-				</div>
-				{/*  */}
-				<div className="flex flex-col gap-y-1">
-					<h4 className="font-bold">Hearing Type</h4>
-					<p className="text-sm text-gray-500">
-						{selectedHearing.hearing_type}
-					</p>
-				</div>
-				{/*  */}
-				<div className="flex flex-col gap-y-1">
-					<h4 className="font-bold">Start Time</h4>
-					<p className="text-sm text-gray-500">
-						{TimeText(start_time_hour, start_time_minutes)}
-					</p>
-				</div>
-				{/*  */}
-				<div className="flex flex-col gap-y-1">
-					<h4 className="font-bold">End Time</h4>
-					<p className="text-sm text-gray-500">
-						{TimeText(end_time_hour, end_time_minutes)}
-					</p>
-				</div>
-				{/*  */}
-				<div className="flex flex-col gap-y-1">
-					<h4 className="font-bold">Status</h4>
-					<p className="text-sm text-gray-500">{selectedHearing.status}</p>
+				<div className="flex flex-col gap-y-8">
+					{/*  */}
+					<div className="flex gap-x-12">
+						{/*  */}
+						<div className="flex flex-col">
+							<h4 className="font-normal">Case No.</h4>
+							<p className="text-sm text-gray-500 font-bold">
+								{caseDetails?.case_no ?? ""}
+							</p>
+						</div>
+						{/*  */}
+						<div className="flex flex-col">
+							<h4 className="font-normal">Type of Case</h4>
+							<p className="text-sm text-gray-500 font-bold">
+								{caseDetails?.type_of_case ?? ""}
+							</p>
+						</div>
+						{/*  */}
+						<div className="flex flex-col">
+							<h4 className="font-normal">Crime</h4>
+							<p className="text-sm text-gray-500 font-bold">
+								{caseDetails?.crime_type !== undefined &&
+								caseDetails?.crime_type.includes("[")
+									? caseDetails?.crime_type.slice(1, -1).replace(/['"]+/g, "")
+									: caseDetails?.crime_type}
+							</p>
+						</div>
+					</div>
+					{/*  */}
+					<div className="flex flex-col">
+						<h4 className="font-normal">Case Title</h4>
+						<p className="text-sm text-gray-500 font-bold">
+							{caseDetails?.case_title ?? ""}
+						</p>
+					</div>
+					{/*  */}
+					<div className="flex flex-col">
+						<h4 className="font-bold">Hearing Details</h4>
+						<div className="p-2 bg-purple-100 text-purple-700 my-2 rounded-md flex flex-col items-start">
+							<p className="text-sm font-bold">
+								{selectedHearing.hearing_type}
+								{" - "}
+								{moment(selectedHearing.proceeding_schedule).format("LL")}
+							</p>
+							<p className="text-xs">
+								{moment(selectedHearing.start_time, "HH:mm").format("hh:mm A")}
+								{" - "}
+								{moment(selectedHearing.end_time, "HH:mm").format("hh:mm A")}
+							</p>
+						</div>
+					</div>
 				</div>
 			</div>
 		</ViewModal>

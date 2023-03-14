@@ -49,7 +49,6 @@ const AddCriminalCase = ({
 			judge_assigned: formData.caseJudge,
 			qr_code: qrBase64,
 			qr_code_tracker: qrValue,
-			imprisonment_span: formData.caseImprisonment,
 		};
 		setTimeout(() => {
 			console.log(data);
@@ -120,15 +119,6 @@ const AddCriminalCase = ({
 					fieldLabel="Crime Type"
 					fieldRules={fieldRules.requiredRule}
 					defaultValue=""
-				/>
-				<MyInputField
-					control={control}
-					fieldLabel="Imprisonment (Years)"
-					fieldType="text"
-					fieldName="caseImprisonment"
-					fieldRules={fieldRules.requiredNumberRule}
-					defaultValue=""
-					placeHolder=""
 				/>
 				<MyInputField
 					control={control}

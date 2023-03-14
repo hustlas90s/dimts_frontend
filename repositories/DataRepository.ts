@@ -1,4 +1,5 @@
 import { backendConn, placesConn } from "./connection";
+import _ from 'lodash'
 
 export default class DataRepository {
     // GET REQUESTS
@@ -179,7 +180,20 @@ export default class DataRepository {
                 'Content-Type' : 'aplication/json'
             }
         })
-        return data.clusters_by_year
+        const clusters = data.clusters.map((cluster: any) => {
+            return cluster.imprisonment_span
+        }).flat()
+        const years = data.clusters.map((cluster: any) => {
+            return new Date(cluster.last_court_action[0]).getFullYear()
+        })
+        const dbscanCluster = {years : _.uniq(_.map(years)), clusters : clusters}
+        const clusterData = dbscanCluster.clusters.map((cluster: any, index: number) => {
+            if (index === 0) {
+                return { y : cluster, x : 2022 }
+            }
+            return { y : cluster, x : 2023 }
+        })
+        return { formattedCluster : clusterData, formattedYears : dbscanCluster.years }
     }
     // Get Court Proceedings
     async GetCourtProceedings(jwt_token: string) {
@@ -219,8 +233,20 @@ export default class DataRepository {
                 'Content-Type' : 'aplication/json'
             }
         })
-        console.log('Cases summary parsed response: ', JSON.parse(data))
         return JSON.parse(data)
+    }
+    // Get Crime Types Summary
+    async FetchCrimeTypesSummary(jwt_token: string) {
+        const { data } = await backendConn.get(`crime_types_summary/`, {
+            headers : {
+                Authorization : `Bearer ${ jwt_token }`,
+                'Content-Type' : 'aplication/json'
+            }
+        })
+        const formattedData = JSON.parse(data).map((data: any) => {
+            return { crime_type : data.crime_type.slice(1, -1).replace(/['"]+/g, ""), total : data.count }
+        })
+        return formattedData
     }
     // Criminal Case Citizens
     async CriminalCaseCitizens(jwt_token: string, case_id: number) {

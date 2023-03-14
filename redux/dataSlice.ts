@@ -24,12 +24,14 @@ interface DataShape {
     officeDocuments: any;
     recentDocuments: any;
     clusterList: any;
+    clusterYears: any;
     courtProceedingsList: any;
     caseProceedingsList: any;
     activityLogs: any;
     isNewData: boolean;
     documentLogs: any;
     casesSummaryList: any;
+    crimeTypesSummaryList: any;
     criminalCaseCitizensList: any;
     civilCaseCitizensList: any;
     docketCaseCitizensList: any;
@@ -57,12 +59,14 @@ const initialState: DataShape = {
     officeDocuments: [],
     recentDocuments : [],
     clusterList : [],
+    clusterYears : [],
     courtProceedingsList : [],
     caseProceedingsList : [],
     activityLogs : [],
     isNewData : false,
     documentLogs : [],
     casesSummaryList : [],
+    crimeTypesSummaryList : [],
     criminalCaseCitizensList : [],
     civilCaseCitizensList : [],
     docketCaseCitizensList : [],
@@ -178,6 +182,14 @@ export const fetchCasesSummary = createAsyncThunk(
     async () => {
         const dataRepo = new DataRepository()
         return await dataRepo.FetchCasesSummary(localStorage.jwt_token)
+    }
+)
+
+export const fetchCrimeTypesSummary = createAsyncThunk(
+    'data/fetchCrimeTypesSummary',
+    async () => {
+        const dataRepo = new DataRepository()
+        return await dataRepo.FetchCrimeTypesSummary(localStorage.jwt_token)
     }
 )
 
@@ -526,7 +538,7 @@ const dataSlice = createSlice({
             return { ...state, dataLoading : false }
         })
         // DOCKET
-        // Get All Dockets
+        // Fetch Cases Summary
         builder.addCase(fetchCasesSummary.pending, (state) => {
             return { ...state, dataLoading : true }
         })
@@ -534,6 +546,16 @@ const dataSlice = createSlice({
             return { ...state, dataLoading : false, casesSummaryList : action.payload }
         })
         builder.addCase(fetchCasesSummary.rejected, (state) => {
+            return { ...state, dataLoading : false }
+        })
+        // Fetch Crime Types Summary
+        builder.addCase(fetchCrimeTypesSummary.pending, (state) => {
+            return { ...state, dataLoading : true }
+        })
+        builder.addCase(fetchCrimeTypesSummary.fulfilled, (state, action) => {
+            return { ...state, dataLoading : false, crimeTypesSummaryList : action.payload }
+        })
+        builder.addCase(fetchCrimeTypesSummary.rejected, (state) => {
             return { ...state, dataLoading : false }
         })
         // Get All Dockets
@@ -704,10 +726,12 @@ const dataSlice = createSlice({
             return { ...state, dataLoading : true }
         })
         builder.addCase(getClustering.fulfilled, (state, action) => {
+            const { payload } = action
             return { 
                 ...state, 
                 dataLoading : false, 
-                clusterList : action.payload
+                clusterList : payload.formattedCluster,
+                clusterYears : payload.formattedYears
             }
         })
         builder.addCase(getClustering.rejected, (state) => {

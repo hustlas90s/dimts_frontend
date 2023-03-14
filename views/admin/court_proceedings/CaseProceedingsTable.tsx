@@ -6,12 +6,6 @@ const CaseProceedingsTable = ({
 	caseProceedings,
 	onShowWarning,
 }: any) => {
-	const TimeText = (hours_time: number, minutes_time: string) => {
-		return hours_time > 12
-			? `${hours_time - 12} : ${minutes_time} PM`
-			: `${hours_time} : ${minutes_time} AM`;
-	};
-
 	return (
 		<div className="overflow-x-auto">
 			<table className="min-w-max w-full table-auto">
@@ -26,16 +20,6 @@ const CaseProceedingsTable = ({
 				</thead>
 				<tbody className="text-gray-600 text-sm">
 					{caseProceedings.map((proceeding: any) => {
-						let start_time_hour = proceeding.start_time.substring(0, 2) * 1;
-						let start_time_minutes = proceeding.start_time.substring(
-							3,
-							proceeding.start_time.length
-						);
-						let end_time_hour = proceeding.end_time.substring(0, 2) * 1;
-						let end_time_minutes = proceeding.end_time.substring(
-							3,
-							proceeding.end_time.length
-						);
 						return (
 							<tr
 								key={proceeding.id}
@@ -48,10 +32,10 @@ const CaseProceedingsTable = ({
 									{moment(proceeding.proceeding_schedule).format("LL")}
 								</td>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
-									{TimeText(start_time_hour, start_time_minutes)}
+									{moment(proceeding.start_time, "HH:mm").format("hh:mm A")}
 								</td>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
-									{TimeText(end_time_hour, end_time_minutes)}
+									{moment(proceeding.end_time, "HH:mm").format("hh:mm A")}
 								</td>
 								<td className="py-3 px-6 text-center">
 									<div className="flex items-center justify-center gap-x-5">
