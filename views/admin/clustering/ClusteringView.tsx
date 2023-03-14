@@ -137,11 +137,11 @@ const ClusteringView = () => {
 									fontSize: "10px",
 								}}
 								domain={[0, "dataMax"]}
-								tick={(value) => {
-									if (value.visibleTicksCount % 1 === 0) {
-										return value.visibleTicksCount;
-									}
-								}}
+								// tick={(value) => {
+								// 	if (value.visibleTicksCount % 1 === 0) {
+								// 		return value.visibleTicksCount;
+								// 	}
+								// }}
 							/>
 							<Tooltip />
 							<Bar
