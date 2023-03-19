@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import {
 	getTransferedDocuments,
 	getOfficesList,
+	getStaffList,
 	getCurrentDockets,
 	deleteDocument,
 } from "../../../redux/dataSlice";
@@ -19,8 +20,13 @@ import ViewDocument from "../../../components/admin/ViewDocument";
 
 const ServedDocsView = () => {
 	const dispatch = useAppDispatch();
-	const { dataLoading, transferedDocuments, officesList, currentDocketList } =
-		useAppSelector((state) => state.dataState);
+	const {
+		dataLoading,
+		transferedDocuments,
+		officesList,
+		staffList,
+		currentDocketList,
+	} = useAppSelector((state) => state.dataState);
 	const {
 		viewModal,
 		setViewModal,
@@ -45,12 +51,35 @@ const ServedDocsView = () => {
 	} = useModalIDs();
 	const [searchInput, setSearchInput] = useState("");
 	const [filteredDocuments, setFilteredDocuments] = useState([]);
+	const [recipients, setRecipients] = useState<any>([]);
 
 	useEffect(() => {
 		dispatch(getTransferedDocuments()).then((res: any) => {
 			setFilteredDocuments(res.payload);
 		});
-		dispatch(getOfficesList());
+		dispatch(getOfficesList()).then((res: any) => {
+			const offices = res.payload.map((data: any) => {
+				return { name: data.first_name, id: data.id, role: "office" };
+			});
+			setRecipients((previusRecipients: any) => [
+				...previusRecipients,
+				...offices,
+			]);
+		});
+		dispatch(getStaffList()).then((res: any) => {
+			const staffs = res.payload.map((data: any) => {
+				return {
+					name: `${data.first_name} ${data.last_name}`,
+					id: data.id,
+					role: "staff",
+				};
+			});
+			setRecipients((previusRecipients: any) => [
+				...previusRecipients,
+				...staffs,
+			]);
+		});
+
 		dispatch(getCurrentDockets());
 	}, []);
 
@@ -117,7 +146,10 @@ const ServedDocsView = () => {
 				isShow={showAddModal}
 				onConfirm={() => onSubmitNewDocument()}
 				onCancel={() => setShowAddModal(false)}
-				officeOptions={officesList}
+				recipientOptions={recipients.filter(
+					(obj: any, index: number, self: any) =>
+						index === self.findIndex((o: any) => o.name === obj.name)
+				)}
 				caseOptions={currentDocketList}
 			/>
 			<SuccessModal

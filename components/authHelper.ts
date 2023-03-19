@@ -1,4 +1,9 @@
+import moment from 'moment'
+
 const isEmailUnique = (email: string) => email !== "qwe@gmail.com"
+const isWeekday = (date: any) => {
+    return moment(date).isoWeekday() >= 1 && moment(date).isoWeekday() <= 5;
+};
 
 export const fieldRules = {
     requiredRule : {
@@ -54,5 +59,9 @@ export const fieldRules = {
             value : new Date().toString(),
             message : "Date must be greater than today"
         }
+    },
+    requiredWeekDayRule: {
+        required : "This field is required",
+        validate : isWeekday
     }
 }

@@ -14,7 +14,7 @@ const MainLayout = ({ children }: any) => {
 		if (paths[1] === "admin") {
 			return (
 				<div
-					className="relative min-h-screen grid grid-cols-layout"
+					className="relative h-screen grid grid-cols-layout overflow-y-hidden"
 					id="portalHere"
 				>
 					{/* SIDENAV */}

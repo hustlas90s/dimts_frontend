@@ -3,6 +3,7 @@ import { nanoid } from "@reduxjs/toolkit";
 import SubmitModal from "../SubmitModal";
 import MyInputField from "../MyInputField";
 import MyMultiSelectField from "../MyMultiSelectField";
+import MyCreatableSelect from "../MyCreatableSelect";
 import { useForm } from "react-hook-form";
 import { fieldRules } from "../authHelper";
 import { useAppDispatch } from "../../redux/hooks";
@@ -46,7 +47,7 @@ const AddCriminalCase = ({
 			crime_type: JSON.stringify(crimes),
 			received_date: formData.caseReceived,
 			raffled_court: formData.caseRaffled,
-			judge_assigned: formData.caseJudge,
+			judge_assigned: formData.caseJudge.value,
 			qr_code: qrBase64,
 			qr_code_tracker: qrValue,
 		};
@@ -93,6 +94,7 @@ const AddCriminalCase = ({
 					fieldRules={fieldRules.requiredRule}
 					defaultValue=""
 					placeHolder=""
+					setFieldValue={setValue}
 				/>
 				<MyMultiSelectField
 					myControl={control}
@@ -119,6 +121,7 @@ const AddCriminalCase = ({
 					fieldLabel="Crime Type"
 					fieldRules={fieldRules.requiredRule}
 					defaultValue=""
+					setFieldValue={setValue}
 				/>
 				<MyInputField
 					control={control}
@@ -128,6 +131,7 @@ const AddCriminalCase = ({
 					fieldRules={fieldRules.requiredRule}
 					defaultValue=""
 					placeHolder=""
+					setFieldValue={setValue}
 				/>
 				<MyInputField
 					control={control}
@@ -137,6 +141,7 @@ const AddCriminalCase = ({
 					fieldRules={fieldRules.requiredRule}
 					defaultValue=""
 					placeHolder=""
+					setFieldValue={setValue}
 				/>
 				<MyInputField
 					control={control}
@@ -146,24 +151,35 @@ const AddCriminalCase = ({
 					fieldRules={fieldRules.requiredRule}
 					defaultValue=""
 					placeHolder=""
+					setFieldValue={setValue}
 				/>
-				<MyInputField
-					control={control}
-					fieldLabel="Raffled Court"
-					fieldType="text"
-					fieldName="caseRaffled"
-					fieldRules={fieldRules.requiredRule}
-					defaultValue=""
-					placeHolder=""
-				/>
-				<MyInputField
-					control={control}
-					fieldLabel="Judge Assigned"
-					fieldType="text"
+				<div className="hidden">
+					<MyInputField
+						control={control}
+						fieldLabel="Raffled Court"
+						fieldType="hidden"
+						fieldName="caseRaffled"
+						fieldRules={fieldRules.requiredRule}
+						defaultValue="RTC-4"
+						placeHolder=""
+						setFieldValue={setValue}
+					/>
+				</div>
+				<MyCreatableSelect
+					myControl={control}
+					myOptions={[
+						{ label: "Hon. Carmel Gil Grado", value: "Hon. Carmel Gil Grado" },
+						{ label: "Hon. Gemma Betonio", value: "Hon. Gemma Betonio" },
+						{
+							label: "Hon. Dorothy Montejo-Gonzaga",
+							value: "Hon. Dorothy Montejo-Gonzaga",
+						},
+					]}
 					fieldName="caseJudge"
+					fieldLabel="Judge Assigned"
 					fieldRules={fieldRules.requiredRule}
 					defaultValue=""
-					placeHolder=""
+					setFieldValue={setValue}
 				/>
 				<div className="col-span-2">
 					<div className="flex flex-col gap-y-1">

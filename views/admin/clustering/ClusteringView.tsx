@@ -11,6 +11,7 @@ import {
 	BarChart,
 	Scatter,
 	Bar,
+	Cell,
 } from "recharts";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import {
@@ -18,22 +19,36 @@ import {
 	fetchCrimeTypesSummary,
 } from "../../../redux/dataSlice";
 import { MoonLoader } from "react-spinners";
+import chroma from "chroma-js";
 
 const ClusteringView = () => {
 	const dispatch = useAppDispatch();
 	const { dataLoading, clusterList, clusterYears, crimeTypesSummaryList } =
 		useAppSelector((state) => state.dataState);
 
-	// const [chartLegends, setChartLegends] = useState([
-	// 	{ value: "2022", type: "plainline", color: "#112E51" },
-	// 	{ value: "2023", type: "plainline", color: "#0071bc" },
-	// ]);
+	const baseColor = "#4c1d95";
+	const numberOfColors = crimeTypesSummaryList.length;
+
+	const colorScale = chroma
+		.scale(["#fcd34d", baseColor, "#0ea5e9", "#0f766e", "#db2777"])
+		.mode("lch")
+		.colors(numberOfColors);
+	const crimeTypeSummaryListWithColors = crimeTypesSummaryList.map(
+		(item: any, index: number) => {
+			return {
+				...item,
+				color: colorScale[index],
+			};
+		}
+	);
+
+	console.log("Colors: ", crimeTypeSummaryListWithColors);
 
 	useEffect(() => {
-		dispatch(getClustering()).then((res: any) => {
-			console.log("Get clustering: ", res.payload);
-		});
-		dispatch(fetchCrimeTypesSummary());
+		dispatch(getClustering());
+		dispatch(fetchCrimeTypesSummary()).then((res: any) =>
+			console.log("Crime types: ", res.payload)
+		);
 	}, []);
 
 	return (
@@ -106,7 +121,7 @@ const ClusteringView = () => {
 						height={400}
 					>
 						<BarChart
-							data={crimeTypesSummaryList}
+							data={crimeTypeSummaryListWithColors}
 							margin={{
 								top: 10,
 								bottom: 5,
@@ -137,6 +152,7 @@ const ClusteringView = () => {
 									fontSize: "10px",
 								}}
 								domain={[0, "dataMax"]}
+								interval={1}
 								// tick={(value) => {
 								// 	if (value.visibleTicksCount % 1 === 0) {
 								// 		return value.visibleTicksCount;
@@ -144,14 +160,16 @@ const ClusteringView = () => {
 								// }}
 							/>
 							<Tooltip />
-							<Bar
-								dataKey="total"
-								fill="#4c1d95"
-							/>
-							{/* <Bar
-								dataKey="civil"
-								fill="#8b5cf6"
-							/> */}
+							<Bar dataKey="total">
+								{crimeTypeSummaryListWithColors.map(
+									(entry: any, index: number) => (
+										<Cell
+											key={`cell-${index}`}
+											fill={entry.color}
+										/>
+									)
+								)}
+							</Bar>
 							{/* <Legend /> */}
 						</BarChart>
 					</ResponsiveContainer>

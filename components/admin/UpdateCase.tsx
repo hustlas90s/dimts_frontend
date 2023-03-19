@@ -152,6 +152,7 @@ const UpdateCase = ({
 					defaultValue={selectedCase.caseRaffled}
 					placeHolder=""
 					setFieldValue={setValue}
+					readOnly={true}
 				/>
 				<MyInputField
 					control={control}

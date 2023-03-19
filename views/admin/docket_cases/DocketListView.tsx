@@ -11,6 +11,7 @@ import useModalIDs from "../../../hooks/useModalIDs";
 import PrintButton from "../../../components/PrintButton";
 import moment from "moment";
 import { ExportToCsv } from "export-to-csv";
+import _ from "lodash";
 
 const CitizenListView = () => {
 	const dispatch = useAppDispatch();
@@ -41,7 +42,8 @@ const CitizenListView = () => {
 		setSuccessText,
 	} = useModalIDs();
 	const [searchInput, setSearchInput] = useState("");
-	const [filteredDocket, setFilteredDocket] = useState([]);
+	const [filteredDocket, setFilteredDocket] = useState<any>([]);
+	const [isSolved, setIsSolved] = useState(0);
 
 	useEffect(() => {
 		dispatch(getPastDockets()).then((res: any) =>
@@ -73,18 +75,70 @@ const CitizenListView = () => {
 		});
 	}, [showDeleteModal, showWarningModal]);
 
+	const onFilterCases = (status: number) => {
+		console.log("Status (on filter case):", status);
+		console.log("Type:", typeof status);
+		switch (status) {
+			case 0:
+				if (searchInput.length === 0) {
+					console.log("Input is 0 (0)");
+					setFilteredDocket(pastDocketList);
+					return;
+				}
+				console.log("Input is not 0 (0)");
+				setFilteredDocket(
+					pastDocketList.filter((docket: any) =>
+						docket.case_no.toLowerCase().includes(searchInput.toLowerCase())
+					)
+				);
+				break;
+			case 1:
+				const solvedCases = pastDocketList.filter(
+					(docket: any) => docket.is_solved
+				);
+				if (searchInput.length === 0) {
+					console.log("Input is 0 (1)");
+					setFilteredDocket(solvedCases);
+					return;
+				}
+				console.log("Input is not 0 (1)");
+				setFilteredDocket(
+					solvedCases.filter((docket: any) =>
+						docket.case_no.toLowerCase().includes(searchInput.toLowerCase())
+					)
+				);
+				break;
+			case 2:
+				const unsolvedCases = pastDocketList.filter(
+					(docket: any) => !docket.is_solved
+				);
+				if (searchInput.length === 0) {
+					console.log("Input is 0 (2)");
+					setFilteredDocket(unsolvedCases);
+					return;
+				}
+				console.log("Input is not 0 (2)");
+				setFilteredDocket(
+					unsolvedCases.filter((docket: any) =>
+						docket.case_no.toLowerCase().includes(searchInput.toLowerCase())
+					)
+				);
+				break;
+			default:
+				console.log("Unknown value");
+				break;
+		}
+	};
+
 	const handleChange = (e: any) => {
 		e.preventDefault();
 		setSearchInput(e.target.value);
-		if (e.target.value.length) {
-			setFilteredDocket(
-				pastDocketList.filter((docket: any) => {
-					return docket.case_no.includes(searchInput);
-				})
-			);
-		} else {
-			setFilteredDocket(pastDocketList);
-		}
+		onFilterCases(isSolved);
+	};
+
+	const caseStatusSelection = (status: number): void => {
+		setIsSolved(Number(status));
+		onFilterCases(Number(status));
 	};
 
 	const onExportCases = () => {
@@ -160,6 +214,17 @@ const CitizenListView = () => {
 						onShowWarning={(e: number) => onShowWarningModal(e)}
 					/>
 				)}
+				<div className="w-full flex justify-end">
+					<select
+						className="w-44 py-1 px-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent appearance-none"
+						onChange={(e: any) => caseStatusSelection(e.target.value)}
+						defaultValue={isSolved}
+					>
+						<option value={0}>All Cases</option>
+						<option value={1}>Solved Cases</option>
+						<option value={2}>Unsolved Cases</option>
+					</select>
+				</div>
 			</div>
 		</div>
 	);

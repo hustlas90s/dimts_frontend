@@ -16,7 +16,7 @@ const RegisterCitizen = ({
 	onConfirm,
 	onCancel,
 }: RegisterCitizenParams) => {
-	const { control, handleSubmit } = useForm();
+	const { control, handleSubmit, setValue } = useForm();
 	const dispatch = useAppDispatch();
 
 	const onSubmit = (formData: any) => {
@@ -49,6 +49,7 @@ const RegisterCitizen = ({
 					fieldRules={fieldRules.requiredStringRule}
 					defaultValue=""
 					placeHolder="John"
+					setFieldValue={setValue}
 				/>
 				<MyInputField
 					control={control}
@@ -58,6 +59,7 @@ const RegisterCitizen = ({
 					fieldRules={fieldRules.requiredStringRule}
 					defaultValue=""
 					placeHolder="Doe"
+					setFieldValue={setValue}
 				/>
 				<MyInputField
 					control={control}
@@ -67,15 +69,17 @@ const RegisterCitizen = ({
 					fieldRules={fieldRules.requiredMobileNumberRule}
 					defaultValue=""
 					placeHolder="09123123123"
+					setFieldValue={setValue}
 				/>
 				<MyInputField
 					control={control}
 					fieldLabel="Email"
-					fieldType="text"
+					fieldType="email"
 					fieldName="citizenEmail"
 					fieldRules={fieldRules.requiredUniqueEmailRule}
 					defaultValue=""
 					placeHolder="dummy@gmail.com"
+					setFieldValue={setValue}
 				/>
 				<MyInputField
 					control={control}
@@ -85,6 +89,7 @@ const RegisterCitizen = ({
 					fieldRules={fieldRules.requiredRule}
 					defaultValue=""
 					placeHolder="johndoe123"
+					setFieldValue={setValue}
 				/>
 				<MyInputField
 					control={control}
@@ -94,6 +99,7 @@ const RegisterCitizen = ({
 					fieldRules={fieldRules.requiredPasswordRule}
 					defaultValue=""
 					placeHolder="********"
+					setFieldValue={setValue}
 				/>
 			</div>
 		</SubmitModal>

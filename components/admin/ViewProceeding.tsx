@@ -111,7 +111,8 @@ const ViewProceeding = ({
 															{" - "}
 															{moment(proceeding.end_time, "HH:mm").format(
 																"hh:mm A"
-															)}
+															)}{" "}
+															({proceeding.status})
 														</p>
 													</div>
 													<svg

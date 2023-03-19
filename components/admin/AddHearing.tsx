@@ -20,7 +20,7 @@ const AddHearing = ({
 	onCancel,
 	selectOptions,
 }: AddHearingParams) => {
-	const { control, handleSubmit } = useForm();
+	const { control, handleSubmit, setValue } = useForm();
 	const dispatch = useAppDispatch();
 
 	const onSubmit = (formData: any) => {
@@ -54,15 +54,17 @@ const AddHearing = ({
 					fieldLabel="Case No."
 					fieldRules={fieldRules.requiredRule}
 					defaultValue=""
+					setFieldValue={setValue}
 				/>
 				<MyInputField
 					control={control}
 					fieldLabel="Hearing Schedule"
 					fieldType="date"
 					fieldName="hearingSchedule"
-					fieldRules={fieldRules.requiredDateFieldRule}
+					fieldRules={fieldRules.requiredWeekDayRule}
 					defaultValue=""
 					placeHolder=""
+					setFieldValue={setValue}
 				/>
 				<MyInputField
 					control={control}
@@ -72,6 +74,7 @@ const AddHearing = ({
 					fieldRules={fieldRules.requiredRule}
 					defaultValue=""
 					placeHolder=""
+					setFieldValue={setValue}
 				/>
 				<MyInputField
 					control={control}
@@ -81,6 +84,7 @@ const AddHearing = ({
 					fieldRules={fieldRules.requiredRule}
 					defaultValue=""
 					placeHolder=""
+					setFieldValue={setValue}
 				/>
 				<div className="col-span-2">
 					<MyTextAreaField
@@ -89,6 +93,7 @@ const AddHearing = ({
 						fieldName="hearingRemarks"
 						fieldRules={fieldRules.requiredRule}
 						defaultValue=""
+						setFieldValue={setValue}
 					/>
 				</div>
 			</div>

@@ -26,7 +26,7 @@ const AddRecord = ({
 	onCancel,
 	selectOptions,
 }: AddRecordParams) => {
-	const { control, handleSubmit } = useForm();
+	const { control, handleSubmit, setValue } = useForm();
 	const dispatch = useAppDispatch();
 
 	const onSubmit = (formData: any) => {
@@ -65,6 +65,7 @@ const AddRecord = ({
 						fieldLabel="Case"
 						fieldRules={fieldRules.requiredRule}
 						defaultValue=""
+						setFieldValue={setValue}
 					/>
 				</div>
 				<MyInputField
@@ -74,6 +75,7 @@ const AddRecord = ({
 					fieldName="recordFirstName"
 					fieldRules={fieldRules.requiredRule}
 					defaultValue=""
+					setFieldValue={setValue}
 				/>
 				<MyInputField
 					control={control}
@@ -82,6 +84,7 @@ const AddRecord = ({
 					fieldName="recordMiddleName"
 					fieldRules={fieldRules.requiredRule}
 					defaultValue=""
+					setFieldValue={setValue}
 				/>
 				<MyInputField
 					control={control}
@@ -90,6 +93,7 @@ const AddRecord = ({
 					fieldName="recordLastName"
 					fieldRules={fieldRules.requiredRule}
 					defaultValue=""
+					setFieldValue={setValue}
 				/>
 				<MyInputField
 					control={control}
@@ -98,6 +102,7 @@ const AddRecord = ({
 					fieldName="recordSuffix"
 					fieldRules=""
 					defaultValue=""
+					setFieldValue={setValue}
 				/>
 				<MyInputField
 					control={control}
@@ -106,6 +111,7 @@ const AddRecord = ({
 					fieldName="recordHeight"
 					fieldRules={fieldRules.requiredNumberRule}
 					defaultValue=""
+					setFieldValue={setValue}
 				/>
 				<MyInputField
 					control={control}
@@ -114,6 +120,7 @@ const AddRecord = ({
 					fieldName="recordWeight"
 					fieldRules={fieldRules.requiredNumberRule}
 					defaultValue=""
+					setFieldValue={setValue}
 				/>
 				<MyInputField
 					control={control}
@@ -122,6 +129,7 @@ const AddRecord = ({
 					fieldName="recordBirthdate"
 					fieldRules={fieldRules.requiredRule}
 					defaultValue=""
+					setFieldValue={setValue}
 				/>
 				<MySelectField
 					myControl={control}
@@ -139,6 +147,7 @@ const AddRecord = ({
 					fieldLabel="Blood Type"
 					fieldRules={fieldRules.requiredRule}
 					defaultValue=""
+					setFieldValue={setValue}
 				/>
 				<MyInputField
 					control={control}
@@ -147,6 +156,7 @@ const AddRecord = ({
 					fieldName="recordDateArrived"
 					fieldRules=""
 					defaultValue=""
+					setFieldValue={setValue}
 				/>
 				<MyInputField
 					control={control}
@@ -155,6 +165,7 @@ const AddRecord = ({
 					fieldName="recordPersonnel"
 					fieldRules={fieldRules.requiredRule}
 					defaultValue=""
+					setFieldValue={setValue}
 				/>
 				<div className="col-span-2">
 					<MyTextAreaField
@@ -163,6 +174,7 @@ const AddRecord = ({
 						fieldName="recordAddress"
 						fieldRules={fieldRules.requiredRule}
 						defaultValue=""
+						setFieldValue={setValue}
 					/>
 				</div>
 				<div className="col-span-2">

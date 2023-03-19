@@ -213,6 +213,21 @@ const CaseView = () => {
 							</p>
 						</div>
 					</div>
+					{/*  */}
+					<div className="w-full grid grid-cols-2 justify-items-center">
+						<div className="w-[200px] flex flex-col gap-y-1">
+							<h4 className="font-bold">Case Solved</h4>
+							<p className="text-sm text-gray-500">
+								{caseDetails.is_solved === true ? "Yes" : "No"}
+							</p>
+						</div>
+						<div className="w-[200px] flex flex-col gap-y-1">
+							<h4 className="font-bold">Imprisonment</h4>
+							<p className="text-sm text-gray-500">
+								{caseDetails.imprisonment_span} Year(s)
+							</p>
+						</div>
+					</div>
 				</div>
 				<div className="bg-white p-5 shadow border-b border-gray-200 rounded-lg flex flex-col gap-y-5">
 					<div className="w-full flex justify-between items-center">

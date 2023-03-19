@@ -27,13 +27,19 @@ const UpdateHearing = ({
 	const dispatch = useAppDispatch();
 	const [caseDetails, setCaseDetails] = useState<any>();
 
-	const onCloseCase = (hearingIsClosed: any, hearingImprisonment: any) => {
+	const onCloseCase = (
+		hearingIsClosed: any,
+		hearingImprisonment: any,
+		hearingStatus: any
+	) => {
 		if (hearingIsClosed !== undefined && hearingIsClosed) {
+			let solved = hearingStatus === "Completed" ? true : false;
 			dispatch(
 				updateDocket({
 					formData: {
 						is_closed: hearingIsClosed,
 						imprisonment_span: hearingImprisonment,
+						is_solved: solved,
 					},
 					docket_id: caseDetails?.id,
 				})
@@ -58,7 +64,11 @@ const UpdateHearing = ({
 			status: formData.hearingStatus,
 		};
 		formData?.hearingIsClosed !== undefined
-			? onCloseCase(formData?.hearingIsClosed, formData?.hearingImprisonment)
+			? onCloseCase(
+					formData?.hearingIsClosed,
+					formData?.hearingImprisonment,
+					formData.hearingStatus
+			  )
 			: null;
 		dispatch(
 			updateHearing({ formData: data, hearing_id: selectedHearing.hearingID })

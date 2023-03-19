@@ -13,6 +13,26 @@ interface MyInputFieldProps {
 	setFieldValue?: any;
 }
 
+const getErrorMessage = ({
+	error,
+	fieldType,
+}: {
+	error: any;
+	fieldType: any;
+}): string => {
+	let errorMessage = "";
+	if (error.type === "validate") {
+		if (fieldType === "email") {
+			errorMessage = "Email already used in another account";
+		} else if (fieldType === "date") {
+			errorMessage = "Weekends are not allowed";
+		}
+	} else {
+		errorMessage = error.message;
+	}
+	return errorMessage;
+};
+
 const MyInputField = ({
 	control,
 	fieldLabel,
@@ -50,9 +70,7 @@ const MyInputField = ({
 					/>
 					{error && (
 						<p className="text-xs text-rose-500">
-							{error.type !== "validate"
-								? error.message
-								: "Email already used in another account"}
+							{getErrorMessage({ error, fieldType })}
 						</p>
 					)}
 				</div>

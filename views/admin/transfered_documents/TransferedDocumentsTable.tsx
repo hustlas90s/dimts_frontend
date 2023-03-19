@@ -11,7 +11,7 @@ const ServedDocsTable = ({
 			<table className="min-w-max w-full table-auto">
 				<thead>
 					<tr className="bg-gray-100 text-gray-600 text-sm leading-normal">
-						<th className="py-3 px-6 text-left">Office</th>
+						<th className="py-3 px-6 text-left">Office/Person</th>
 						<th className="py-3 px-6 text-left">QRCode Tracker</th>
 						<th className="py-3 px-6 text-left">Case No.</th>
 						<th className="py-3 px-6 text-left">Date Submitted</th>

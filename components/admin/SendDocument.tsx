@@ -11,7 +11,7 @@ interface SendDocumentParams {
 	isShow: boolean;
 	onConfirm(): void;
 	onCancel(): void;
-	officeOptions: any;
+	recipientOptions: any;
 	caseOptions: any;
 }
 
@@ -19,7 +19,7 @@ const SendDocument = ({
 	isShow,
 	onConfirm,
 	onCancel,
-	officeOptions,
+	recipientOptions,
 	caseOptions,
 }: SendDocumentParams) => {
 	const { control, handleSubmit, setValue } = useForm();
@@ -46,13 +46,14 @@ const SendDocument = ({
 			<div className="grid grid-cols-2 gap-y-8 gap-x-5">
 				<MySelectField
 					myControl={control}
-					myOptions={officeOptions.map((option: any) => {
-						return { label: option.first_name, value: option.id };
+					myOptions={recipientOptions.map((option: any) => {
+						return { label: option.name, value: option.id };
 					})}
 					fieldName="documentOffice"
-					fieldLabel="Office"
+					fieldLabel="Office/Person"
 					fieldRules={fieldRules.requiredRule}
 					defaultValue=""
+					setFieldValue={setValue}
 				/>
 				<MySelectField
 					myControl={control}
@@ -63,6 +64,7 @@ const SendDocument = ({
 					fieldLabel="Case"
 					fieldRules={fieldRules.requiredRule}
 					defaultValue=""
+					setFieldValue={setValue}
 				/>
 				<MyInputField
 					control={control}
@@ -70,6 +72,7 @@ const SendDocument = ({
 					fieldType="date"
 					fieldName="documentDate"
 					fieldRules={fieldRules.requiredRule}
+					setFieldValue={setValue}
 				/>
 				<MyInputField
 					control={control}
