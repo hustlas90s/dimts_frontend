@@ -10,6 +10,7 @@ import { useAppDispatch } from "../../redux/hooks";
 import { createNewDocket } from "../../redux/dataSlice";
 import { QRCodeCanvas } from "qrcode.react";
 import MyInputFieldFull from "../MyInputFieldFull";
+import { criminalCrimeTypes } from "../../crimeTypesHelper";
 
 interface AddCriminalCaseParams {
 	isShow: boolean;
@@ -98,25 +99,7 @@ const AddCriminalCase = ({
 				/>
 				<MyMultiSelectField
 					myControl={control}
-					myOptions={[
-						{ label: "Antisocial Behaviour", value: "Antisocial Behaviour" },
-						{ label: "Arson", value: "Arson" },
-						{ label: "Burglary", value: "Burglary" },
-						{ label: "Child Abuse", value: "Child Abuse" },
-						{ label: "Crime Abroad", value: "Crime Abroad" },
-						{ label: "Cybercrime", value: "Cybercrime" },
-						{ label: "Domestic Abuse", value: "Domestic Abuse" },
-						{ label: "Fraud", value: "Fraud" },
-						{ label: "Hate Crime", value: "Hate Crime" },
-						{ label: "Modern Slavery", value: "Modern Slavery" },
-						{ label: "Murder", value: "Murder" },
-						{ label: "Rape/Sexual Assault", value: "Rape/Sexual Assault" },
-						{ label: "Robbery", value: "Robbery" },
-						{ label: "Sexual Harassment", value: "Sexual Harassment" },
-						{ label: "Stalking", value: "Stalking" },
-						{ label: "Terrorism", value: "Terrorism" },
-						{ label: "Violent Crime", value: "Violent Crime" },
-					]}
+					myOptions={criminalCrimeTypes}
 					fieldName="caseCrimeType"
 					fieldLabel="Crime Type"
 					fieldRules={fieldRules.requiredRule}

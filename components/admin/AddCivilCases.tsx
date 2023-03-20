@@ -10,6 +10,7 @@ import { useAppDispatch } from "../../redux/hooks";
 import { createNewDocket } from "../../redux/dataSlice";
 import { QRCodeCanvas } from "qrcode.react";
 import MyCreatableSelect from "../MyCreatableSelect";
+import { civilCrimeTypes } from "../../crimeTypesHelper";
 
 interface AddCivilCaseParams {
 	isShow: boolean;
@@ -98,19 +99,7 @@ const AddCivilCase = ({
 				/>
 				<MyMultiSelectField
 					myControl={control}
-					myOptions={[
-						{ label: "Tort Claims", value: "Tort Claims" },
-						{ label: "Contract Disputes", value: "Contract Disputes" },
-						{ label: "Equitable Claims", value: "Equitable Claims" },
-						{
-							label: "Landlord/Tenant Issues",
-							value: "Landlord/Tenant Issues",
-						},
-						{
-							label: "Complaints Against the City",
-							value: "Complaints Against the City",
-						},
-					]}
+					myOptions={civilCrimeTypes}
 					fieldName="caseCrimeType"
 					fieldLabel="Civil Type"
 					fieldRules={fieldRules.requiredRule}
