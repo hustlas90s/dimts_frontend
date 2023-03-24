@@ -25,6 +25,7 @@ import db from "../../../firebaseConfig";
 import { collection, doc, setDoc } from "firebase/firestore";
 import FilterButton from "../../../components/FilterButton";
 import { DateRange } from "react-date-range";
+import HigherCourtModal from "../../../components/admin/HigherCourtModal";
 
 const CourtHearingsView = () => {
 	const dispatch = useAppDispatch();
@@ -55,6 +56,7 @@ const CourtHearingsView = () => {
 	} = useModalIDs();
 	const [searchInput, setSearchInput] = useState("");
 	const [filteredHearings, setFilteredHearings] = useState([]);
+	const [showHigherCourt, setShowHigherCourt] = useState(false);
 
 	const [selection, setSelection] = useState([
 		{
@@ -228,6 +230,11 @@ const CourtHearingsView = () => {
 				onCancel={() => setShowEditModal(false)}
 				selectedHearing={selectedObject}
 				docketList={currentDocketList}
+				showCourtHearing={() => {
+					console.log("Justine Gwapo");
+					setShowEditModal(false);
+					setShowHigherCourt(true);
+				}}
 			/>
 			<SuccessModal
 				isShow={showSuccessModal}
@@ -240,6 +247,11 @@ const CourtHearingsView = () => {
 				warningText="hearing"
 				onConfirm={() => onDeleteHearing()}
 				onCancel={() => setShowDeleteModal(false)}
+			/>
+			<HigherCourtModal
+				isShow={showHigherCourt}
+				onConfirm={() => onSubmitNewHearing()}
+				onCancel={() => setShowHigherCourt(false)}
 			/>
 			<AdminBreadCrumbs activeText="Court Hearings" />
 			<div className="w-full bg-white font-mont flex flex-col gap-y-5 text-gray-700 p-5 shadow border-b border-gray-200 rounded-lg">

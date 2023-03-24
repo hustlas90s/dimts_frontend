@@ -17,6 +17,7 @@ import DeletedModal from "../../../components/DeletedModal";
 import useCrudModals from "../../../hooks/useCrudModals";
 import useModalIDs from "../../../hooks/useModalIDs";
 import ViewDocument from "../../../components/admin/ViewDocument";
+import _ from "lodash";
 
 const ServedDocsView = () => {
 	const dispatch = useAppDispatch();
@@ -61,10 +62,7 @@ const ServedDocsView = () => {
 			const offices = res.payload.map((data: any) => {
 				return { name: data.first_name, id: data.id, role: "office" };
 			});
-			setRecipients((previusRecipients: any) => [
-				...previusRecipients,
-				...offices,
-			]);
+			setRecipients((prevRecipients: any) => [...prevRecipients, ...offices]);
 		});
 		dispatch(getStaffList()).then((res: any) => {
 			const staffs = res.payload.map((data: any) => {
@@ -122,14 +120,16 @@ const ServedDocsView = () => {
 	const handleChange = (e: any) => {
 		e.preventDefault();
 		setSearchInput(e.target.value);
-		if (e.target.value.length) {
-			setFilteredDocuments(
-				transferedDocuments.filter((documents: any) => {
-					return documents.office__first_name
+		if (e.target.value.length > 0) {
+			let filtered_values: any = _.filter(
+				transferedDocuments,
+				function (doc: any) {
+					return doc.office_name
 						.toLowerCase()
-						.includes(searchInput.toLowerCase());
-				})
+						.includes(e.target.value.toLowerCase());
+				}
 			);
+			setFilteredDocuments(filtered_values);
 		} else {
 			setFilteredDocuments(transferedDocuments);
 		}
@@ -203,7 +203,7 @@ const ServedDocsView = () => {
 						</button>
 						<input
 							type="text"
-							placeholder="Search Office"
+							placeholder="Office/Person"
 							className="w-44 py-1 px-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
 							onChange={handleChange}
 							value={searchInput}

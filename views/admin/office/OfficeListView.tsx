@@ -14,6 +14,7 @@ import SuccessModal from "../../../components/SuccessModal";
 import WarningModal from "../../../components/WarningModal";
 import useCrudModals from "../../../hooks/useCrudModals";
 import useModalIDs from "../../../hooks/useModalIDs";
+import _ from "lodash";
 
 const OfficeListView = () => {
 	const dispatch = useAppDispatch();
@@ -68,13 +69,11 @@ const OfficeListView = () => {
 		e.preventDefault();
 		setSearchInput(e.target.value);
 		if (e.target.value.length) {
-			setFilteredOffice(
-				officesList.filter((office: any) => {
-					return office.first_name
-						.toLowerCase()
-						.includes(searchInput.toLowerCase());
-				})
-			);
+			let filtered_values: any = _.filter(officesList, function (office: any) {
+				const office_name = `${office.first_name} ${office.last_name}`;
+				return office_name.toLowerCase().includes(e.target.value.toLowerCase());
+			});
+			setFilteredOffice(filtered_values);
 		} else {
 			setFilteredOffice(officesList);
 		}

@@ -31,7 +31,7 @@ const DocumentLogView = () => {
 			<div className="w-full flex justify-between">
 				<div className="flex items-center gap-x-1">
 					<p className="text-sm tracking-wider">
-						{documentDetails.office__first_name}
+						{documentDetails.office_name}
 					</p>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -95,7 +95,7 @@ const DocumentLogView = () => {
 						<div className="w-[200px] flex flex-col gap-y-1">
 							<h4 className="font-bold">Office</h4>
 							<p className="text-sm text-gray-500">
-								{documentDetails.office__first_name}
+								{documentDetails.office_name}
 							</p>
 						</div>
 						<div className="w-[200px] flex flex-col gap-y-1">

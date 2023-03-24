@@ -20,6 +20,7 @@ import useCrudModals from "../../../hooks/useCrudModals";
 import useModalIDs from "../../../hooks/useModalIDs";
 import { ExportToCsv } from "export-to-csv";
 import moment from "moment";
+import _ from "lodash";
 
 const CriminalCaseListView = () => {
 	const dispatch = useAppDispatch();
@@ -144,11 +145,15 @@ const CriminalCaseListView = () => {
 		e.preventDefault();
 		setSearchInput(e.target.value);
 		if (e.target.value.length) {
-			setFilteredCase(
-				criminalCaseList.filter((criminal: any) => {
-					return criminal.case_no.includes(searchInput);
-				})
+			let filtered_values: any = _.filter(
+				criminalCaseList,
+				function (case_: any) {
+					return case_.case_no
+						.toLowerCase()
+						.includes(e.target.value.toLowerCase());
+				}
 			);
+			setFilteredCase(filtered_values);
 		} else {
 			setFilteredCase(criminalCaseList);
 		}

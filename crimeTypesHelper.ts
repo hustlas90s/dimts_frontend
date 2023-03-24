@@ -72,12 +72,28 @@ export const criminalCrimeTypes = [
 ]
 
 export const civilCrimeTypes = [
-    {label: "Breach of Contract", value: "Breach of Contract"},
-    {label: "Property Dispute", value: "Property Dispute"},
-    {label: "Personal Injury", value: "Personal Injury"},
-    {label: "Employment Discrimination", value: "Employment Discrimination"},
-    {label: "Product Liability", value: "Product Liability"},
-    {label: "Medical Malpractice", value: "Medical Malpractice"},
-    {label: "Intellectual Property Dispute", value: "Intellectual Property Dispute"},
-    {label: "Environmental Litigation", value: "Environmental Litigation"}
+    {label: "Annulment of auction sale", value: "Annulment of auction sale"},
+    {label: "Annulment of documents", value: "Annulment of documents"},
+    {label: "Annulment of foreclosure sale", value: "Annulment of foreclosure"},
+    {label: "Annulment of judgment", value: "Annulment of judgment"},
+    {label: "Annulment of marriage ", value: "Annulment of marriage"},
+    {label: "Annulment of mortgage", value: "Annulment of mortgage"},
+    {label: "Annulment of sale", value: "Annulment of sale"},
+    {label: "Annulment of tax sale", value: "Annulment of tax sale"},
+    {label: "Annulment of title", value: "Annulment of title"},
+    {label: "Breach of contract", value: "Breach contract"},
+    {label: "Cancellation of adverse claim", value:"Cancellation of adverse claim"},
+    {label: "Cancellation of encumbrance", value: "Cancellation of encumbrances"},
+    {label: "Cancellation of entry", value: "Cancellation of entry"},
+    {label: "Cancellation of lien", value: "Cancellation of lien"},
+    {label: "Cancellation of title", value: "Cancellation of title"},
+    {label: "Consolidation of ownership", value: "Consolidation of ownership"},
+    {label: "Damages", value: "Damages"},
+    {label: "Easement", value: "Easement"},
+    {label: "Ejectment", value: "Ejectment"},
+    {label: "Exclusion", value: "Exclusion"},
+    {label: "Injunction", value: "Injunction"},
+    {label: "Insurance of owner's duplicate TCT", value: "Insurance of owner's duplicate TCT"},
+    {label: "Just compensation", value: "Just compensation"},
+    {label: "Reconveyance", value: "Reconveyance"}
 ]

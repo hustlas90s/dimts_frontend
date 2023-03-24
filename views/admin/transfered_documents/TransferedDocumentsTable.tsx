@@ -27,7 +27,7 @@ const ServedDocsTable = ({
 								className="border-b border-gray-200 hover:bg-gray-50"
 							>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
-									{doc.office__first_name}
+									{doc.office_name}
 								</td>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
 									{doc.case__qr_code_tracker}

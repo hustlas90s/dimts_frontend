@@ -18,12 +18,9 @@ const ViewHearing = ({
 	const [caseDetails, setCaseDetails] = useState<any>();
 
 	useEffect(() => {
-		console.log("Selected hearing: ", selectedHearing);
-		console.log("All dockets: ", allDockets);
 		const currentCase = allDockets.find(
 			(case_: any) => case_.case_no === selectedHearing.case__case_no
 		);
-		console.log("Current case: ", currentCase);
 		setCaseDetails(currentCase);
 	}, [selectedHearing]);
 

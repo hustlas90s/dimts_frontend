@@ -13,6 +13,7 @@ import useModalIDs from "../../../hooks/useModalIDs";
 import AddRecord from "../../../components/admin/AddRecord";
 import ViewRecord from "../../../components/admin/ViewRecord";
 import UpdateRecord from "../../../components/admin/UpdateRecord";
+import _ from "lodash";
 
 const BJMPView = () => {
 	const dispatch = useAppDispatch();
@@ -104,11 +105,10 @@ const BJMPView = () => {
 		e.preventDefault();
 		setSearchInput(e.target.value);
 		if (e.target.value.length) {
-			setFilteredBJMP(
-				bjmpRecords.filter((bjmp: any) => {
-					return bjmp.name.toLowerCase().includes(searchInput.toLowerCase());
-				})
-			);
+			let filtered_values: any = _.filter(bjmpRecords, function (bjmp: any) {
+				return bjmp.name.toLowerCase().includes(e.target.value.toLowerCase());
+			});
+			setFilteredBJMP(filtered_values);
 		} else {
 			setFilteredBJMP(bjmpRecords);
 		}

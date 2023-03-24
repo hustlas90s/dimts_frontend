@@ -2,14 +2,14 @@ import { useState, useEffect } from "react";
 import { nanoid } from "@reduxjs/toolkit";
 import SubmitModal from "../SubmitModal";
 import MyInputField from "../MyInputField";
-import MyInputFieldFull from "../MyInputFieldFull";
 import MyMultiSelectField from "../MyMultiSelectField";
+import MyCreatableSelect from "../MyCreatableSelect";
 import { useForm } from "react-hook-form";
 import { fieldRules } from "../authHelper";
 import { useAppDispatch } from "../../redux/hooks";
 import { createNewDocket } from "../../redux/dataSlice";
 import { QRCodeCanvas } from "qrcode.react";
-import MyCreatableSelect from "../MyCreatableSelect";
+import MyInputFieldFull from "../MyInputFieldFull";
 import { civilCrimeTypes } from "../../crimeTypesHelper";
 
 interface AddCivilCaseParams {
@@ -83,7 +83,7 @@ const AddCivilCase = ({
 						fieldName="caseType"
 						fieldRules={fieldRules.requiredRule}
 						defaultValue="Civil"
-						readOnly={true}
+						// readOnly={true}
 						setFieldValue={setValue}
 					/>
 				</div>
@@ -143,7 +143,7 @@ const AddCivilCase = ({
 						fieldType="hidden"
 						fieldName="caseRaffled"
 						fieldRules={fieldRules.requiredRule}
-						defaultValue=""
+						defaultValue="RTC-4"
 						placeHolder=""
 						setFieldValue={setValue}
 					/>

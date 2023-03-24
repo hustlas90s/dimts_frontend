@@ -23,6 +23,17 @@ export const fieldRules = {
             message : "Numeric characters only"
         }
     },
+    requiredNumberRule2 : {
+        required : "This field is required",
+        pattern : {
+            value : /^\d+$/,
+            message : "Numeric characters only"
+        },
+        minValue : {
+            value : 1,
+            message : "Value must be greater than 0"
+        }
+    },
     requiredMobileNumberRule : {
         required : "This field is required",
         pattern : {
@@ -62,6 +73,10 @@ export const fieldRules = {
     },
     requiredWeekDayRule: {
         required : "This field is required",
-        validate : isWeekday
+        validate : isWeekday,
+        min : {
+            value : new Date().toString(),
+            message : "Date must be greater than today"
+        }
     }
 }

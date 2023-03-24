@@ -43,6 +43,7 @@ const CitizenListView = () => {
 	} = useModalIDs();
 	const [searchInput, setSearchInput] = useState("");
 	const [filteredDocket, setFilteredDocket] = useState<any>([]);
+	const [filterWithType, setFilterWithType] = useState<any>([]);
 	const [isSolved, setIsSolved] = useState(0);
 
 	useEffect(() => {
@@ -76,53 +77,27 @@ const CitizenListView = () => {
 	}, [showDeleteModal, showWarningModal]);
 
 	const onFilterCases = (status: number) => {
-		console.log("Status (on filter case):", status);
-		console.log("Type:", typeof status);
 		switch (status) {
 			case 0:
-				if (searchInput.length === 0) {
-					console.log("Input is 0 (0)");
-					setFilteredDocket(pastDocketList);
-					return;
-				}
-				console.log("Input is not 0 (0)");
-				setFilteredDocket(
-					pastDocketList.filter((docket: any) =>
-						docket.case_no.toLowerCase().includes(searchInput.toLowerCase())
-					)
-				);
+				setFilterWithType(pastDocketList);
+				let noFilterValues = _.filter(filterWithType, function (docket: any) {
+					return docket.case_no.includes(searchInput);
+				});
+				setFilteredDocket(noFilterValues);
 				break;
 			case 1:
-				const solvedCases = pastDocketList.filter(
-					(docket: any) => docket.is_solved
-				);
-				if (searchInput.length === 0) {
-					console.log("Input is 0 (1)");
-					setFilteredDocket(solvedCases);
-					return;
-				}
-				console.log("Input is not 0 (1)");
-				setFilteredDocket(
-					solvedCases.filter((docket: any) =>
-						docket.case_no.toLowerCase().includes(searchInput.toLowerCase())
-					)
-				);
+				setFilterWithType(pastDocketList);
+				let solvedValues = _.filter(filterWithType, function (docket: any) {
+					return docket.is_solved;
+				});
+				setFilteredDocket(solvedValues);
 				break;
 			case 2:
-				const unsolvedCases = pastDocketList.filter(
-					(docket: any) => !docket.is_solved
-				);
-				if (searchInput.length === 0) {
-					console.log("Input is 0 (2)");
-					setFilteredDocket(unsolvedCases);
-					return;
-				}
-				console.log("Input is not 0 (2)");
-				setFilteredDocket(
-					unsolvedCases.filter((docket: any) =>
-						docket.case_no.toLowerCase().includes(searchInput.toLowerCase())
-					)
-				);
+				setFilterWithType(pastDocketList);
+				let notSolvedValues = _.filter(filterWithType, function (docket: any) {
+					return !docket.is_solved;
+				});
+				setFilteredDocket(notSolvedValues);
 				break;
 			default:
 				console.log("Unknown value");
@@ -133,7 +108,19 @@ const CitizenListView = () => {
 	const handleChange = (e: any) => {
 		e.preventDefault();
 		setSearchInput(e.target.value);
-		onFilterCases(isSolved);
+		if (e.target.value.length > 0) {
+			let filtered_values: any = _.filter(
+				pastDocketList,
+				function (docket: any) {
+					return docket.case_no
+						.toLowerCase()
+						.includes(e.target.value.toLowerCase());
+				}
+			);
+			setFilteredDocket(filtered_values);
+		} else {
+			setFilteredDocket(pastDocketList);
+		}
 	};
 
 	const caseStatusSelection = (status: number): void => {

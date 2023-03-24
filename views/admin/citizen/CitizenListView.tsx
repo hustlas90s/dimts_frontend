@@ -11,6 +11,7 @@ import SuccessModal from "../../../components/SuccessModal";
 import WarningModal from "../../../components/WarningModal";
 import useCrudModals from "../../../hooks/useCrudModals";
 import useModalIDs from "../../../hooks/useModalIDs";
+import _ from "lodash";
 
 const CitizenListView = () => {
 	const dispatch = useAppDispatch();
@@ -76,12 +77,13 @@ const CitizenListView = () => {
 		e.preventDefault();
 		setSearchInput(e.target.value);
 		if (e.target.value.length) {
-			setFilteredCitizen(
-				citizenList.filter((citizen: any) => {
-					const citizen_name = `${citizen.first_name} ${citizen.last_name}`;
-					return citizen_name.toLowerCase().includes(searchInput.toLowerCase());
-				})
-			);
+			let filtered_values: any = _.filter(citizenList, function (citizen: any) {
+				const citizen_name = `${citizen.first_name} ${citizen.last_name}`;
+				return citizen_name
+					.toLowerCase()
+					.includes(e.target.value.toLowerCase());
+			});
+			setFilteredCitizen(filtered_values);
 		} else {
 			setFilteredCitizen(citizenList);
 		}

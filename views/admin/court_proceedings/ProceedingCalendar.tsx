@@ -63,8 +63,6 @@ const ProceedingCalendar = ({ caseProceedings }: ProceedingCalendarProps) => {
 			isSameDay(new Date(proceeding.proceeding_schedule), selectedDay)
 		);
 
-	console.log("Selected hearings: ", selectedDayHearings);
-
 	return (
 		<div className="w-full">
 			<div className="md:grid md:grid-cols-calendar md:divide-x md:divide-gray-200 gap-x-8">

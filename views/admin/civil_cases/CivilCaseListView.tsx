@@ -20,6 +20,7 @@ import useModalIDs from "../../../hooks/useModalIDs";
 import moment from "moment";
 import { ExportToCsv } from "export-to-csv";
 import AddCivilCase from "../../../components/admin/AddCivilCases";
+import _ from "lodash";
 
 const CivilCaseListView = () => {
 	const dispatch = useAppDispatch();
@@ -148,11 +149,12 @@ const CivilCaseListView = () => {
 		e.preventDefault();
 		setSearchInput(e.target.value);
 		if (e.target.value.length) {
-			setFilteredCivilCase(
-				civilCaseList.filter((civil: any) => {
-					return civil.case_no.includes(searchInput);
-				})
-			);
+			let filtered_values: any = _.filter(civilCaseList, function (case_: any) {
+				return case_.case_no
+					.toLowerCase()
+					.includes(e.target.value.toLowerCase());
+			});
+			setFilteredCivilCase(filtered_values);
 		} else {
 			setFilteredCivilCase(civilCaseList);
 		}

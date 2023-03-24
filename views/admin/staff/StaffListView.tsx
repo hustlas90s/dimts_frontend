@@ -10,6 +10,7 @@ import SuccessModal from "../../../components/SuccessModal";
 import WarningModal from "../../../components/WarningModal";
 import useCrudModals from "../../../hooks/useCrudModals";
 import useModalIDs from "../../../hooks/useModalIDs";
+import _ from "lodash";
 
 const StaffListView = () => {
 	const dispatch = useAppDispatch();
@@ -63,12 +64,11 @@ const StaffListView = () => {
 		e.preventDefault();
 		setSearchInput(e.target.value);
 		if (e.target.value.length) {
-			setFilteredStaff(
-				staffList.filter((staff: any) => {
-					const staff_name = `${staff.first_name} ${staff.last_name}`;
-					return staff_name.toLowerCase().includes(searchInput.toLowerCase());
-				})
-			);
+			let filtered_values: any = _.filter(staffList, function (staff: any) {
+				const staff_name = `${staff.first_name} ${staff.last_name}`;
+				return staff_name.toLowerCase().includes(e.target.value.toLowerCase());
+			});
+			setFilteredStaff(filtered_values);
 		} else {
 			setFilteredStaff(staffList);
 		}

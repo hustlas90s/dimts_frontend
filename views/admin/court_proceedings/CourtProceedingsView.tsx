@@ -152,12 +152,16 @@ const CourtProceedingsView = () => {
 	const handleChange = (e: any) => {
 		e.preventDefault();
 		setSearchInput(e.target.value);
-		if (e.target.value) {
-			setFilteredProceedings(
-				courtProceedingsList.filter((proceeding: any) => {
-					return proceeding.case__case_no.includes(searchInput);
-				})
+		if (e.target.value.length > 0) {
+			let filtered_values: any = _.filter(
+				courtProceedingsList,
+				function (proceeding: any) {
+					return proceeding.case__case_no
+						.toLowerCase()
+						.includes(e.target.value.toLowerCase());
+				}
 			);
+			setFilteredProceedings(filtered_values);
 		} else {
 			setFilteredProceedings(courtProceedingsList);
 		}

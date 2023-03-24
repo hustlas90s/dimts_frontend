@@ -13,6 +13,7 @@ import useModalIDs from "../../../hooks/useModalIDs";
 import AddRecord from "../../../components/admin/AddRecord";
 import ViewRecord from "../../../components/admin/ViewRecord";
 import UpdateRecord from "../../../components/admin/UpdateRecord";
+import _ from "lodash";
 
 const BuCorView = () => {
 	const dispatch = useAppDispatch();
@@ -104,11 +105,10 @@ const BuCorView = () => {
 		e.preventDefault();
 		setSearchInput(e.target.value);
 		if (e.target.value.length) {
-			setFilteredBuCor(
-				bucorRecords.filter((bucor: any) => {
-					return bucor.name.toLowerCase().includes(searchInput.toLowerCase());
-				})
-			);
+			let filtered_values: any = _.filter(bucorRecords, function (bucor: any) {
+				return bucor.name.toLowerCase().includes(e.target.value.toLowerCase());
+			});
+			setFilteredBuCor(filtered_values);
 		} else {
 			setFilteredBuCor(bucorRecords);
 		}

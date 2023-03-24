@@ -17,6 +17,7 @@ import WarningModal from "../../../components/WarningModal";
 import DeletedModal from "../../../components/DeletedModal";
 import useCrudModals from "../../../hooks/useCrudModals";
 import useModalIDs from "../../../hooks/useModalIDs";
+import _ from "lodash";
 
 const PNPView = () => {
 	const dispatch = useAppDispatch();
@@ -126,12 +127,11 @@ const PNPView = () => {
 	const handleChange = (e: any) => {
 		e.preventDefault();
 		setSearchInput(e.target.value);
-		if (e.target.value.length) {
-			setFilteredPNP(
-				pnpRecords.filter((pnp: any) => {
-					return pnp.name.toLowerCase().includes(searchInput.toLowerCase());
-				})
-			);
+		if (e.target.value.length > 0) {
+			let filtered_values: any = _.filter(pnpRecords, function (pnp: any) {
+				return pnp.name.toLowerCase().includes(e.target.value.toLowerCase());
+			});
+			setFilteredPNP(filtered_values);
 		} else {
 			setFilteredPNP(pnpRecords);
 		}

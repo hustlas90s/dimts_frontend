@@ -83,7 +83,7 @@ const AddCriminalCase = ({
 						fieldName="caseType"
 						fieldRules={fieldRules.requiredRule}
 						defaultValue="Criminal"
-						readOnly={true}
+						// readOnly={true}
 						setFieldValue={setValue}
 					/>
 				</div>
