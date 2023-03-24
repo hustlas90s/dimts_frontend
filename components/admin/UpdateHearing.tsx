@@ -101,8 +101,8 @@ const UpdateHearing = ({
 			formData?.hearingIsClosed !== undefined &&
 			formData.hearingIsClosed.toString() === "false"
 		) {
-			localStorage.courtHearingData = formData;
-			localStorage.courtHearingId = caseDetails?.id;
+			localStorage.courtHearingData = JSON.stringify(formData);
+			localStorage.courtHearingId = selectedHearing.hearingID;
 			showCourtHearing();
 		}
 	};

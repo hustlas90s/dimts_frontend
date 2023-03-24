@@ -128,6 +128,7 @@ const CourtHearingsView = () => {
 		setSuccessText("Updating of court hearing schedule is successful");
 		setShowSuccessModal(true);
 		setShowEditModal(false);
+		setShowHigherCourt(false);
 		setTimeout(() => {
 			setShowSuccessModal(false);
 		}, 3000);
