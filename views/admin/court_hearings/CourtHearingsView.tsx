@@ -232,7 +232,6 @@ const CourtHearingsView = () => {
 				selectedHearing={selectedObject}
 				docketList={currentDocketList}
 				showCourtHearing={() => {
-					console.log("Justine Gwapo");
 					setShowEditModal(false);
 					setShowHigherCourt(true);
 				}}
@@ -251,7 +250,10 @@ const CourtHearingsView = () => {
 			/>
 			<HigherCourtModal
 				isShow={showHigherCourt}
-				onConfirm={() => onSubmitNewHearing()}
+				onConfirm={() => {
+					onSubmitNewHearing();
+					setShowHigherCourt(false);
+				}}
 				onCancel={() => setShowHigherCourt(false)}
 			/>
 			<AdminBreadCrumbs activeText="Court Hearings" />

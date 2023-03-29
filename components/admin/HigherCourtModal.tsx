@@ -4,7 +4,7 @@ import MySelectField from "../MySelectField";
 import { useForm } from "react-hook-form";
 import { fieldRules } from "../authHelper";
 import { useAppDispatch } from "../../redux/hooks";
-import { updateDocket } from "../../redux/dataSlice";
+import { updateDocket, updateHearing } from "../../redux/dataSlice";
 import MyTextAreaField from "../MyTextArea";
 
 interface HigherCourtModalParams {
@@ -21,10 +21,24 @@ const HigherCourtModal = ({
 	const dispatch = useAppDispatch();
 
 	const onSubmit = () => {
-		const courtHearingData = JSON.parse(localStorage.courtHearingData);
-		const courtHearingId = JSON.parse(localStorage.courtHearingId);
+		const parsedHearing = JSON.parse(localStorage.courtHearingData);
+		const parsedHearingId = JSON.parse(localStorage.courtHearingId);
+		const parsedDocketId = JSON.parse(localStorage.docketId);
+		const hearingData = {
+			hearing_schedule: parsedHearing.hearingSchedule,
+			hearing_type: parsedHearing.hearingType,
+			start_time: parsedHearing.hearingStartTime,
+			end_time: parsedHearing.hearingEndTime,
+			status: parsedHearing.hearingStatus,
+		};
 		dispatch(
-			updateDocket({ formData: courtHearingData, docket_id: courtHearingId })
+			updateHearing({ formData: hearingData, hearing_id: parsedHearingId })
+		);
+		dispatch(
+			updateDocket({
+				formData: { is_closed: false, imprisonment_span: 0, is_solved: true },
+				docket_id: parsedDocketId,
+			})
 		).then(() => {
 			onConfirm();
 		});

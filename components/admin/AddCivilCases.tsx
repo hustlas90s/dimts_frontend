@@ -4,7 +4,7 @@ import SubmitModal from "../SubmitModal";
 import MyInputField from "../MyInputField";
 import MyMultiSelectField from "../MyMultiSelectField";
 import MyCreatableSelect from "../MyCreatableSelect";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { fieldRules } from "../authHelper";
 import { useAppDispatch } from "../../redux/hooks";
 import { createNewDocket } from "../../redux/dataSlice";
@@ -31,7 +31,56 @@ const AddCivilCase = ({
 	const dispatch = useAppDispatch();
 
 	const [qrValue, setQrValue] = useState<any>();
+	const [qrTracker, setQrTracker] = useState<any>();
 	const [showLoading, setShowLoading] = useState(false);
+
+	const caseType = useWatch({
+		control,
+		name: "caseType",
+		defaultValue: "Civil",
+	});
+
+	const caseNo = useWatch({
+		control,
+		name: "caseNo",
+		defaultValue: "",
+	});
+
+	const caseDocTitle = useWatch({
+		control,
+		name: "caseDocTitle",
+		defaultValue: "",
+	});
+
+	const caseTitle = useWatch({
+		control,
+		name: "caseTitle",
+		defaultValue: "",
+	});
+
+	const caseCrimeType = useWatch({
+		control,
+		name: "caseCrimeType",
+		defaultValue: "",
+	});
+
+	const caseReceived = useWatch({
+		control,
+		name: "caseReceived",
+		defaultValue: "",
+	});
+
+	const caseRaffled = useWatch({
+		control,
+		name: "caseRaffled",
+		defaultValue: "RTC-4",
+	});
+
+	const caseJudge = useWatch({
+		control,
+		name: "caseJudge",
+		defaultValue: "",
+	});
 
 	const onSubmit = (formData: any) => {
 		let qrImage: any = document.getElementById("qr-gen");
@@ -50,10 +99,11 @@ const AddCivilCase = ({
 			raffled_court: formData.caseRaffled,
 			judge_assigned: formData.caseJudge.value,
 			qr_code: qrBase64,
-			qr_code_tracker: qrValue,
+			qr_code_tracker: qrTracker,
 		};
+		// console.log("Data: ", data);
+		// onConfirm();
 		setTimeout(() => {
-			console.log(data);
 			dispatch(createNewDocket(data)).then(() => {
 				setShowLoading(false);
 				onConfirm();
@@ -62,8 +112,37 @@ const AddCivilCase = ({
 	};
 
 	useEffect(() => {
-		setQrValue(nanoid());
-	}, [onConfirm, onCancel]);
+		let tracker = nanoid();
+		const crimes =
+			caseCrimeType !== ""
+				? caseCrimeType.map((crime: any) => {
+						return crime.value;
+				  })
+				: [];
+		const qrData = `
+				Case Type: ${caseType}\n\n
+				Case No: ${caseNo}\n\n
+				Tracking: ${tracker}\n\n
+				Document Title: ${caseDocTitle}\n\n
+				Case Title: ${caseTitle}\n\n
+				Crime Type: ${crimes.toString()}\n\n
+				Received Date: ${caseReceived}\n\n
+				Raffled Court: ${caseRaffled}\n\n
+				Judge Assigned: ${caseJudge.value}
+			`;
+		console.log("QR Data: ", qrData);
+		setQrTracker(tracker);
+		setQrValue(qrData);
+	}, [
+		caseType,
+		caseNo,
+		caseDocTitle,
+		caseTitle,
+		caseCrimeType,
+		caseReceived,
+		caseRaffled,
+		caseJudge,
+	]);
 
 	return (
 		<SubmitModal

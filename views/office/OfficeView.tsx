@@ -10,6 +10,7 @@ import SuccessModal from "../../components/SuccessModal";
 import useCrudModals from "../../hooks/useCrudModals";
 import db from "../../firebaseConfig";
 import { collection, doc, setDoc } from "firebase/firestore";
+import _ from "lodash";
 
 const OfficeView = () => {
 	const dispatch = useAppDispatch();
@@ -28,9 +29,9 @@ const OfficeView = () => {
 	const { handleSubmit, control } = useForm();
 
 	useEffect(() => {
-		dispatch(getOfficeDocuments()).then(() =>
-			setFilteredDocuments(officeDocuments)
-		);
+		dispatch(getOfficeDocuments()).then((res) => {
+			setFilteredDocuments(res.payload);
+		});
 	}, []);
 
 	const afterSubmission = useCallback(() => {
@@ -77,11 +78,15 @@ const OfficeView = () => {
 		e.preventDefault();
 		setSearchInput(e.target.value);
 		if (e.target.value.length) {
-			setFilteredDocuments(
-				officeDocuments.filter((documents: any) => {
-					return documents.case__case_no.includes(searchInput);
-				})
+			let filtered_values: any = _.filter(
+				officeDocuments,
+				function (case_: any) {
+					return case_.case__case_no
+						.toLowerCase()
+						.includes(e.target.value.toLowerCase());
+				}
 			);
+			setFilteredDocuments(filtered_values);
 		} else {
 			setFilteredDocuments(officeDocuments);
 		}

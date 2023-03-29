@@ -83,6 +83,7 @@ const AddModal = ({
 											type="button"
 											className="bg-purple-600 hover:bg-purple-500 focus:outline-none px-5 py-2 rounded-lg flex justify-center items-center"
 											onClick={onConfirm}
+											disabled={loadingState}
 										>
 											{loadingState ? (
 												<PulseLoader

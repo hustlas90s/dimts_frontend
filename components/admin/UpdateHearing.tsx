@@ -31,21 +31,23 @@ const UpdateHearing = ({
 	const dispatch = useAppDispatch();
 	const [caseDetails, setCaseDetails] = useState<any>();
 
-	const onCloseCase = (hearingIsClosed: any, hearingImprisonment: any) => {
-		let solved = hearingIsClosed.toString() === "true" ? true : false;
-		if (hearingIsClosed !== undefined && solved) {
-			dispatch(
-				updateDocket({
-					formData: {
-						is_closed: hearingIsClosed,
-						imprisonment_span: hearingImprisonment,
-						is_solved: solved,
-					},
-					docket_id: caseDetails?.id,
-				})
-			);
-			return;
-		}
+	const onCloseCase = (
+		hearingIsClosed: any,
+		hearingImprisonment: any,
+		hearingStatus: any
+	) => {
+		const solved = hearingStatus === "Completed" ? true : false;
+		const data = {
+			is_closed: Number(hearingIsClosed) === 0 ? true : false,
+			imprisonment_span: hearingImprisonment,
+			is_solved: solved,
+		};
+		dispatch(
+			updateDocket({
+				formData: data,
+				docket_id: caseDetails?.id,
+			})
+		);
 	};
 
 	const onUpdateHearing = (data: any, activityRef: any, newActivity: any) => {
@@ -56,7 +58,6 @@ const UpdateHearing = ({
 				if (data.hearing_type === "Last Court Action") {
 					setDoc(activityRef, newActivity);
 				}
-				console.log("Hearing Updated");
 			} catch (error) {
 				console.log(error);
 			}
@@ -86,23 +87,39 @@ const UpdateHearing = ({
 		};
 		const collectionRef = collection(db, "activity-logs");
 		const activityRef = doc(collectionRef);
-		formData?.hearingIsClosed !== undefined
-			? onCloseCase(formData?.hearingIsClosed, formData?.hearingImprisonment)
-			: null;
 
 		if (formData?.hearingIsClosed === undefined) {
+			console.log("Hearing closed undefined");
+			onCloseCase("1", 0, formData.hearingStatus);
 			onUpdateHearing(data, activityRef, newActivity);
 		} else if (
 			formData?.hearingIsClosed !== undefined &&
-			formData.hearingIsClosed.toString() === "true"
+			Number(formData.hearingIsClosed) === 0
 		) {
+			console.log("Close case");
+			onCloseCase(
+				formData?.hearingIsClosed,
+				formData?.hearingImprisonment,
+				formData.hearingStatus
+			);
 			onUpdateHearing(data, activityRef, newActivity);
 		} else if (
 			formData?.hearingIsClosed !== undefined &&
-			formData.hearingIsClosed.toString() === "false"
+			Number(formData.hearingIsClosed) === 1 &&
+			formData.hearingStatus.toLowerCase() !== "completed"
 		) {
+			console.log("Not completed and closed");
+			onCloseCase("1", 0, formData.hearingStatus);
+			onUpdateHearing(data, activityRef, newActivity);
+		} else if (
+			formData?.hearingIsClosed !== undefined &&
+			Number(formData.hearingIsClosed) === 1 &&
+			formData.hearingStatus.toLowerCase() === "completed"
+		) {
+			console.log("Completed but not closed");
 			localStorage.courtHearingData = JSON.stringify(formData);
 			localStorage.courtHearingId = selectedHearing.hearingID;
+			localStorage.docketId = caseDetails.id;
 			showCourtHearing();
 		}
 	};
@@ -221,17 +238,13 @@ const UpdateHearing = ({
 							<MySelectField
 								myControl={control}
 								myOptions={[
-									{ label: "Yes", value: true },
-									{ label: "No", value: false },
+									{ label: "Yes", value: "0" },
+									{ label: "No", value: "1" },
 								]}
 								fieldName="hearingIsClosed"
 								fieldLabel="Close Case?"
 								fieldRules={fieldRules.requiredRule}
-								defaultValue={
-									caseDetails?.is_closed !== undefined
-										? caseDetails?.is_closed
-										: ""
-								}
+								defaultValue={caseDetails.is_closed ? "0" : "1"}
 								setFieldValue={setValue}
 							/>
 							<MyInputField

@@ -16,27 +16,28 @@ const OfficeDocumentsTable = ({ officeDocuments }: any) => {
 					</tr>
 				</thead>
 				<tbody className="text-gray-600 text-sm">
-					{officeDocuments.map((doc: any) => {
-						return (
-							<tr
-								key={doc.id}
-								className="border-b border-gray-200 hover:bg-gray-50"
-							>
-								<td className="py-3 px-6 text-left whitespace-nowrap">
-									{doc.case__case_no}
-								</td>
-								<td className="py-3 px-6 text-left whitespace-nowrap">
-									{doc.case__crime_type.includes("[")
-										? doc.case__crime_type.slice(1, -1).replace(/['"]+/g, "")
-										: doc.case__crime_type}
-								</td>
-								<td className="py-3 px-6 text-left whitespace-nowrap">
-									{moment(doc.date_received).format("LL")}
-								</td>
-								<td className="py-3 px-6 text-left whitespace-nowrap">
-									{doc.status}
-								</td>
-								{/* <td className="py-3 px-6 text-center">
+					{officeDocuments.length > 0 ? (
+						officeDocuments.map((doc: any) => {
+							return (
+								<tr
+									key={doc.id}
+									className="border-b border-gray-200 hover:bg-gray-50"
+								>
+									<td className="py-3 px-6 text-left whitespace-nowrap">
+										{doc.case__case_no}
+									</td>
+									<td className="py-3 px-6 text-left whitespace-nowrap">
+										{doc.case__crime_type.includes("[")
+											? doc.case__crime_type.slice(1, -1).replace(/['"]+/g, "")
+											: doc.case__crime_type}
+									</td>
+									<td className="py-3 px-6 text-left whitespace-nowrap">
+										{moment(doc.date_received).format("LL")}
+									</td>
+									<td className="py-3 px-6 text-left whitespace-nowrap">
+										{doc.status}
+									</td>
+									{/* <td className="py-3 px-6 text-center">
 									<div className="flex items-center justify-center gap-x-5">
 										<div className="w-4 mr-2 transform hover:text-purple-600 hover:scale-110 cursor-pointer">
 											<svg
@@ -56,9 +57,14 @@ const OfficeDocumentsTable = ({ officeDocuments }: any) => {
 										</div>
 									</div>
 								</td> */}
-							</tr>
-						);
-					})}
+								</tr>
+							);
+						})
+					) : (
+						<tr>
+							<td colSpan={5}>No data available</td>
+						</tr>
+					)}
 				</tbody>
 			</table>
 		</div>
