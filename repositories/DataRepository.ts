@@ -112,6 +112,16 @@ export default class DataRepository {
         })
         return data
     }
+    // Get All Detainees
+    async GetAllDetainees(jwt_token: string) {
+        const { data } = await backendConn.get('all_detainees/', {
+            headers : {
+                Authorization : `Bearer ${ jwt_token }`,
+                'Content-Type' : 'aplication/json'
+            }
+        })
+        return JSON.parse(data)
+    }
     // Get PNP Detainees
     async GetPNPDetainees(jwt_token: string) {
         const { data } = await backendConn.get('pnp_detainees/', {

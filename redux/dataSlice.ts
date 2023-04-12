@@ -17,6 +17,7 @@ interface DataShape {
     civilCaseList: any;
     courtHearingList: any;
     upcomingHearingList: any;
+    allRecords: any;
     pnpRecords: any;
     bjmpRecords: any;
     bucorRecords: any;
@@ -52,6 +53,7 @@ const initialState: DataShape = {
     civilCaseList : [],
     courtHearingList : [],
     upcomingHearingList : [],
+    allRecords : [],
     pnpRecords : [],
     bjmpRecords : [],
     bucorRecords : [],
@@ -254,6 +256,15 @@ export const deleteDocket = createAsyncThunk(
     async (docket_id: number) => {
         const dataRepo = new DataRepository()
         await dataRepo.DeleteDocket(localStorage.jwt_token, docket_id)
+    }
+)
+
+// DETAINEE THUNKS
+export const getAllDetainees = createAsyncThunk(
+    'data/getAllDetainees',
+    async () => {
+        const dataRepo = new DataRepository()
+        return await dataRepo.GetAllDetainees(localStorage.jwt_token)
     }
 )
 
@@ -640,6 +651,16 @@ const dataSlice = createSlice({
             return { ...state, dataLoading : false }
         })
         // DETAINEES
+        // Get All Detainees
+        builder.addCase(getAllDetainees.pending, (state) => {
+            return { ...state, dataLoading : true }
+        })
+        builder.addCase(getAllDetainees.fulfilled, (state, action) => {
+            return { ...state, dataLoading : false, allRecords : action.payload }
+        })
+        builder.addCase(getAllDetainees.rejected, (state) => {
+            return { ...state, dataLoading : false }
+        })
         // Get PNP Detainees
         builder.addCase(getPNPDetainees.pending, (state) => {
             return { ...state, dataLoading : true }

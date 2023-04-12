@@ -441,114 +441,42 @@ const AdminSideNav = () => {
 				</p>
 			</div>
 			{/* CUSTODIES */}
-			<div className="w-full flex flex-col gap-y-3">
-				{/*  */}
-				<div
-					className={`w-full flex justify-between items-center px-5 py-3 ${
-						router.pathname.includes("custody")
-							? "bg-purple-50"
-							: "bg-transparent"
-					} rounded-lg hover:cursor-pointer`}
-					onClick={custodiesClicked}
+			<div
+				className={`w-full flex items-center gap-x-5 px-5 py-3 ${
+					router.pathname.includes("custodies")
+						? "bg-purple-50"
+						: "bg-transparent"
+				} rounded-lg hover:cursor-pointer`}
+				onClick={() => router.push("/admin/custodies")}
+			>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					preserveAspectRatio="xMidYMid meet"
+					viewBox="0 0 24 24"
+					className={`w-5 h-5 ${
+						router.pathname.includes("custodies")
+							? "text-purple-600"
+							: "text-gray-700"
+					}`}
 				>
-					<div className="w-full flex gap-x-5">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							preserveAspectRatio="xMidYMid meet"
-							viewBox="0 0 24 24"
-							className={`w-5 h-5 ${
-								router.pathname.includes("custody")
-									? "text-purple-600"
-									: "text-gray-700"
-							}`}
-						>
-							<path
-								fill="none"
-								stroke="currentColor"
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								strokeWidth="1.5"
-								d="M18 4v16M14 4v16M6 4v5m0 6v5m4-16v5m1 0H5v6h6zm-1 6v5m-2-8h-.01"
-							/>
-						</svg>
-						<p
-							className={`font-medium ${
-								router.pathname.includes("custody")
-									? "text-purple-600"
-									: "text-gray-700"
-							} text-sm`}
-						>
-							Custodies
-						</p>
-					</div>
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						className={`text-right w-4 h-4 ${
-							router.pathname.includes("custody")
-								? "text-purple-600"
-								: "text-gray-700"
-						} ${custodiesDropDown ? "rotate-180" : "rotate-0"}`}
+					<path
 						fill="none"
-						viewBox="0 0 24 24"
 						stroke="currentColor"
-						strokeWidth={1.5}
-					>
-						<path
-							strokeLinecap="round"
-							strokeLinejoin="round"
-							d="M19 9l-7 7-7-7"
-						/>
-					</svg>
-				</div>
-				{/* CUSTODIES ITEMS */}
-				{custodiesDropDown ? (
-					<div className="flex flex-col gap-y-1">
-						<div
-							className={`w-full pl-[60px] py-3 bg-transparent rounded-lg hover:cursor-pointer`}
-							onClick={() => isItemClicked("/admin/pnp_custody")}
-						>
-							<p
-								className={`font-medium ${
-									router.pathname === "/admin/pnp_custody"
-										? "text-purple-600"
-										: "text-gray-700"
-								} text-xs`}
-							>
-								PNP
-							</p>
-						</div>
-						{/*  */}
-						<div
-							className={`w-full pl-[60px] py-3 bg-transparent rounded-lg hover:cursor-pointer`}
-							onClick={() => isItemClicked("/admin/bjmp_custody")}
-						>
-							<p
-								className={`font-medium ${
-									router.pathname === "/admin/bjmp_custody"
-										? "text-purple-600"
-										: "text-gray-700"
-								} text-xs`}
-							>
-								BJMP
-							</p>
-						</div>
-						<div
-							className={`w-full pl-16 py-3 bg-transparent rounded-lg hover:cursor-pointer`}
-							onClick={() => isItemClicked("/admin/bucor_custody")}
-						>
-							<p
-								className={`font-medium ${
-									router.pathname === "/admin/bucor_custody"
-										? "text-purple-600"
-										: "text-gray-700"
-								} text-xs`}
-							>
-								BuCor
-							</p>
-						</div>
-					</div>
-				) : null}
-				{/*  */}
+						strokeLinecap="round"
+						strokeLinejoin="round"
+						strokeWidth="1.5"
+						d="M18 4v16M14 4v16M6 4v5m0 6v5m4-16v5m1 0H5v6h6zm-1 6v5m-2-8h-.01"
+					/>
+				</svg>
+				<p
+					className={`font-medium ${
+						router.pathname.includes("custodies")
+							? "text-purple-600"
+							: "text-gray-700"
+					} text-sm`}
+				>
+					Custodies
+				</p>
 			</div>
 			{/* CLUSTERING */}
 			<div

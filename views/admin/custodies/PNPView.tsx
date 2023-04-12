@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import PNPTable from "./PNPTable";
 import {
 	deleteDetainee,
+	getAllDetainees,
 	getPNPDetainees,
 	getAllDockets,
 } from "../../../redux/dataSlice";
@@ -21,7 +22,7 @@ import _ from "lodash";
 
 const PNPView = () => {
 	const dispatch = useAppDispatch();
-	const { dataLoading, pnpRecords, allDocketList } = useAppSelector(
+	const { dataLoading, allDocketList, allRecords } = useAppSelector(
 		(state) => state.dataState
 	);
 
@@ -48,14 +49,25 @@ const PNPView = () => {
 		setSuccessText,
 	} = useModalIDs();
 	const [searchInput, setSearchInput] = useState("");
-	const [filteredPNP, setFilteredPNP] = useState([]);
+	const [filteredCustody, setFilteredCustody] = useState([]);
 
 	useEffect(() => {
-		dispatch(getPNPDetainees()).then((res: any) => {
-			setFilteredPNP(res.payload);
+		dispatch(getAllDetainees()).then((res: any) => {
+			setFilteredCustody(res.payload);
 		});
 		dispatch(getAllDockets());
 	}, []);
+
+	const custodySelection = (detained: string): void => {
+		if (detained.toLowerCase() === "all") {
+			setFilteredCustody(allRecords);
+			return;
+		}
+		const filteredDetainees = allRecords.filter(
+			(record: any) => record.detained_in === detained
+		);
+		setFilteredCustody(filteredDetainees);
+	};
 
 	const onViewRecord = (criminal_record: any) => {
 		setSelectedObject(criminal_record);
@@ -63,7 +75,9 @@ const PNPView = () => {
 	};
 
 	const onSubmitNewRecord = useCallback(() => {
-		dispatch(getPNPDetainees()).then((res: any) => setFilteredPNP(res.payload));
+		dispatch(getAllDetainees()).then((res: any) =>
+			setFilteredCustody(res.payload)
+		);
 		setSuccessText("Creation of new pnp record is successful");
 		setShowAddModal(false);
 		setShowSuccessModal(true);
@@ -74,7 +88,7 @@ const PNPView = () => {
 
 	const onShowUpdateModal = (record_id: number) => {
 		setSelectedID(record_id);
-		const record = pnpRecords.find(
+		const record = allRecords.find(
 			(pnp_record: any) => pnp_record.id === record_id
 		);
 		setSelectedObject({
@@ -96,7 +110,9 @@ const PNPView = () => {
 	};
 
 	const onUpdateHearing = () => {
-		dispatch(getPNPDetainees()).then((res: any) => setFilteredPNP(res.payload));
+		dispatch(getAllDetainees()).then((res: any) =>
+			setFilteredCustody(res.payload)
+		);
 		setSuccessText("Updating of pnp record is successful");
 		setShowSuccessModal(true);
 		setShowEditModal(false);
@@ -113,8 +129,8 @@ const PNPView = () => {
 	const onDeleteRecord = useCallback(() => {
 		setSuccessText("Deletion of pnp record is successful");
 		dispatch(deleteDetainee(selectedID)).then(() => {
-			dispatch(getPNPDetainees()).then((res: any) =>
-				setFilteredPNP(res.payload)
+			dispatch(getAllDetainees()).then((res: any) =>
+				setFilteredCustody(res.payload)
 			);
 			setShowWarningModal(false);
 			setShowDeleteModal(true);
@@ -128,12 +144,12 @@ const PNPView = () => {
 		e.preventDefault();
 		setSearchInput(e.target.value);
 		if (e.target.value.length > 0) {
-			let filtered_values: any = _.filter(pnpRecords, function (pnp: any) {
+			let filtered_values: any = _.filter(allRecords, function (pnp: any) {
 				return pnp.name.toLowerCase().includes(e.target.value.toLowerCase());
 			});
-			setFilteredPNP(filtered_values);
+			setFilteredCustody(filtered_values);
 		} else {
-			setFilteredPNP(pnpRecords);
+			setFilteredCustody(allRecords);
 		}
 	};
 
@@ -141,15 +157,15 @@ const PNPView = () => {
 		<div className="flex flex-col gap-y-5 font-mont text-gray-700">
 			<ViewRecord
 				isShow={viewModal}
-				viewTitle="PNP Custody"
+				viewTitle="Custody"
 				viewText="View pnp record details"
 				onClose={() => setViewModal(false)}
 				selectedRecord={selectedObject}
 			/>
 			<AddRecord
 				isShow={showAddModal}
-				addTitle="PNP Custody"
-				addText="Create new pnp record"
+				addTitle="Custody"
+				addText="Create new custody record"
 				detainedIn="pnp"
 				onConfirm={() => onSubmitNewRecord()}
 				onCancel={() => setShowAddModal(false)}
@@ -157,35 +173,35 @@ const PNPView = () => {
 			/>
 			<UpdateRecord
 				isShow={showEditModal}
-				editTitle="PNP Custody"
-				editText="Update pnp record"
+				editTitle="Custody"
+				editText="Update custody record"
 				onConfirm={() => onUpdateHearing()}
 				onCancel={() => setShowEditModal(false)}
 				selectedRecord={selectedObject}
 			/>
 			<SuccessModal
 				isShow={showSuccessModal}
-				successTitle="PNP Custody"
+				successTitle="Custody"
 				successText={successText}
 				onConfirm={() => setShowSuccessModal(false)}
 			/>
 			<WarningModal
 				isShow={showWarningModal}
-				warningText="pnp record"
+				warningText="record"
 				onConfirm={() => onDeleteRecord()}
 				onCancel={() => setShowWarningModal(false)}
 			/>
 			<DeletedModal
 				isShow={showDeleteModal}
-				deletedTitle="PNP Custody"
+				deletedTitle="Custody"
 				deletedText={successText}
 				onConfirm={() => setShowDeleteModal(false)}
 			/>
-			<AdminBreadCrumbs activeText="PNP" />
+			<AdminBreadCrumbs activeText="Custodies" />
 			<div className="w-full bg-white font-mont flex flex-col gap-y-5 text-gray-700 p-5 shadow border-b border-gray-200 rounded-lg">
 				{/*  */}
 				<div className="w-full flex justify-between">
-					<h4 className="text-xl font-black tracking-wider">PNP Custody</h4>
+					<h4 className="text-xl font-black tracking-wider">Custodies</h4>
 					<div className="flex flex-row gap-x-3">
 						<AddNewButton
 							btnText="New Record"
@@ -215,11 +231,24 @@ const PNPView = () => {
 				)}
 				{!dataLoading && (
 					<PNPTable
-						pnpRecords={filteredPNP}
+						detaineeRecords={filteredCustody}
 						onViewRecord={(record: any) => onViewRecord(record)}
 						onShowWarning={(record_id: number) => onShowWarningModal(record_id)}
 						onShowEdit={(record_id: number) => onShowUpdateModal(record_id)}
 					/>
+				)}
+				{allRecords.length > 0 && (
+					<div className="w-full flex justify-end">
+						<select
+							className="w-44 py-1 px-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent appearance-none"
+							onChange={(e: any) => custodySelection(e.target.value)}
+						>
+							<option value="all">Show All</option>
+							<option value="pnp">PNP</option>
+							<option value="bjmp">BJMP</option>
+							<option value="bucor">Bucor</option>
+						</select>
+					</div>
 				)}
 			</div>
 		</div>
