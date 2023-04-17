@@ -6,6 +6,21 @@ const CourtHearingsTable = ({
 	onShowWarning,
 	onShowEdit,
 }: any) => {
+	const getStatusColor = (status: string) => {
+		let statusColor = "";
+		const currentStatus = status.toLowerCase();
+		if (currentStatus === "completed") {
+			statusColor = "bg-cyan-600";
+		}
+		if (currentStatus === "canceled") {
+			statusColor = "bg-red-500";
+		}
+		if (status.toLowerCase() === "pending") {
+			statusColor = "bg-yellow-400";
+		}
+		return statusColor;
+	};
+
 	return (
 		<div className="overflow-x-auto">
 			<table className="min-w-max w-full table-auto">
@@ -13,6 +28,7 @@ const CourtHearingsTable = ({
 					<tr className="bg-gray-100 text-gray-600 text-sm leading-normal">
 						<th className="py-3 px-6 text-left">Case No.</th>
 						<th className="py-3 px-6 text-left">Crime Type</th>
+						<th className="py-3 px-6 text-left">Hearing Type</th>
 						<th className="py-3 px-6 text-left">Hearing Schedule</th>
 						<th className="py-3 px-6 text-left">Start Time</th>
 						<th className="py-3 px-6 text-center">Actions</th>
@@ -34,6 +50,14 @@ const CourtHearingsTable = ({
 												.slice(1, -1)
 												.replace(/['"]+/g, "")
 										: hearing.case__crime_type}
+								</td>
+								<td className="py-3 px-6 text-left whitespace-nowrap flex items-center">
+									<span
+										className={`w-1 h-1 rounded-full p-1 mr-1 ${getStatusColor(
+											hearing.status
+										)}`}
+									></span>
+									{hearing.hearing_type}
 								</td>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
 									{moment(hearing.hearing_schedule).format("LL")}

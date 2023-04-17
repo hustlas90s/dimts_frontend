@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { deleteDocket, getPastDockets } from "../../../redux/dataSlice";
+import {
+	deleteDocket,
+	getPastDockets,
+	newDockets,
+} from "../../../redux/dataSlice";
 import MoonLoader from "react-spinners/MoonLoader";
 import DocketListTable from "./DocketListTable";
 import AdminBreadCrumbs from "../../../components/admin/AdminBreadCrumbs";
@@ -12,6 +16,10 @@ import PrintButton from "../../../components/PrintButton";
 import moment from "moment";
 import { ExportToCsv } from "export-to-csv";
 import _ from "lodash";
+import ImportButton from "../../../components/ImportButton";
+import CommonModal from "../../../components/CommonModal";
+import { read, utils } from "xlsx";
+import { useDropzone } from "react-dropzone";
 
 const CitizenListView = () => {
 	const dispatch = useAppDispatch();
@@ -25,8 +33,6 @@ const CitizenListView = () => {
 		showAddModal,
 		setShowAddModal,
 		showSuccessModal,
-		showEditModal,
-		setShowEditModal,
 		setShowSuccessModal,
 		showWarningModal,
 		setShowWarningModal,
@@ -45,6 +51,72 @@ const CitizenListView = () => {
 	const [filteredDocket, setFilteredDocket] = useState<any>([]);
 	const [filterWithType, setFilterWithType] = useState<any>([]);
 	const [isSolved, setIsSolved] = useState(0);
+	const [importedData, setImportedData] = useState<any>([]);
+	const [importedFileName, setImportedFileName] = useState<any>("");
+	const [showLoading, setShowLoading] = useState(false);
+
+	const onUploadExcel: any = useCallback((uploadedFile: any) => {
+		const file = uploadedFile;
+		const reader = new FileReader();
+
+		reader.onload = (e: any) => {
+			const data = new Uint8Array(e.target.result);
+			const workbook = read(data, { type: "array" });
+			const sheetName = workbook.SheetNames[0];
+			const worksheet = workbook.Sheets[sheetName];
+			const json = utils.sheet_to_json(worksheet);
+			const formattedJson = json.map((data: any) => {
+				return {
+					type_of_case: data.type_of_case,
+					case_no: data.case_no,
+					document_title: data.document_title,
+					case_title: data.case_title,
+					crime_type: data.crime_type,
+					received_date: moment(data.received_date).format("YYYY-MM-DD"),
+					raffled_court: data.raffled_court,
+					judge_assigned: data.judge_assigned,
+					qr_code: data.qr_code,
+					qr_code_tracker: data.qr_code_tracker,
+					is_closed: true,
+					is_solved: data.is_solved,
+				};
+			});
+
+			// Use the json data in your application
+			setImportedData(formattedJson);
+			console.log("Excel file data: ", formattedJson);
+		};
+
+		reader.readAsArrayBuffer(file);
+	}, []);
+
+	const onDropDocument = useCallback(
+		(files: any) => {
+			console.log("Dropped doc: ", files);
+			setImportedFileName(files[0].path);
+			onUploadExcel(files[0]);
+		},
+		[onUploadExcel]
+	);
+
+	const {
+		acceptedFiles: acceptedDocumentFiles,
+		getRootProps: getDocumentRootProps,
+		getInputProps: getDocumentInputProps,
+	} = useDropzone({
+		accept: {
+			"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [],
+			"application/vnd.ms-excel": [],
+			"text/csv": [],
+		},
+		onDrop: onDropDocument,
+	});
+
+	const handleRemoveDocument = () => {
+		acceptedDocumentFiles.pop();
+		setImportedData([]);
+		setImportedFileName("");
+	};
 
 	useEffect(() => {
 		dispatch(getPastDockets()).then((res: any) =>
@@ -148,8 +220,109 @@ const CitizenListView = () => {
 		csvCases.length ? csvExporter.generateCsv(csvCases) : null;
 	};
 
+	const onCompleteImport = () => {
+		setTimeout(() => {
+			setShowLoading(false);
+			setShowAddModal(false);
+			setImportedData([]);
+			setImportedFileName("");
+			setTimeout(() => {
+				location.reload();
+			}, 500);
+		}, 1000);
+	};
+
+	const onSubmitImport = () => {
+		setShowLoading(true);
+		dispatch(newDockets(importedData)).then(() => {
+			onCompleteImport();
+		});
+	};
+
 	return (
 		<div className="flex flex-col gap-y-5 font-mont text-gray-700">
+			<CommonModal
+				isShow={showAddModal}
+				commonTitle="Docket Case"
+				commonText="Import docket data"
+				submitButtonText="Submit"
+				onSubmitModal={onSubmitImport}
+				onCloseModal={() => setShowAddModal(false)}
+				loadingState={showLoading}
+			>
+				<div className="w-96 flex justify-center items-center">
+					{/* <div className="flex flex-col gap-y-1">
+						<label className="font-semibold text-sm text-gray-700">
+							Excel File
+						</label>
+						<input
+							type="file"
+							id="docketXlsx"
+							name="docketXlsx"
+							className="bg-gray-100 px-3 py-1 w-full focus:outline-none border border-gray-200 focus:border-purple-400 rounded-lg appearance-none"
+							onChange={onUploadExcel}
+						/>
+					</div> */}
+					{importedData.length ? (
+						<div className="w-full relative bg-gray-100 border-2 border-dashed border-gray-400 h-48 rounded-lg flex justify-center items-center">
+							<button
+								type="button"
+								onClick={handleRemoveDocument}
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									className="absolute h-6 w-6 top-5 right-5 text-red-500"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke="currentColor"
+									strokeWidth={2}
+								>
+									<path
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+									/>
+								</svg>
+							</button>
+							<div className="flex items-center gap-x-2">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									className="h-6 w-6 text-purple-600"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke="currentColor"
+									strokeWidth={2}
+								>
+									<path
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+									/>
+								</svg>
+								<p className="font-int text-xs text-purple-600">
+									{importedFileName}
+								</p>
+							</div>
+						</div>
+					) : (
+						<div
+							className={`w-full relative bg-gray-100 border-2 border-dashed border-gray-400 h-48 rounded-lg flex justify-center items-center`}
+							{...getDocumentRootProps()}
+						>
+							<input
+								{...getDocumentInputProps()}
+								className="w-full h-full"
+							/>
+							<p className="font-int text-sm text-gray-600 font-light">
+								Drop files here or{" "}
+								<span className="text-purple-600 font-medium cursor-pointer">
+									browse
+								</span>
+							</p>
+						</div>
+					)}
+				</div>
+			</CommonModal>
 			<ViewDocket
 				isShow={viewModal}
 				viewTitle="Docket Case"
@@ -169,6 +342,7 @@ const CitizenListView = () => {
 				<div className="w-full flex justify-between">
 					<h4 className="text-xl font-black tracking-wider">Docket Cases</h4>
 					<div className="flex gap-x-5 items-center">
+						<ImportButton onClickImport={() => setShowAddModal(true)} />
 						<PrintButton onClickPrint={() => onExportCases()} />
 						<input
 							type="text"

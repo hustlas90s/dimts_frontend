@@ -117,6 +117,7 @@ const CourtHearingsView = () => {
 			hearingEndTime: hearing.end_time,
 			hearingStatus: hearing.status,
 			hearingCaseNo: hearing.case__case_no,
+			hearingAllowedTypes: hearing.allowed_hearing_types,
 		});
 		setShowEditModal(true);
 	};

@@ -31,6 +31,11 @@ const UpdateHearing = ({
 	const dispatch = useAppDispatch();
 	const [caseDetails, setCaseDetails] = useState<any>();
 
+	const allowedTypes =
+		selectedHearing?.hearingAllowedTypes !== undefined
+			? selectedHearing?.hearingAllowedTypes.split(",")
+			: [];
+
 	const onCloseCase = (
 		hearingIsClosed: any,
 		hearingImprisonment: any,
@@ -66,6 +71,7 @@ const UpdateHearing = ({
 	};
 
 	const onSubmit = (formData: any) => {
+		console.log("Hearing type: ", formData.hearingType);
 		if (
 			Object.entries(selectedHearing).toString() ===
 			Object.entries(formData).toString()
@@ -185,14 +191,17 @@ const UpdateHearing = ({
 					placeHolder=""
 					setFieldValue={setValue}
 				/>
+				{/* [
+					{ label: "Hearing", value: "Hearing" },
+					{ label: "Arraignment", value: "Arraignment" },
+					{ label: "Initial Trial", value: "Initial Trial" },
+					{ label: "Last Court Action", value: "Last Court Action" },
+				] */}
 				<MySelectField
 					myControl={control}
-					myOptions={[
-						{ label: "Hearing", value: "Hearing" },
-						{ label: "Arraignment", value: "Arraignment" },
-						{ label: "Initial Trial", value: "Initial Trial" },
-						{ label: "Last Court Action", value: "Last Court Action" },
-					]}
+					myOptions={allowedTypes.map((hearing_type: string) => {
+						return { label: hearing_type, value: hearing_type };
+					})}
 					fieldName="hearingType"
 					fieldLabel="Hearing Type"
 					fieldRules={fieldRules.requiredRule}
@@ -244,7 +253,7 @@ const UpdateHearing = ({
 								fieldName="hearingIsClosed"
 								fieldLabel="Close Case?"
 								fieldRules={fieldRules.requiredRule}
-								defaultValue={caseDetails.is_closed ? "0" : "1"}
+								defaultValue={caseDetails?.is_closed ? "0" : "1"}
 								setFieldValue={setValue}
 							/>
 							<MyInputField

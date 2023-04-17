@@ -205,6 +205,16 @@ export default class DataRepository {
         })
         return { formattedCluster : clusterData, formattedYears : dbscanCluster.years }
     }
+    // Get Cluster Cases
+    async GetClusterCases(jwt_token: string, years: number) {
+        const {data} = await backendConn.get(`cluster_cases/${years}`, {
+            headers : {
+                Authorization : `Bearer ${ jwt_token }`,
+                'Content-Type' : 'aplication/json'
+            }
+        })
+        return JSON.parse(data)
+    }
     // Get Court Proceedings
     async GetCourtProceedings(jwt_token: string) {
         const { data } = await backendConn.get('court_proceedings/', {
@@ -299,6 +309,14 @@ export default class DataRepository {
     async NewCaseCitizens(jwt_token: string, formData: any) { 
         console.log('NewCaseCitizens data: ', formData)
         const { data } = await backendConn.post('new_case_citizens/', formData, {
+            headers : {
+                Authorization : `Bearer ${ jwt_token }`
+            }
+        })
+        return data
+    }
+    async NewDockets(jwt_token: string, formData: any) { 
+        const { data } = await backendConn.post('new_dockets/', formData, {
             headers : {
                 Authorization : `Bearer ${ jwt_token }`
             }

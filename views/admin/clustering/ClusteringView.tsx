@@ -17,14 +17,23 @@ import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import {
 	getClustering,
 	fetchCrimeTypesSummary,
+	getClusterCases,
 } from "../../../redux/dataSlice";
 import { MoonLoader } from "react-spinners";
 import chroma from "chroma-js";
+import CommonModal from "../../../components/CommonModal";
 
 const ClusteringView = () => {
 	const dispatch = useAppDispatch();
-	const { dataLoading, clusterList, clusterYears, crimeTypesSummaryList } =
-		useAppSelector((state) => state.dataState);
+	const {
+		dataLoading,
+		clusterList,
+		clusterYears,
+		crimeTypesSummaryList,
+		clusterCases,
+	} = useAppSelector((state) => state.dataState);
+
+	const [showCommonModal, setShowCommonModal] = useState(false);
 
 	const baseColor = "#4c1d95";
 	const numberOfColors = crimeTypesSummaryList.length;
@@ -42,17 +51,72 @@ const ClusteringView = () => {
 		}
 	);
 
-	console.log("Colors: ", crimeTypeSummaryListWithColors);
+	// console.log("Colors: ", crimeTypeSummaryListWithColors);
 
 	useEffect(() => {
 		dispatch(getClustering());
-		dispatch(fetchCrimeTypesSummary()).then((res: any) =>
-			console.log("Crime types: ", res.payload)
-		);
+		dispatch(fetchCrimeTypesSummary());
+		// .then((res: any) =>
+		// 	console.log("Crime types: ", res.payload)
+		// );
 	}, []);
+
+	const onClickCluster = (years: number) => {
+		if (years !== 0) {
+			dispatch(getClusterCases(years)).then(() => {
+				setShowCommonModal(true);
+			});
+		}
+	};
 
 	return (
 		<div className="flex flex-col gap-y-5 font-mont text-gray-700">
+			{showCommonModal && (
+				<CommonModal
+					isShow={showCommonModal}
+					commonText=""
+					commonTitle="Cluster Cases"
+					submitButtonText=""
+					onSubmitModal={() => console.log("Oten")}
+					onCloseModal={() => setShowCommonModal(false)}
+				>
+					<div className="w-96 flex flex-col gap-y-5 text-gray-700 font-mont py-5 border-t border-gray-200">
+						{clusterCases.map((cluster: any, index: number) => {
+							return (
+								<div
+									key={cluster.id}
+									className={`w-full flex flex-col gap-y-3 ${
+										clusterCases.length === index + 1
+											? ""
+											: "border-b border-gray-200 py-3"
+									}`}
+								>
+									<div className="flex flex-col justify-center items-center">
+										<img
+											src={cluster?.qr_code ?? ""}
+											className="w-auto h-56"
+											alt="QRcode"
+										/>
+										<p className="text-sm font-medium">
+											{cluster?.qr_code_tracker ?? ""}
+										</p>
+									</div>
+									<div className="flex flex-col">
+										<h4 className="font-normal text-sm">
+											Crime & Imprisonment:
+										</h4>
+										<p className="text-sm font-bold">
+											{cluster.crime_type.replaceAll(/["\[\]]+/g, "")}
+											{" - "}
+											<span>{cluster.imprisonment_span} years</span>
+										</p>
+									</div>
+								</div>
+							);
+						})}
+					</div>
+				</CommonModal>
+			)}
 			<AdminBreadCrumbs activeText="DBSCAN Clustering" />
 			<div className="w-full bg-white font-mont flex flex-col gap-y-5 text-gray-700 p-5 shadow border-b border-gray-200 rounded-lg">
 				<h4 className="text-xl font-black tracking-wider">DBSCAN Clustering</h4>
@@ -104,6 +168,7 @@ const ClusteringView = () => {
 								// name="Custom Name"
 								data={clusterList}
 								fill="#8884d8"
+								onClick={(data: any) => onClickCluster(data.payload.y)}
 							/>
 						</ScatterChart>
 					</ResponsiveContainer>

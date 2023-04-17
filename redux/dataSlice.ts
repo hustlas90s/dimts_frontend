@@ -26,6 +26,7 @@ interface DataShape {
     recentDocuments: any;
     clusterList: any;
     clusterYears: any;
+    clusterCases: any;
     courtProceedingsList: any;
     caseProceedingsList: any;
     activityLogs: any;
@@ -62,6 +63,7 @@ const initialState: DataShape = {
     recentDocuments : [],
     clusterList : [],
     clusterYears : [],
+    clusterCases : [],
     courtProceedingsList : [],
     caseProceedingsList : [],
     activityLogs : [],
@@ -243,6 +245,14 @@ export const createNewDocket = createAsyncThunk(
     }
 )
 
+export const newDockets = createAsyncThunk(
+    'data/newDockets',
+    async (formData: any) => {
+        const dataRepo = new DataRepository()
+        await dataRepo.NewDockets(localStorage.jwt_token, formData)
+    }
+)
+
 export const updateDocket = createAsyncThunk(
     'data/updateDocket',
     async (args: {formData: any, docket_id: number}) => {
@@ -380,6 +390,14 @@ export const getClustering = createAsyncThunk(
     async () => {
         const dataRepo = new DataRepository()
         return await dataRepo.GetClustering(localStorage.jwt_token)
+    }
+)
+
+export const getClusterCases = createAsyncThunk(
+    'data/getClusterCases',
+    async (years: number) => {
+        const dataRepo = new DataRepository()
+        return await dataRepo.GetClusterCases(localStorage.jwt_token, years)
     }
 )
 
@@ -757,6 +775,19 @@ const dataSlice = createSlice({
         })
         builder.addCase(getClustering.rejected, (state) => {
             return { ...state, dataLoading : false }
+        })
+        // Get Cluster Cases
+        builder.addCase(getClusterCases.pending, (state) => {
+            return { ...state }
+        })
+        builder.addCase(getClusterCases.fulfilled, (state, action) => {
+            return { 
+                ...state, 
+                clusterCases : action.payload,
+            }
+        })
+        builder.addCase(getClusterCases.rejected, (state) => {
+            return { ...state }
         })
         // COURT PROCEEDINGS
         // Get Court Proceedings
