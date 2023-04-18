@@ -79,12 +79,20 @@ const UpdateHearing = ({
 			onCancel();
 			return;
 		}
+		const hearingTypeIndex = allowedTypes.indexOf(formData.hearingType);
+		const newAllowedTypesArr =
+			formData.hearingStatus === "Completed"
+				? allowedTypes.filter(
+						(_: any, index: number) => index !== hearingTypeIndex
+				  )
+				: allowedTypes;
 		const data = {
 			hearing_schedule: formData.hearingSchedule,
 			hearing_type: formData.hearingType,
 			start_time: formData.hearingStartTime,
 			end_time: formData.hearingEndTime,
 			status: formData.hearingStatus,
+			allowed_hearing_types: newAllowedTypesArr.join(","),
 		};
 		const newActivity = {
 			activity_description: "New case forwarded to docket case",
@@ -205,7 +213,13 @@ const UpdateHearing = ({
 					fieldName="hearingType"
 					fieldLabel="Hearing Type"
 					fieldRules={fieldRules.requiredRule}
-					defaultValue={selectedHearing.hearingType}
+					defaultValue={
+						allowedTypes.find(
+							(type: any) => type === selectedHearing.hearingType
+						) !== undefined
+							? selectedHearing.hearingType
+							: ""
+					}
 					setFieldValue={setValue}
 				/>
 				<MyInputField
@@ -238,7 +252,13 @@ const UpdateHearing = ({
 					fieldName="hearingStatus"
 					fieldLabel="Status"
 					fieldRules={fieldRules.requiredRule}
-					defaultValue={selectedHearing.hearingStatus}
+					defaultValue={
+						allowedTypes.find(
+							(type: any) => type === selectedHearing.hearingType
+						) !== undefined
+							? selectedHearing.hearingStatus
+							: ""
+					}
 					setFieldValue={setValue}
 				/>
 				{hearingType.toLowerCase() === "last court action" &&
