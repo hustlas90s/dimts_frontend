@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, Fragment } from "react";
 import AdminBreadCrumbs from "../../../components/admin/AdminBreadCrumbs";
 import {
 	ResponsiveContainer,
@@ -18,10 +18,12 @@ import {
 	getClustering,
 	fetchCrimeTypesSummary,
 	getClusterCases,
+	getClusterCrimes,
 } from "../../../redux/dataSlice";
 import { MoonLoader } from "react-spinners";
 import chroma from "chroma-js";
 import CommonModal from "../../../components/CommonModal";
+import { Disclosure } from "@headlessui/react";
 
 const ClusteringView = () => {
 	const dispatch = useAppDispatch();
@@ -31,6 +33,7 @@ const ClusteringView = () => {
 		clusterYears,
 		crimeTypesSummaryList,
 		clusterCases,
+		clusterCrimes,
 	} = useAppSelector((state) => state.dataState);
 
 	const [showCommonModal, setShowCommonModal] = useState(false);
@@ -69,6 +72,12 @@ const ClusteringView = () => {
 		}
 	};
 
+	const onClickAccordion = (crime: string, isClosed: any) => {
+		if (!isClosed) {
+			dispatch(getClusterCrimes(crime));
+		}
+	};
+
 	return (
 		<div className="flex flex-col gap-y-5 font-mont text-gray-700">
 			{showCommonModal && (
@@ -83,35 +92,66 @@ const ClusteringView = () => {
 					<div className="w-96 flex flex-col gap-y-5 text-gray-700 font-mont py-5 border-t border-gray-200">
 						{clusterCases.map((cluster: any, index: number) => {
 							return (
-								<div
-									key={cluster.id}
-									className={`w-full flex flex-col gap-y-3 ${
-										clusterCases.length === index + 1
-											? ""
-											: "border-b border-gray-200 py-3"
-									}`}
-								>
-									<div className="flex flex-col justify-center items-center">
-										<img
-											src={cluster?.qr_code ?? ""}
-											className="w-auto h-56"
-											alt="QRcode"
-										/>
-										<p className="text-sm font-medium">
-											{cluster?.qr_code_tracker ?? ""}
-										</p>
-									</div>
-									<div className="flex flex-col">
-										<h4 className="font-normal text-sm">
-											Crime & Imprisonment:
-										</h4>
-										<p className="text-sm font-bold">
-											{cluster.crime_type.replaceAll(/["\[\]]+/g, "")}
-											{" - "}
-											<span>{cluster.imprisonment_span} years</span>
-										</p>
-									</div>
-								</div>
+								<Disclosure key={cluster.id}>
+									{({ open }) => (
+										<Fragment>
+											<Disclosure.Button
+												className="p-2 bg-purple-100 text-purple-700 my-2 rounded-md"
+												onClick={() =>
+													onClickAccordion(cluster.crime_type, open)
+												}
+											>
+												<div className="w-full flex justify-between items-center">
+													<div className="flex flex-col items-start">
+														<p className="text-sm font-bold">
+															{cluster.crime_type.replaceAll(/["\[\]]+/g, "")}
+															{" - "}
+															<span>{cluster.imprisonment_span} years</span>
+														</p>
+														<p className="text-xs font-medium">
+															Crime Type & Imprisonment
+														</p>
+													</div>
+													<svg
+														xmlns="http://www.w3.org/2000/svg"
+														viewBox="0 0 20 20"
+														fill="currentColor"
+														className={`${
+															open ? "rotate-180 transform" : ""
+														} h-5 w-5`}
+													>
+														<path
+															fillRule="evenodd"
+															d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+															clipRule="evenodd"
+														/>
+													</svg>
+												</div>
+											</Disclosure.Button>
+											<Disclosure.Panel className="text-sm p-3 text-gray-700 font-medium flex flex-col gap-y-5">
+												{clusterCrimes.map((cluster_crimes: any) => {
+													return (
+														<div
+															key={cluster_crimes.no}
+															className="w-full col-span-2 flex flex-col gap-y-1"
+														>
+															<div className="flex gap-x-1">
+																<h4 className="font-bold">Case No</h4>
+																<p>-</p>
+																<p className="">{cluster_crimes.case_no}</p>
+															</div>
+															<img
+																src={cluster_crimes.qr_code}
+																className="w-full h-auto"
+																alt="QRcode"
+															/>
+														</div>
+													);
+												})}
+											</Disclosure.Panel>
+										</Fragment>
+									)}
+								</Disclosure>
 							);
 						})}
 					</div>

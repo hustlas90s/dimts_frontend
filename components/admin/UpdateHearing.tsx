@@ -9,6 +9,7 @@ import { updateHearing, updateDocket } from "../../redux/dataSlice";
 import { useState, useEffect } from "react";
 import db from "../../firebaseConfig";
 import { collection, doc, setDoc } from "firebase/firestore";
+import MyTextAreaField from "../MyTextArea";
 
 interface UpdateHearingParams {
 	isShow: boolean;
@@ -92,6 +93,7 @@ const UpdateHearing = ({
 			start_time: formData.hearingStartTime,
 			end_time: formData.hearingEndTime,
 			status: formData.hearingStatus,
+			remarks: formData.hearingRemarks,
 			allowed_hearing_types: newAllowedTypesArr.join(","),
 		};
 		const newActivity = {
@@ -261,6 +263,22 @@ const UpdateHearing = ({
 					}
 					setFieldValue={setValue}
 				/>
+				<div className="col-span-2">
+					<MyTextAreaField
+						control={control}
+						fieldLabel="Remarks"
+						fieldName="hearingRemarks"
+						fieldRules={fieldRules.requiredRule}
+						defaultValue={
+							allowedTypes.find(
+								(type: any) => type === selectedHearing.hearingType
+							) !== undefined
+								? selectedHearing.hearingRemarks
+								: ""
+						}
+						setFieldValue={setValue}
+					/>
+				</div>
 				{hearingType.toLowerCase() === "last court action" &&
 					hearingStatus.toLowerCase() === "completed" && (
 						<div className="col-span-2 grid grid-cols-2 gap-y-8 gap-x-5">

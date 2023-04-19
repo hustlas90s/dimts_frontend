@@ -215,6 +215,16 @@ export default class DataRepository {
         })
         return JSON.parse(data)
     }
+    // Get Cluster Crimes
+    async GetClusterCrimes(jwt_token: string, crime: string) {
+        const {data} = await backendConn.get(`cluster_crimes/${crime}`, {
+            headers : {
+                Authorization : `Bearer ${ jwt_token }`,
+                'Content-Type' : 'aplication/json'
+            }
+        })
+        return JSON.parse(data)
+    }
     // Get Court Proceedings
     async GetCourtProceedings(jwt_token: string) {
         const { data } = await backendConn.get('court_proceedings/', {

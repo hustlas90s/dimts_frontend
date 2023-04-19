@@ -27,6 +27,7 @@ interface DataShape {
     clusterList: any;
     clusterYears: any;
     clusterCases: any;
+    clusterCrimes: any;
     courtProceedingsList: any;
     caseProceedingsList: any;
     activityLogs: any;
@@ -64,6 +65,7 @@ const initialState: DataShape = {
     clusterList : [],
     clusterYears : [],
     clusterCases : [],
+    clusterCrimes : [],
     courtProceedingsList : [],
     caseProceedingsList : [],
     activityLogs : [],
@@ -398,6 +400,14 @@ export const getClusterCases = createAsyncThunk(
     async (years: number) => {
         const dataRepo = new DataRepository()
         return await dataRepo.GetClusterCases(localStorage.jwt_token, years)
+    }
+)
+
+export const getClusterCrimes = createAsyncThunk(
+    'data/getClusterCrimes',
+    async (crime: string) => {
+        const dataRepo = new DataRepository()
+        return await dataRepo.GetClusterCrimes(localStorage.jwt_token, crime)
     }
 )
 
@@ -787,6 +797,19 @@ const dataSlice = createSlice({
             }
         })
         builder.addCase(getClusterCases.rejected, (state) => {
+            return { ...state }
+        })
+        // Get Cluster Crimes
+        builder.addCase(getClusterCrimes.pending, (state) => {
+            return { ...state }
+        })
+        builder.addCase(getClusterCrimes.fulfilled, (state, action) => {
+            return { 
+                ...state, 
+                clusterCrimes : action.payload,
+            }
+        })
+        builder.addCase(getClusterCrimes.rejected, (state) => {
             return { ...state }
         })
         // COURT PROCEEDINGS
