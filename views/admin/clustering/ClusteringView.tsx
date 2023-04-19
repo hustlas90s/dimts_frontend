@@ -30,7 +30,7 @@ const ClusteringView = () => {
 	const {
 		dataLoading,
 		clusterList,
-		clusterYears,
+		// clusterYears,
 		crimeTypesSummaryList,
 		clusterCases,
 		clusterCrimes,
@@ -195,11 +195,11 @@ const ClusteringView = () => {
 								tickLine={false}
 								domain={["dataMin", "dataMax"]}
 							/>
-							<Legend
+							{/* <Legend
 								payload={clusterYears.map((year: any) => {
 									return { value: year, type: "line", color: "#8b5cf6" };
 								})}
-							/>
+							/> */}
 							<Tooltip
 								cursor={{ strokeDasharray: "3 3" }}
 								content={<CustomToolTip />}
@@ -290,7 +290,7 @@ function CustomToolTip({ active, payload, label }: any) {
 			<div className="bg-white p-2 flex flex-col shadow border-b border-gray-300 text-gray-700">
 				<p className="capitalize">
 					<span className="font-medium">Value: </span>
-					{payload[0].payload.y}
+					{payload[0]?.payload.y ?? ""}
 				</p>
 			</div>
 		);

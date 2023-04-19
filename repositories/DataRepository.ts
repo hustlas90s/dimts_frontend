@@ -193,17 +193,18 @@ export default class DataRepository {
         const clusters = data.clusters.map((cluster: any) => {
             return cluster.imprisonment_span
         }).flat()
-        const years = data.clusters.map((cluster: any) => {
-            return new Date(cluster.last_court_action[0]).getFullYear()
-        })
-        const dbscanCluster = {years : _.uniq(_.map(years)), clusters : clusters}
-        const clusterData = dbscanCluster.clusters.map((cluster: any, index: number) => {
+        console.log("Fvcking clusters: ", data.clusters)
+        // const years = data.clusters.map((cluster: any) => {
+        //     return new Date(cluster.last_court_action[0]).getFullYear()
+        // })
+        // const dbscanCluster = {years : _.uniq(_.map(years)), clusters : clusters}
+        const clusterData = clusters.map((cluster: any, index: number) => {
             if (index === 0) {
                 return { y : cluster, x : 2022 }
             }
             return { y : cluster, x : 2023 }
         })
-        return { formattedCluster : clusterData, formattedYears : dbscanCluster.years }
+        return { formattedCluster : clusterData, formattedYears : undefined }
     }
     // Get Cluster Cases
     async GetClusterCases(jwt_token: string, years: number) {

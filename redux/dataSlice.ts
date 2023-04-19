@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import DataRepository from '../repositories/DataRepository'
 import AuthRepository from '../repositories/AuthRepository'
 import moment from "moment";
+import _ from "lodash"
 
 interface DataShape {
     dataLoading: boolean;
@@ -399,7 +400,9 @@ export const getClusterCases = createAsyncThunk(
     'data/getClusterCases',
     async (years: number) => {
         const dataRepo = new DataRepository()
-        return await dataRepo.GetClusterCases(localStorage.jwt_token, years)
+        const currClusterCases = await dataRepo.GetClusterCases(localStorage.jwt_token, years)
+        const fileteredClusterCases = _.uniqBy(currClusterCases, "crime_type")
+        return fileteredClusterCases
     }
 )
 
@@ -780,7 +783,7 @@ const dataSlice = createSlice({
                 ...state, 
                 dataLoading : false, 
                 clusterList : payload.formattedCluster,
-                clusterYears : payload.formattedYears
+                // clusterYears : payload.formattedYears
             }
         })
         builder.addCase(getClustering.rejected, (state) => {
