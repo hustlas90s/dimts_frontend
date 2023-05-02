@@ -21,12 +21,14 @@ import moment from "moment";
 import { ExportToCsv } from "export-to-csv";
 import AddCivilCase from "../../../components/admin/AddCivilCases";
 import _ from "lodash";
+import { useRouter } from "next/router";
 
 const CivilCaseListView = () => {
 	const dispatch = useAppDispatch();
 	const { dataLoading, civilCaseList, courtProceedingsList } = useAppSelector(
 		(state: any) => state.dataState
 	);
+	const router = useRouter();
 
 	const {
 		viewModal,
@@ -213,7 +215,7 @@ const CivilCaseListView = () => {
 						<PrintButton onClickPrint={() => onExportCases()} />
 						<AddNewButton
 							btnText="New Case"
-							onClickAdd={() => setShowAddModal(true)}
+							onClickAdd={() => router.push(`/admin/add_case?type=Civil`)}
 						/>
 						<input
 							type="text"

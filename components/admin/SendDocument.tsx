@@ -1,3 +1,4 @@
+import { useState } from "react";
 import SubmitModal from "../SubmitModal";
 import MyInputField from "../MyInputField";
 import MySelectField from "../MySelectField";
@@ -24,6 +25,7 @@ const SendDocument = ({
 }: SendDocumentParams) => {
 	const { control, handleSubmit, setValue } = useForm();
 	const dispatch = useAppDispatch();
+	const [showLoading, setShowLoading] = useState(false);
 
 	const onSubmit = (formData: any) => {
 		const data = {
@@ -32,7 +34,11 @@ const SendDocument = ({
 			case: formData.documentCase,
 			status: formData.documentStatus,
 		};
-		dispatch(sendDocumentEmail(data)).then(() => onConfirm());
+		setShowLoading(true);
+		dispatch(sendDocumentEmail(data)).then(() => {
+			setShowLoading(false);
+			onConfirm();
+		});
 	};
 
 	return (
@@ -42,6 +48,7 @@ const SendDocument = ({
 			addText="Send new document"
 			onConfirm={handleSubmit(onSubmit)}
 			onCancel={onCancel}
+			loadingState={showLoading}
 		>
 			<div className="grid grid-cols-2 gap-y-8 gap-x-5">
 				<MySelectField

@@ -35,7 +35,10 @@ interface ProceedingCalendarProps {
 }
 
 const ProceedingCalendar = ({ caseProceedings }: ProceedingCalendarProps) => {
-	let today = new Date(caseProceedings[0].proceeding_schedule ?? "");
+	let today =
+		caseProceedings[0]?.proceeding_schedule !== undefined
+			? new Date(caseProceedings[0].proceeding_schedule)
+			: new Date();
 	let [selectedDay, setSelectedDay] = useState(today);
 	let [currentMonth, setCurrentMonth] = useState(format(today, "MMM-yyyy"));
 	const [showCalendarMeeting, setShowCalendarMeeting] =
@@ -60,7 +63,12 @@ const ProceedingCalendar = ({ caseProceedings }: ProceedingCalendarProps) => {
 	let selectedDayHearings =
 		caseProceedings &&
 		caseProceedings.filter((proceeding: any) =>
-			isSameDay(new Date(proceeding.proceeding_schedule), selectedDay)
+			isSameDay(
+				proceeding.proceeding_schedule
+					? new Date(proceeding.proceeding_schedule)
+					: new Date(),
+				selectedDay
+			)
 		);
 
 	return (
@@ -172,7 +180,14 @@ const ProceedingCalendar = ({ caseProceedings }: ProceedingCalendarProps) => {
 								<div className="w-1 h-1 mx-auto mt-1">
 									{caseProceedings &&
 										caseProceedings.some((proceeding: any) =>
-											isSameDay(parseISO(proceeding.proceeding_schedule), day)
+											isSameDay(
+												parseISO(
+													proceeding?.proceeding_schedule !== undefined
+														? proceeding.proceeding_schedule
+														: "2023-01-01"
+												),
+												day
+											)
 										) && (
 											<div className="w-1 h-1 rounded-full bg-purple-500"></div>
 										)}

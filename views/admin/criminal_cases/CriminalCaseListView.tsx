@@ -21,11 +21,14 @@ import useModalIDs from "../../../hooks/useModalIDs";
 import { ExportToCsv } from "export-to-csv";
 import moment from "moment";
 import _ from "lodash";
+import { Router, useRouter } from "next/router";
 
 const CriminalCaseListView = () => {
 	const dispatch = useAppDispatch();
 	const { dataLoading, criminalCaseList, courtProceedingsList } =
 		useAppSelector((state: any) => state.dataState);
+	const router = useRouter();
+
 	const {
 		viewModal,
 		setViewModal,
@@ -212,7 +215,7 @@ const CriminalCaseListView = () => {
 						<PrintButton onClickPrint={() => onExportCases()} />
 						<AddNewButton
 							btnText="New Case"
-							onClickAdd={() => setShowAddModal(true)}
+							onClickAdd={() => router.push(`/admin/add_case?type=Criminal`)}
 						/>
 						<input
 							type="text"

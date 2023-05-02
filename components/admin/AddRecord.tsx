@@ -6,6 +6,7 @@ import { fieldRules } from "../authHelper";
 import { useAppDispatch } from "../../redux/hooks";
 import { createNewDetainee } from "../../redux/dataSlice";
 import MyTextAreaField from "../MyTextArea";
+import MyMultiSelectField from "../MyMultiSelectFieldFull";
 
 interface AddRecordParams {
 	isShow: boolean;
@@ -56,7 +57,7 @@ const AddRecord = ({
 		>
 			<div className="grid grid-cols-2 gap-y-8 gap-x-5">
 				<div className="col-span-2">
-					<MySelectField
+					<MyMultiSelectField
 						myControl={control}
 						myOptions={selectOptions.map((option: any) => {
 							return { label: option.case_no, value: option.id };
