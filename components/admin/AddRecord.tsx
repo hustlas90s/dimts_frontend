@@ -31,6 +31,9 @@ const AddRecord = ({
 	const dispatch = useAppDispatch();
 
 	const onSubmit = (formData: any) => {
+		const detainee_cases = formData.recordCase.map((dc: any) => {
+			return dc.value;
+		});
 		const data = {
 			name: `${formData.recordFirstName} ${formData.recordMiddleName} ${formData.recordLastName} ${formData.recordSuffix}`,
 			height: formData.recordHeight,
@@ -42,7 +45,7 @@ const AddRecord = ({
 			assigned_personnel: formData.recordPersonnel,
 			remarks: formData.recordRemarks,
 			detained_in: detainedIn,
-			case: formData.recordCase,
+			cases: JSON.stringify(detainee_cases),
 		};
 		dispatch(createNewDetainee(data)).then(() => onConfirm());
 	};

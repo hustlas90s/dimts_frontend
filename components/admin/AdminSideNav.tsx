@@ -481,7 +481,9 @@ const AdminSideNav = () => {
 			{/* CLUSTERING */}
 			<div
 				className={`w-full flex items-center gap-x-5 px-5 py-3 ${
-					router.pathname === "clustering" ? "bg-purple-50" : "bg-transparent"
+					router.pathname.includes("clustering")
+						? "bg-purple-50"
+						: "bg-transparent"
 				} rounded-lg hover:cursor-pointer`}
 				onClick={() => router.push("/admin/clustering")}
 			>

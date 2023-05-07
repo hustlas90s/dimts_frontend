@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import {
 	getCriminalCases,
@@ -22,6 +22,7 @@ import { ExportToCsv } from "export-to-csv";
 import moment from "moment";
 import _ from "lodash";
 import { Router, useRouter } from "next/router";
+import Paginator from "../../../components/Paginator";
 
 const CriminalCaseListView = () => {
 	const dispatch = useAppDispatch();
@@ -162,6 +163,15 @@ const CriminalCaseListView = () => {
 		}
 	};
 
+	const [currentPage, setCurrentPage] = useState(1);
+
+	const lastLogIndex = currentPage * 10;
+	const firstLogIndex = lastLogIndex - 10;
+
+	const currentDataLogs = useMemo(() => {
+		return filteredCase.slice(firstLogIndex, lastLogIndex);
+	}, [filteredCase, firstLogIndex, lastLogIndex]);
+
 	return (
 		<div className="flex flex-col gap-y-5 font-mont text-gray-700">
 			<ViewCase
@@ -242,11 +252,17 @@ const CriminalCaseListView = () => {
 				{!dataLoading && (
 					<CriminalCaseTable
 						courtProceedings={courtProceedingsList}
-						criminalCases={filteredCase}
+						criminalCases={currentDataLogs}
 						onShowWarning={(e: number) => onShowWarningModal(e)}
 						onShowEdit={(crime_id: number) => onShowUpdateModal(crime_id)}
 					/>
 				)}
+				<Paginator
+					totalLogs={criminalCaseList.length}
+					logsPerPage={10}
+					currentPage={currentPage}
+					setCurrentPage={setCurrentPage}
+				/>
 			</div>
 		</div>
 	);

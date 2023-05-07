@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import {
 	deleteDocket,
@@ -22,6 +22,7 @@ import { ExportToCsv } from "export-to-csv";
 import AddCivilCase from "../../../components/admin/AddCivilCases";
 import _ from "lodash";
 import { useRouter } from "next/router";
+import Paginator from "../../../components/Paginator";
 
 const CivilCaseListView = () => {
 	const dispatch = useAppDispatch();
@@ -162,6 +163,15 @@ const CivilCaseListView = () => {
 		}
 	};
 
+	const [currentPage, setCurrentPage] = useState(1);
+
+	const lastLogIndex = currentPage * 10;
+	const firstLogIndex = lastLogIndex - 10;
+
+	const currentDataLogs = useMemo(() => {
+		return filteredCivilCase.slice(firstLogIndex, lastLogIndex);
+	}, [filteredCivilCase, firstLogIndex, lastLogIndex]);
+
 	return (
 		<div className="flex flex-col gap-y-5 font-mont text-gray-700">
 			<ViewCase
@@ -242,11 +252,17 @@ const CivilCaseListView = () => {
 				{!dataLoading && (
 					<CivilCaseTable
 						courtProceedings={courtProceedingsList}
-						civilCases={filteredCivilCase}
+						civilCases={currentDataLogs}
 						onShowWarning={(civil_id: number) => onShowWarningModal(civil_id)}
 						onShowEdit={(civild_id: number) => onShowUpdateModal(civild_id)}
 					/>
 				)}
+				<Paginator
+					totalLogs={civilCaseList.length}
+					logsPerPage={10}
+					currentPage={currentPage}
+					setCurrentPage={setCurrentPage}
+				/>
 			</div>
 		</div>
 	);

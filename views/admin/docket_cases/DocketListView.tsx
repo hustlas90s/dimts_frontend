@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import {
 	deleteDocket,
@@ -20,6 +20,7 @@ import ImportButton from "../../../components/ImportButton";
 import CommonModal from "../../../components/CommonModal";
 import { read, utils } from "xlsx";
 import { useDropzone } from "react-dropzone";
+import Paginator from "../../../components/Paginator";
 
 const CitizenListView = () => {
 	const dispatch = useAppDispatch();
@@ -239,6 +240,15 @@ const CitizenListView = () => {
 		});
 	};
 
+	const [currentPage, setCurrentPage] = useState(1);
+
+	const lastLogIndex = currentPage * 10;
+	const firstLogIndex = lastLogIndex - 10;
+
+	const currentDataLogs = useMemo(() => {
+		return filteredDocket.slice(firstLogIndex, lastLogIndex);
+	}, [filteredDocket, firstLogIndex, lastLogIndex]);
+
 	return (
 		<div className="flex flex-col gap-y-5 font-mont text-gray-700">
 			<CommonModal
@@ -375,7 +385,13 @@ const CitizenListView = () => {
 						onShowWarning={(e: number) => onShowWarningModal(e)}
 					/>
 				)}
-				<div className="w-full flex justify-end">
+				<div className="w-full flex justify-between">
+					<Paginator
+						totalLogs={pastDocketList.length}
+						logsPerPage={10}
+						currentPage={currentPage}
+						setCurrentPage={setCurrentPage}
+					/>
 					<select
 						className="w-44 py-1 px-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent appearance-none"
 						onChange={(e: any) => caseStatusSelection(e.target.value)}
