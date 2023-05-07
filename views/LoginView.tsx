@@ -24,7 +24,11 @@ const LoginView = () => {
 				if (res.payload) {
 					const decoded: any = jwt_decode(res.payload.access);
 					dispatch(getAccountDetails(decoded.user_id)).then((res) => {
-						router.push(`/${res.payload.role}`);
+						if (res.payload.role.includes("citizen")) {
+							router.push(`/${res.payload.role}`);
+						} else {
+							router.push(`/admin`);
+						}
 					});
 				} else {
 					setErrorTitle("Login Error");
@@ -118,7 +122,7 @@ const LoginView = () => {
 				{/*  */}
 				<div className="flex flex-col justify-center items-center gap-y-8">
 					<div className="flex flex-col gap-y-1 items-center">
-						<h4 className="text-3xl font-black text-center">What's Up?</h4>
+						<h4 className="text-3xl font-black text-center">What&apos;s Up?</h4>
 						<p className="text-sm">Sign in your account to proceed</p>
 					</div>
 					<MyInputField
