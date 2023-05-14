@@ -1,8 +1,8 @@
 export const criminalCrimeTypes = [
     { label: "Aggravated Assault", value: "Aggravated Assault" },
     { label: "Arson", value: "Arson" },
-    { label: "Assault", value: "Assault" },
-    { label: "Attempt", value: "Attempt" },
+    // { label: "Assault", value: "Assault" },
+    // { label: "Attempt", value: "Attempt" },
     { label: "Bribery", value: "Bribery" },
     { label: "Burglary", value: "Burglary" },
     { label: "Child Abandonment", value: "Child Abandonment" },

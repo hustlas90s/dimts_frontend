@@ -12,6 +12,9 @@ import { useAppDispatch } from "../../../redux/hooks";
 import { useRouter } from "next/router";
 import { createNewDocket } from "../../../redux/dataSlice";
 import { PulseLoader } from "react-spinners";
+import crimeQuestions from "../../../crime_questions.json";
+
+const caseCrimeSentences: any = crimeQuestions;
 
 const AddCaseView = () => {
 	const { control, handleSubmit, setValue } = useForm();
@@ -261,6 +264,50 @@ const AddCaseView = () => {
 							defaultValue=""
 							setFieldValue={setValue}
 						/>
+						{/*  */}
+						{caseCrimeType.length && type === "Criminal" ? (
+							<div className="col-span-2 w-full overflow-y-auto flex flex-col gap-y-5">
+								{caseCrimeType.map((crimeType: any) => {
+									const crimeTypeValue = crimeType.value;
+									if (caseCrimeSentences[crimeTypeValue] !== undefined) {
+										return (
+											<div
+												key={crimeType}
+												className="flex flex-col gap-y-1"
+											>
+												<h4 className="text-xl font-bold">{crimeTypeValue}</h4>
+												<div className="flex flex-col gap-y-3">
+													{caseCrimeSentences[crimeTypeValue].penaltyItems.map(
+														(crimeQuestion: any, index: number) => {
+															console.log("Penalty question: ", crimeQuestion);
+															return (
+																<div
+																	key={`${crimeType}+${index}`}
+																	className="flex items-center px-4 border border-gray-300 rounded"
+																>
+																	<input
+																		type="checkbox"
+																		value={
+																			caseCrimeSentences[crimeTypeValue]
+																				.penaltySentences[index]
+																		}
+																		name="bordered-checkbox"
+																		className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 focus:ring-2"
+																	/>
+																	<label className="w-full py-4 ml-2 text-sm font-normal text-gray-700 dark:text-gray-300">
+																		{crimeQuestion}
+																	</label>
+																</div>
+															);
+														}
+													)}
+												</div>
+											</div>
+										);
+									}
+								})}
+							</div>
+						) : null}
 						{/*  */}
 						<div className="col-span-2">
 							<div className="flex flex-col gap-y-1">
