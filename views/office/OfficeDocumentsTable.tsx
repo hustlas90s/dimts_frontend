@@ -34,7 +34,13 @@ const OfficeDocumentsTable = ({ officeDocuments }: any) => {
 									<td className="py-3 px-6 text-left whitespace-nowrap">
 										{moment(doc.date_received).format("LL")}
 									</td>
-									<td className="py-3 px-6 text-left whitespace-nowrap">
+									<td
+										className={`py-3 px-6 text-left whitespace-nowrap ${
+											doc.status.toLowerCase() === "pending"
+												? "text-yellow-500"
+												: "text-teal-500"
+										}`}
+									>
 										{doc.status}
 									</td>
 									{/* <td className="py-3 px-6 text-center">

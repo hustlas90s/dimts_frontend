@@ -60,7 +60,12 @@ const ServedDocsView = () => {
 		});
 		dispatch(getOfficesList()).then((res: any) => {
 			const offices = res.payload.map((data: any) => {
-				return { name: data.first_name, id: data.id, role: "office" };
+				return {
+					name: data.first_name,
+					id: data.id,
+					email: data.email,
+					role: "office",
+				};
 			});
 			setRecipients((prevRecipients: any) => [...prevRecipients, ...offices]);
 		});
@@ -69,13 +74,11 @@ const ServedDocsView = () => {
 				return {
 					name: `${data.first_name} ${data.last_name}`,
 					id: data.id,
+					email: data.email,
 					role: "staff",
 				};
 			});
-			setRecipients((previusRecipients: any) => [
-				...previusRecipients,
-				...staffs,
-			]);
+			setRecipients((prevRecipients: any) => [...prevRecipients, ...staffs]);
 		});
 
 		dispatch(getCurrentDockets());
@@ -170,12 +173,12 @@ const ServedDocsView = () => {
 				deletedText={successText}
 				onConfirm={() => setShowDeleteModal(false)}
 			/>
-			<AdminBreadCrumbs activeText="Transfered Documents" />
+			<AdminBreadCrumbs activeText="Transferred Documents" />
 			<div className="w-full bg-white font-mont flex flex-col gap-y-5 text-gray-700 p-5 shadow border-b border-gray-200 rounded-lg">
 				{/*  */}
 				<div className="w-full flex justify-between">
 					<h4 className="text-xl font-black tracking-wider">
-						Transfered Documents
+						Transferred Documents
 					</h4>
 					{/*  */}
 					<div className="flex flex-row gap-x-3">
