@@ -279,7 +279,7 @@ const AddCaseView = () => {
 												<div className="flex flex-col gap-y-3">
 													{caseCrimeSentences[crimeTypeValue].penaltyItems.map(
 														(crimeQuestion: any, index: number) => {
-															console.log("Penalty question: ", crimeQuestion);
+															// console.log("Penalty question: ", crimeQuestion);
 															return (
 																<div
 																	key={`${crimeType}+${index}`}

@@ -28,11 +28,22 @@ const SendDocument = ({
 	const [showLoading, setShowLoading] = useState(false);
 
 	const onSubmit = (formData: any) => {
+		const selectedCase = caseOptions.find(
+			(selectedOption: any) =>
+				selectedOption.id === Number(formData.documentCase)
+		);
+		const recipient = recipientOptions.find(
+			(receiver: any) => receiver.id === Number(formData.documentOffice)
+		);
+
 		const data = {
 			office: formData.documentOffice,
 			date_received: formData.documentDate,
 			case: formData.documentCase,
 			status: formData.documentStatus,
+			qr_tracker: selectedCase.qr_code_tracker,
+			case_no: selectedCase.case_no,
+			office_name: recipient.name,
 		};
 		setShowLoading(true);
 		dispatch(sendDocumentEmail(data)).then(() => {

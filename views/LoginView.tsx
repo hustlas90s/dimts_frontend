@@ -24,8 +24,9 @@ const LoginView = () => {
 				if (res.payload) {
 					const decoded: any = jwt_decode(res.payload.access);
 					dispatch(getAccountDetails(decoded.user_id)).then((res) => {
-						if (res.payload.role.includes("citizen")) {
-							router.push(`/${res.payload.role}`);
+						const userRole = res.payload?.role ?? "";
+						if (userRole.includes("citizen") || userRole.includes("office")) {
+							router.push(`/${userRole}`);
 						} else {
 							router.push(`/admin`);
 						}

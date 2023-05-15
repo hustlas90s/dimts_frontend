@@ -1,4 +1,4 @@
-import { backendConn, placesConn } from "./connection";
+import { backendConn, placesConn, emailConn } from "./connection";
 import _ from 'lodash'
 
 export default class DataRepository {
@@ -363,11 +363,17 @@ export default class DataRepository {
     }
     // Send Document
     async SendDocumentEmail (jwt_token: string, formData: any) {
-        const { data } = await backendConn.post('send_document_email/', formData, {
+        await backendConn.post('send_document_email/', formData, {
             headers : {
                 Authorization : `Bearer ${ jwt_token }`
             }
         })
+        const { data } = await emailConn.post('/send-email/', {
+            office_name : formData.office_name,
+            case_no : formData.case_no,
+            qr_tracker : formData.qr_tracker
+        })
+        console.log("Send email response: ", data)
         return data
     }
     // New Proceeding
